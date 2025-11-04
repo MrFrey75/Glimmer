@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Glimmer Creator</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Glimmer.Creator.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="ribbon-menu">
+        <ul class="ribbon-items">
+            <li class="ribbon-item">
+                <a href="#" class="ribbon-brand">Glimmer Creator</a>
+                <ul class="dropdown-menu">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li class="separator"></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Exit</a></li>
+                </ul>
+            </li>
+            
+            <li class="ribbon-item">
+                <a href="#">Universe</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">New Universe</a></li>
+                    <li><a href="#">Open Universe</a></li>
+                    <li><a href="#">Save Universe</a></li>
+                    <li class="separator"></li>
+                    <li class="has-submenu">
+                        <a href="#">Recent Universes</a>
+                        <ul class="submenu">
+                            <li><a href="#">Universe 1</a></li>
+                            <li><a href="#">Universe 2</a></li>
+                            <li><a href="#">Universe 3</a></li>
+                        </ul>
+                    </li>
+                    <li class="separator"></li>
+                    <li><a href="#">Universe Properties</a></li>
+                </ul>
+            </li>
+            
+            <li class="ribbon-item">
+                <a href="#">Entities</a>
+                <ul class="dropdown-menu">
+                    <li class="has-submenu">
+                        <a href="#">Notable Figures</a>
+                        <ul class="submenu">
+                            <li><a href="#">Create Figure</a></li>
+                            <li><a href="#">Browse Figures</a></li>
+                            <li><a href="#">Search Figures</a></li>
+                            <li class="separator"></li>
+                            <li class="has-submenu">
+                                <a href="#">Figure Types</a>
+                                <ul class="submenu">
+                                    <li><a href="#">Heroes</a></li>
+                                    <li><a href="#">Villains</a></li>
+                                    <li><a href="#">Supporting Characters</a></li>
+                                    <li><a href="#">Historical Figures</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">Locations</a>
+                        <ul class="submenu">
+                            <li><a href="#">Create Location</a></li>
+                            <li><a href="#">Browse Locations</a></li>
+                            <li><a href="#">Search Locations</a></li>
+                            <li class="separator"></li>
+                            <li class="has-submenu">
+                                <a href="#">Location Types</a>
+                                <ul class="submenu">
+                                    <li><a href="#">Cities</a></li>
+                                    <li><a href="#">Regions</a></li>
+                                    <li><a href="#">Landmarks</a></li>
+                                    <li><a href="#">Natural Features</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">Artifacts</a>
+                        <ul class="submenu">
+                            <li><a href="#">Create Artifact</a></li>
+                            <li><a href="#">Browse Artifacts</a></li>
+                            <li><a href="#">Search Artifacts</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">Events</a>
+                        <ul class="submenu">
+                            <li><a href="#">Create Event</a></li>
+                            <li><a href="#">Browse Events</a></li>
+                            <li><a href="#">Timeline View</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">Factions</a>
+                        <ul class="submenu">
+                            <li><a href="#">Create Faction</a></li>
+                            <li><a href="#">Browse Factions</a></li>
+                            <li><a href="#">Faction Relations</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="ribbon-item">
+                <a href="#">Relations</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Create Relationship</a></li>
+                    <li><a href="#">Browse Relationships</a></li>
+                    <li class="separator"></li>
+                    <li class="has-submenu">
+                        <a href="#">Relationship Types</a>
+                        <ul class="submenu">
+                            <li><a href="#">Family Relations</a></li>
+                            <li><a href="#">Social Relations</a></li>
+                            <li><a href="#">Location Relations</a></li>
+                            <li><a href="#">Event Relations</a></li>
+                        </ul>
+                    </li>
+                    <li class="separator"></li>
+                    <li><a href="#">Relationship Graph</a></li>
+                </ul>
+            </li>
+            
+            <li class="ribbon-item">
+                <a href="#">Tools</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Timeline Builder</a></li>
+                    <li><a href="#">Relationship Visualizer</a></li>
+                    <li><a href="#">Name Generator</a></li>
+                    <li class="separator"></li>
+                    <li class="has-submenu">
+                        <a href="#">Export</a>
+                        <ul class="submenu">
+                            <li><a href="#">Export to PDF</a></li>
+                            <li><a href="#">Export to JSON</a></li>
+                            <li><a href="#">Export to Markdown</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">Import</a>
+                        <ul class="submenu">
+                            <li><a href="#">Import from JSON</a></li>
+                            <li><a href="#">Import from CSV</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="ribbon-item">
+                <a href="#">View</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Entity Browser</a></li>
+                    <li><a href="#">Timeline View</a></li>
+                    <li><a href="#">Map View</a></li>
+                    <li class="separator"></li>
+                    <li><a href="#">Customize Layout</a></li>
+                </ul>
+            </li>
+            
+            <li class="ribbon-item">
+                <a href="#">Help</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Keyboard Shortcuts</a></li>
+                    <li class="separator"></li>
+                    <li><a href="#">Report Issue</a></li>
+                    <li><a href="#">About Glimmer</a></li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+    
+    <div class="main-content">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            &copy; 2025 - Glimmer Creator - Universe Building Tool - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

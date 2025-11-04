@@ -1,0 +1,34 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimmer.Core", "Glimmer.Core\Glimmer.Core.csproj", "{A353B204-8E65-4CC6-8001-BF18D9716C12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Glimmer.Creator", "Glimmer.Creator\Glimmer.Creator.csproj", "{2E00AA8E-93A1-4691-9B60-02EC42E32633}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0AC619B-885A-9E03-DE60-406E3E393B48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0AC619B-885A-9E03-DE60-406E3E393B48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0AC619B-885A-9E03-DE60-406E3E393B48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0AC619B-885A-9E03-DE60-406E3E393B48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A353B204-8E65-4CC6-8001-BF18D9716C12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A353B204-8E65-4CC6-8001-BF18D9716C12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A353B204-8E65-4CC6-8001-BF18D9716C12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A353B204-8E65-4CC6-8001-BF18D9716C12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E00AA8E-93A1-4691-9B60-02EC42E32633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E00AA8E-93A1-4691-9B60-02EC42E32633}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E00AA8E-93A1-4691-9B60-02EC42E32633}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E00AA8E-93A1-4691-9B60-02EC42E32633}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4377AB2B-3DBB-42EC-B03A-C3A63139173D}
+	EndGlobalSection
+EndGlobal

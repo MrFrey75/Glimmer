@@ -1,0 +1,31 @@
+using Glimmer.Core.Enums;
+
+namespace Glimmer.Core.Models;
+
+public class EntityRelation
+{
+    public int Oid { get; set; } = 0;
+    public BaseEntity FromEntity { get; set; }
+    public BaseEntity ToEntity { get; set; }
+    public RelationTypeEnum RelationType { get; set; } = RelationTypeEnum.Unknown;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public bool IsDeleted { get; set; } = false;
+
+    public string Description => $"{FromEntity?.Name ?? "Unknown"} - {RelationType} -> {ToEntity?.Name ?? "Unknown"}";
+
+    public EntityRelation()
+    {
+        FromEntity = null!;
+        ToEntity = null!;
+    }
+
+    public EntityRelation(BaseEntity fromEntity, BaseEntity toEntity, RelationTypeEnum relationType)
+    {
+        FromEntity = fromEntity;
+        ToEntity = toEntity;
+        RelationType = relationType;
+    }
+
+}

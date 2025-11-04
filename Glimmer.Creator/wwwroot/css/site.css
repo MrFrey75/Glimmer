@@ -1,0 +1,210 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+/* Dark Mode Theme */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem #3a3a3a, 0 0 0 0.25rem #0d6efd;
+}
+
+/* Ribbon Menu Styles */
+.ribbon-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #2d2d30;
+  border-bottom: 1px solid #3e3e42;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ribbon-items {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ribbon-item {
+  position: relative;
+}
+
+.ribbon-item > a {
+  display: block;
+  padding: 12px 20px;
+  color: #d4d4d4;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  font-size: 14px;
+}
+
+.ribbon-item > a:hover,
+.ribbon-item.active > a {
+  background-color: #3e3e42;
+  color: #ffffff;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #2d2d30;
+  border: 1px solid #3e3e42;
+  min-width: 200px;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  z-index: 1001;
+}
+
+.ribbon-item:hover > .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  position: relative;
+}
+
+.dropdown-menu li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  color: #d4d4d4;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #3e3e42;
+  color: #ffffff;
+}
+
+/* Submenu indicator */
+.dropdown-menu li.has-submenu > a::after {
+  content: '▶';
+  font-size: 10px;
+  margin-left: 8px;
+}
+
+/* Cascading Submenu */
+.submenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: #2d2d30;
+  border: 1px solid #3e3e42;
+  min-width: 200px;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-menu li:hover > .submenu {
+  display: block;
+}
+
+/* Separator */
+.dropdown-menu .separator {
+  height: 1px;
+  background-color: #3e3e42;
+  margin: 4px 0;
+}
+
+/* Main Content Area */
+.main-content {
+  margin-top: 50px;
+  padding: 20px;
+}
+
+/* Footer */
+.footer {
+  background-color: #2d2d30;
+  border-top: 1px solid #3e3e42;
+  color: #808080;
+  padding: 15px 0;
+}
+
+.footer a {
+  color: #569cd6;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #7eb3e6;
+  text-decoration: underline;
+}
+
+/* Form Controls Dark Theme */
+.form-control {
+  background-color: #3c3c3c;
+  border: 1px solid #555;
+  color: #d4d4d4;
+}
+
+.form-control:focus {
+  background-color: #3c3c3c;
+  border-color: #0d6efd;
+  color: #d4d4d4;
+}
+
+/* Buttons Dark Theme */
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+/* Card Dark Theme */
+.card {
+  background-color: #2d2d30;
+  border: 1px solid #3e3e42;
+  color: #d4d4d4;
+}
+
+.card-header {
+  background-color: #252526;
+  border-bottom: 1px solid #3e3e42;
+}
+
+/* Table Dark Theme */
+.table {
+  color: #d4d4d4;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #2d2d30;
+}
+
+.table-hover > tbody > tr:hover {
+  background-color: #3e3e42;
+}
