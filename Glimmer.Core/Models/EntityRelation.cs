@@ -1,9 +1,12 @@
 using Glimmer.Core.Enums;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Glimmer.Core.Models;
 
+[BsonIgnoreExtraElements]
 public class EntityRelation
 {
+    [BsonId]
     public int Oid { get; set; } = 0;
     public Guid UniverseId { get; set; }
     public BaseEntity FromEntity { get; set; }

@@ -1,7 +1,12 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Glimmer.Core.Models;
 
+[BsonIgnoreExtraElements]
 public class BaseEntity
 {
+    [BsonId]
+    [BsonElement("_id")]
     public Guid Uuid { get; set; } = Guid.NewGuid();
     public required string Name { get; set; }
     public required string Description { get; set; }
