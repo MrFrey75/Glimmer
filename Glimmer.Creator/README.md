@@ -92,8 +92,8 @@ dotnet watch run
 ```
 
 The application will be available at:
-- **HTTPS**: `https://localhost:7296`
-- **HTTP**: `http://localhost:5152`
+- **HTTPS**: `https://localhost:5228`
+- **HTTP**: `http://localhost:5228`
 
 ### Development Mode
 ```bash
