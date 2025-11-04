@@ -6,57 +6,99 @@
 [![C#](https://img.shields.io/badge/C%23-12.0-239120.svg)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](#)
-[![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen.svg)](#)
-[![Maintainability](https://img.shields.io/badge/maintainability-A-brightgreen.svg)](#)
-[![Security](https://img.shields.io/badge/security-A-brightgreen.svg)](#)
-
-[![GitHub Issues](https://img.shields.io/github/issues/MrFrey75/Glimmer.svg)](https://github.com/MrFrey75/Glimmer/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/MrFrey75/Glimmer.svg)](https://github.com/MrFrey75/Glimmer/pulls)
-[![GitHub Stars](https://img.shields.io/github/stars/MrFrey75/Glimmer.svg?style=social)](https://github.com/MrFrey75/Glimmer/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/MrFrey75/Glimmer.svg?style=social)](https://github.com/MrFrey75/Glimmer/network/members)
-
-[![JWT](https://img.shields.io/badge/Auth-JWT-orange.svg)](https://jwt.io/)
-[![Bootstrap](https://img.shields.io/badge/UI-Bootstrap%205.3-7952B3.svg)](https://getbootstrap.com/)
-[![MVC](https://img.shields.io/badge/Pattern-MVC-red.svg)](https://docs.microsoft.com/en-us/aspnet/core/mvc/)
-[![DDD](https://img.shields.io/badge/Architecture-DDD-blue.svg)](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/)
-
-Glimmer is a comprehensive universe building tool designed for writers, storytellers, and world builders. Create rich, interconnected universes with detailed characters, locations, events, and relationships.
+Glimmer is a comprehensive universe building tool designed for writers, storytellers, and world builders. Create rich, interconnected universes with detailed characters, locations, events, and relationships - all powered by MongoDB for persistent storage.
 
 ## 🏗️ Architecture
 
 Glimmer follows a clean 2-tier architecture:
 
-- **[Glimmer.Core](Glimmer.Core/README.md)**: Domain models, business logic, and services (.NET 8 class library)
-- **[Glimmer.Creator](Glimmer.Creator/README.md)**: MVC web application for user interface (.NET 8 MVC)
+- **[Glimmer.Core](Glimmer.Core/README.md)**: Domain models, business logic, services, and MongoDB repositories (.NET 8 class library)
+- **[Glimmer.Creator](Glimmer.Creator/README.md)**: ASP.NET Core MVC web application with dark mode UI (.NET 8 MVC)
+
+```
+┌─────────────────────────────────────┐
+│     Web Browser (Dark Mode UI)     │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│    Glimmer.Creator (MVC Layer)     │
+│  Controllers │ Views │ wwwroot     │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│     Glimmer.Core (Domain Layer)    │
+│  Services │ Models │ Repositories  │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│      MongoDB (Persistence)         │
+│  GlimmerDB │ Collections │ Indexes │
+└─────────────────────────────────────┘
+```
 
 ## 🌟 Features
 
 ### Domain Modeling
-- **Universe Management**: Create and manage multiple universes
+- **Universe Management**: Create and manage multiple universes with full CRUD operations
 - **Entity Types**: NotableFigures, Locations, Artifacts, CannonEvents, Factions, Facts
 - **Relationship System**: Rich semantic relationships between any entities (ParentOf, LocatedIn, AllyOf, etc.)
 - **Soft Delete**: Safe entity removal with recovery options
+- **Embedded Collections**: Entities stored within universes for efficient queries
 
 ### Authentication & Security
 - **JWT-based Authentication**: Secure access and refresh token system
-- **User Management**: Registration, login, password reset
-- **HMACSHA512 Encryption**: Industry-standard password hashing
-- **Account Management**: Email verification and account activation
+- **User Management**: Registration, login, password reset, email verification
+- **HMACSHA512 Encryption**: Industry-standard password hashing with salts
+- **Superuser System**: Admin account (Admin/Password1234) seeded on startup
+- **Session Management**: Secure HttpOnly cookies for token storage
 
-### Data Persistence
-- **MongoDB Integration**: NoSQL database for flexible schema evolution
-- **DbContext Pattern**: Clean data access abstraction
-- **GUID Primary Keys**: Distributed system-friendly identifiers
+### Data Persistence (MongoDB)
+- **MongoDB Repositories**: Full repository pattern implementation
+- **GUID Primary Keys**: Distributed system-friendly identifiers mapped to MongoDB _id
+- **Indexed Collections**: Optimized queries with automatic index creation
+- **Async/Await**: All database operations are asynchronous for better performance
+- **Embedded Documents**: Universes contain entities for efficient single-query retrieval
+
+### User Interface
+- **Dark Mode**: Always-on dark theme (#1a1a1a background, #e0e0e0 text, #9333ea accents)
+- **File Ribbon Menu**: Top navigation bar with cascading submenus
+- **Responsive Design**: Mobile-friendly Bootstrap 5.3 layout
+- **Authentication Pages**: Login, register, password reset with validation
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- .NET 8.0 SDK
-- MongoDB (local or cloud instance)
-- Visual Studio 2022 or VS Code
+- .NET 8.0 SDK ([Download](https://dotnet.microsoft.com/download))
+- MongoDB 7.0+ ([Docker](#mongodb-setup) or [Local Installation](#mongodb-setup))
+- Visual Studio 2022, VS Code, or JetBrains Rider (optional)
 
-### Building the Solution
+### MongoDB Setup
+
+#### Option 1: Docker (Recommended)
+```bash
+# Start MongoDB container
+docker run -d -p 27017:27017 --name mongodb mongo:latest
+
+# Verify it's running
+docker ps | grep mongodb
+```
+
+#### Option 2: Local Installation
+```bash
+# Ubuntu/Debian
+sudo apt-get install mongodb-org
+sudo systemctl start mongod
+
+# macOS
+brew install mongodb-community
+brew services start mongodb-community
+
+# Windows
+# Download installer from https://www.mongodb.com/try/download/community
+```
+
+### Building and Running
+
 ```bash
 # Clone the repository
 git clone https://github.com/MrFrey75/Glimmer.git
@@ -70,18 +112,29 @@ cd Glimmer.Creator
 dotnet run
 ```
 
-The application will be available at `https://localhost:7296` (or the port shown in the console).
+The application will be available at **http://localhost:5228**
+
+### First Login
+
+1. Navigate to http://localhost:5228
+2. Click "Login" in the menu
+3. Use default superuser credentials:
+   - **Username**: `Admin`
+   - **Password**: `Password1234`
+4. **Important**: Change the password immediately after first login!
 
 ### Configuration
-Update `appsettings.json` in Glimmer.Creator:
+
+Update `Glimmer.Creator/appsettings.json` if needed:
 
 ```json
 {
-  "ConnectionStrings": {
-    "MongoDB": "mongodb://localhost:27017/glimmer"
+  "MongoDB": {
+    "ConnectionString": "mongodb://localhost:27017",
+    "DatabaseName": "GlimmerDB"
   },
   "Jwt": {
-    "Secret": "YourSecretKey-MinLength32Characters-ChangeInProduction!",
+    "Secret": "GlimmerCreator-SecretKey-ChangeInProduction-MinimumLength32Chars!",
     "Issuer": "Glimmer.Creator",
     "Audience": "Glimmer.Users",
     "AccessTokenExpirationMinutes": 60,
@@ -95,8 +148,8 @@ Update `appsettings.json` in Glimmer.Creator:
 ```
 Glimmer/
 ├── Glimmer.Core/              # Domain layer → [README](Glimmer.Core/README.md)
-│   ├── Models/                # Domain entities
-│   │   ├── BaseEntity.cs      # Common entity properties
+│   ├── Models/                # Domain entities with MongoDB attributes
+│   │   ├── BaseEntity.cs      # Common entity properties ([BsonId])
 │   │   ├── Universe.cs        # Root aggregate
 │   │   ├── NotableFigure.cs   # Characters/people
 │   │   ├── Location.cs        # Places and geography
@@ -105,60 +158,120 @@ Glimmer/
 │   │   ├── Faction.cs         # Groups and organizations
 │   │   ├── Fact.cs           # Lore and trivia
 │   │   ├── EntityRelation.cs  # Relationship modeling
-│   │   └── User.cs           # User accounts
+│   │   ├── User.cs           # User accounts
+│   │   ├── RefreshToken.cs    # JWT refresh tokens
+│   │   └── PasswordResetToken.cs # Password reset tokens
 │   ├── Enums/                # Domain enumerations
 │   │   ├── RelationTypeEnum.cs # Relationship types
 │   │   └── *TypeEnum.cs      # Entity type classifications
 │   ├── Services/             # Business services
-│   │   ├── AuthenticationService.cs # User auth & JWT
-│   │   └── EntityService.cs  # Entity management
-│   ├── Data/                 # Data access
-│   │   └── GlimmerDbContext.cs # MongoDB context
-│   └── Configuration/        # Settings models
-│       └── JwtSettings.cs    # JWT configuration
+│   │   ├── AuthenticationService.cs # User auth & JWT (MongoDB)
+│   │   └── EntityService.cs  # Entity management (MongoDB)
+│   ├── Repositories/         # MongoDB data access layer
+│   │   ├── UserRepository.cs # User CRUD with unique indexes
+│   │   ├── TokenRepository.cs # Token management
+│   │   ├── UniverseRepository.cs # Universe CRUD
+│   │   └── RelationRepository.cs # Relationship CRUD
+│   ├── Configuration/        # Settings models
+│   │   ├── JwtSettings.cs    # JWT configuration
+│   │   └── MongoDbSettings.cs # MongoDB configuration
+│   └── Extensions/           # DI extensions
+│       └── ServiceCollectionExtensions.cs # Service registration
 ├── Glimmer.Creator/          # Web application layer → [README](Glimmer.Creator/README.md)
 │   ├── Controllers/          # MVC controllers
 │   │   ├── HomeController.cs # Main application
 │   │   └── AccountController.cs # Authentication
 │   ├── Views/               # Razor views
-│   ├── Models/              # View models
-│   └── wwwroot/             # Static assets
-└── .github/                 # GitHub configuration
-    └── copilot-instructions.md # AI coding guidelines
+│   │   ├── Home/           # Application views
+│   │   ├── Account/        # Auth views (Login, Register)
+│   │   └── Shared/         # Layouts (_Layout.cshtml)
+│   ├── wwwroot/             # Static assets
+│   │   ├── css/            # Dark mode styles (site.css)
+│   │   ├── js/             # JavaScript (site.js)
+│   │   └── lib/            # Bootstrap, jQuery
+│   ├── Program.cs          # App startup & superuser seeding
+│   └── appsettings.json    # Configuration
+├── .github/                 # GitHub configuration
+│   └── copilot-instructions.md # AI coding guidelines
+├── MONGODB_MIGRATION.md     # Migration documentation (OUTDATED)
+└── README.md               # This file
 ```
 
 ## 🎯 Core Concepts
 
 ### Entities and Relationships
 All domain entities inherit from `BaseEntity` providing:
-- `Guid Uuid` - Unique identifier
-- `string Name` - Display name
-- `string Description` - Detailed description
-- `DateTime CreatedAt/UpdatedAt` - Timestamps
-- `bool IsDeleted` - Soft delete flag
+```csharp
+[BsonId]
+[BsonElement("_id")]
+public Guid Uuid { get; set; } = Guid.NewGuid();
+public required string Name { get; set; }
+public required string Description { get; set; }
+public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+public bool IsDeleted { get; set; } = false;
+```
 
 ### Relationship System
 Entities connect via `EntityRelation` with semantic `RelationTypeEnum`:
-- **Spatial**: LocatedIn, OccurredAt
-- **Ownership**: CreatedBy, OwnedBy
-- **Social**: ParentOf, AllyOf, EnemyOf, SpouseOf
-- **Historical**: ParticipatedIn, DiscoveredBy
+- **Spatial**: LocatedIn, OccurredAt, Contains
+- **Ownership**: CreatedBy, OwnedBy, DiscoveredBy
+- **Social**: ParentOf, ChildOf, AllyOf, EnemyOf, SpouseOf, SiblingOf
+- **Organizational**: MemberOf, LeaderOf, RuledOver
+- **Historical**: ParticipatedIn, InfluencedBy, ContemporaryOf
 
 ### Authentication Flow
-1. User registration with email verification
+1. User registration with email verification (optional)
 2. JWT access token (60 min) + refresh token (7 days)
-3. Automatic token refresh on expiration
-4. Secure password reset via time-limited tokens
+3. Tokens stored in HttpOnly cookies for security
+4. Automatic token refresh on expiration
+5. Secure password reset via time-limited tokens
+
+### MongoDB Integration
+- **Collections**: users, universes, relations, refreshTokens, passwordResetTokens
+- **Indexes**: Automatic creation on startup for optimal query performance
+- **Embedded Documents**: Entities stored within universes (one-to-many)
+- **Separate Collections**: Users, relations, and tokens stored separately
+- **BSON Mapping**: Guid properties map to MongoDB _id field
 
 ## 🔧 Development
 
-### Database Setup
+### Running with Hot Reload
 ```bash
-# Start MongoDB locally
-mongod --dbpath /path/to/data
+cd Glimmer.Creator
+dotnet watch run
+```
 
-# Or use Docker
-docker run -d -p 27017:27017 --name mongodb mongo:latest
+### Database Management
+
+#### View Database Contents
+```bash
+# Connect to MongoDB shell
+docker exec -it mongodb mongosh
+
+# Switch to Glimmer database
+use GlimmerDB
+
+# View collections
+show collections
+
+# Query users
+db.users.find().pretty()
+
+# Query universes
+db.universes.find().pretty()
+
+# Count documents
+db.users.countDocuments()
+```
+
+#### Clear Database
+```bash
+# Drop entire database (WARNING: deletes all data!)
+docker exec mongodb mongosh GlimmerDB --eval "db.dropDatabase()"
+
+# Drop specific collection
+docker exec mongodb mongosh GlimmerDB --eval "db.users.drop()"
 ```
 
 ### Running Tests
@@ -166,32 +279,46 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
 dotnet test
 ```
 
-### Adding Migrations
-The project uses MongoDB, so no traditional migrations are needed. Schema changes are handled through code-first model updates.
+### Code Quality
+```bash
+# Format code
+dotnet format
 
-## 📚 API Documentation
+# Analyze code
+dotnet build /p:TreatWarningsAsErrors=true
+```
 
-### Authentication Endpoints
-- `POST /Account/Register` - User registration
-- `POST /Account/Login` - User login
-- `POST /Account/Refresh` - Token refresh
-- `POST /Account/Logout` - User logout
-- `POST /Account/ForgotPassword` - Password reset request
-- `POST /Account/ResetPassword` - Password reset confirmation
+## 📖 Documentation
 
-### Universe Management
-- `GET /Universe` - List user's universes
-- `POST /Universe` - Create new universe
-- `GET /Universe/{id}` - Get universe details
-- `PUT /Universe/{id}` - Update universe
-- `DELETE /Universe/{id}` - Delete universe
+- **[Glimmer.Core README](Glimmer.Core/README.md)** - Domain layer, services, and repositories
+- **[Glimmer.Creator README](Glimmer.Creator/README.md)** - Web application and UI
+- **[Authentication Service Guide](Glimmer.Core/Services/README_AUTHENTICATION.md)** - JWT system
+- **[Entity Service Guide](Glimmer.Core/Services/README_ENTITYSERVICE.md)** - Entity management
+- **[Superuser Documentation](Glimmer.Core/SUPERUSER.md)** - Admin account info
+- **[MongoDB Migration](MONGODB_MIGRATION.md)** - Migration history (OUTDATED - see [TODO.md](TODO.md))
+- **[Copilot Instructions](.github/copilot-instructions.md)** - AI coding guidelines
 
-## 📖 Project Documentation
+## 🛡️ Security Considerations
 
-- **[Glimmer.Core README](Glimmer.Core/README.md)** - Domain layer, services, and data access
-- **[Glimmer.Creator README](Glimmer.Creator/README.md)** - Web application, controllers, and UI
-- **[Authentication Service Guide](Glimmer.Core/Services/README_AUTHENTICATION.md)** - JWT authentication system
-- **[Copilot Instructions](.github/copilot-instructions.md)** - AI coding agent guidelines
+### Production Checklist
+- [ ] Change default superuser password
+- [ ] Update JWT secret in `appsettings.json` (use environment variables)
+- [ ] Enable MongoDB authentication
+- [ ] Configure HTTPS with valid SSL certificate
+- [ ] Set up CORS policies
+- [ ] Implement rate limiting
+- [ ] Enable application logging (Application Insights, Seq, etc.)
+- [ ] Configure secure cookie settings
+- [ ] Set up backup strategy for MongoDB
+- [ ] Implement security headers (CSP, HSTS, etc.)
+
+### Security Features
+- HMACSHA512 password hashing with unique salts
+- JWT tokens with configurable expiration
+- HttpOnly cookies prevent XSS attacks
+- Secure token generation using cryptographic RNG
+- Superuser account cannot be deleted
+- Soft delete for data recovery
 
 ## 🤝 Contributing
 
@@ -201,6 +328,10 @@ The project uses MongoDB, so no traditional migrations are needed. Schema change
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## 📋 TODO
+
+See [TODO.md](TODO.md) for the complete project roadmap and task list.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -208,7 +339,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Built with .NET 8 and ASP.NET Core MVC
-- MongoDB for flexible data storage
-- JWT for secure authentication
+- MongoDB for flexible, scalable data storage
+- JWT for secure stateless authentication
+- Bootstrap 5.3 for responsive UI
 - Entity-relationship modeling inspired by domain-driven design principles
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/MrFrey75/Glimmer/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/MrFrey75/Glimmer/discussions)
+
+---
+
+**⭐ Star this repository if you find it helpful!**
 
