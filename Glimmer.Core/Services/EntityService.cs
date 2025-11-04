@@ -1,6 +1,7 @@
 using Glimmer.Core.Models;
 using Glimmer.Core.Enums;
 using Glimmer.Core.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace Glimmer.Core.Services;
 
@@ -74,11 +75,16 @@ public class EntityService : IEntityService
 {
     private readonly IUniverseRepository _universeRepository;
     private readonly IRelationRepository _relationRepository;
+    private readonly ILogger<EntityService> _logger;
 
-    public EntityService(IUniverseRepository universeRepository, IRelationRepository relationRepository)
+    public EntityService(
+        IUniverseRepository universeRepository, 
+        IRelationRepository relationRepository,
+        ILogger<EntityService> logger)
     {
         _universeRepository = universeRepository;
         _relationRepository = relationRepository;
+        _logger = logger;
     }
 
     #region Universe Operations

@@ -374,14 +374,12 @@ RUN dotnet restore "Glimmer.Creator/Glimmer.Creator.csproj"
 
 ## 🔄 Future Enhancements
 
-- [ ] Real-time collaboration features
+- [ ] AI-powered content suggestions
 - [ ] Advanced universe visualization
 - [ ] Export/import functionality
 - [ ] Mobile app companion
 - [ ] Advanced search and filtering
 - [ ] Universe templates and sharing
-- [ ] AI-powered content suggestions
-- [ ] Multi-language support
 - [ ] Advanced role-based permissions
 - [ ] API documentation with Swagger
 

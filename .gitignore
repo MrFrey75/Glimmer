@@ -412,4 +412,4 @@ appsettings.Staging.json
 
 # Glimmer specific artifacts
 /Glimmer.Creator/wwwroot/lib/
-/Glimmer.Creator/bundleconfig.json.output
+/Glimmer.Creator/bundleconfig.json.outputLogs/

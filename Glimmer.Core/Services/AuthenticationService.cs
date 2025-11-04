@@ -5,6 +5,7 @@ using System.Text;
 using Glimmer.Core.Models;
 using Glimmer.Core.Repositories;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Glimmer.Core.Services;
@@ -34,6 +35,7 @@ public class AuthenticationService : IAuthenticationService
     private readonly IUserRepository _userRepository;
     private readonly ITokenRepository _tokenRepository;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthenticationService> _logger;
     private readonly string _jwtSecret;
     private readonly string _jwtIssuer;
     private readonly string _jwtAudience;
@@ -43,11 +45,13 @@ public class AuthenticationService : IAuthenticationService
     public AuthenticationService(
         IUserRepository userRepository,
         ITokenRepository tokenRepository,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<AuthenticationService> logger)
     {
         _userRepository = userRepository;
         _tokenRepository = tokenRepository;
         _configuration = configuration;
+        _logger = logger;
         _jwtSecret = configuration["Jwt:Secret"] ?? "GlimmerSecretKey-ChangeInProduction-MinLength32Characters!";
         _jwtIssuer = configuration["Jwt:Issuer"] ?? "Glimmer.Creator";
         _jwtAudience = configuration["Jwt:Audience"] ?? "Glimmer.Users";
@@ -57,13 +61,17 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task EnsureSuperUserExistsAsync()
     {
+        _logger.LogDebug("Checking if superuser exists");
+        
         // Check if superuser already exists
         var existingSuperUser = await _userRepository.GetByUsernameAsync("Admin");
         if (existingSuperUser != null && existingSuperUser.IsSuperUser)
         {
+            _logger.LogDebug("Superuser already exists");
             return;
         }
 
+        _logger.LogInformation("Creating superuser");
         var passwordHash = HashPassword("Password1234", out string salt);
 
         var superUser = new User
@@ -83,6 +91,7 @@ public class AuthenticationService : IAuthenticationService
         };
 
         await _userRepository.CreateAsync(superUser);
+        _logger.LogInformation("Superuser created successfully");
     }
 
     public async Task<AuthenticationResult> RegisterAsync(string username, string email, string password)
