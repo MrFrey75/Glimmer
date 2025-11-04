@@ -91,6 +91,8 @@ public class EntityService : IEntityService
 
     public async Task<Universe?> CreateUniverseAsync(string name, string description, User createdBy)
     {
+        _logger.LogInformation("Creating universe '{Name}' for user {Username} (ID: {UserId})", name, createdBy.Username, createdBy.Uuid);
+        
         var universe = new Universe
         {
             Uuid = Guid.NewGuid(),
@@ -101,7 +103,20 @@ public class EntityService : IEntityService
             UpdatedAt = DateTime.UtcNow
         };
 
-        return await _universeRepository.CreateAsync(universe);
+        var result = await _universeRepository.CreateAsync(universe);
+        
+        if (result != null)
+        {
+            _logger.LogInformation("Universe {UniverseId} created successfully by user {Username} (ID: {UserId})", 
+                universe.Uuid, createdBy.Username, createdBy.Uuid);
+        }
+        else
+        {
+            _logger.LogError("Failed to create universe '{Name}' for user {Username} (ID: {UserId})", 
+                name, createdBy.Username, createdBy.Uuid);
+        }
+        
+        return result;
     }
 
     public async Task<Universe?> GetUniverseByIdAsync(Guid universeId)
@@ -122,21 +137,47 @@ public class EntityService : IEntityService
     public async Task<bool> UpdateUniverseAsync(Universe universe)
     {
         var existing = await _universeRepository.GetByIdAsync(universe.Uuid);
-        if (existing == null) return false;
+        if (existing == null)
+        {
+            _logger.LogWarning("Universe update failed: Universe {UniverseId} not found", universe.Uuid);
+            return false;
+        }
+
+        _logger.LogInformation("Updating universe {UniverseId} '{Name}'", universe.Uuid, universe.Name);
 
         existing.Name = universe.Name;
         existing.Description = universe.Description;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        return await _universeRepository.UpdateAsync(existing);
+        var result = await _universeRepository.UpdateAsync(existing);
+        
+        if (result)
+        {
+            _logger.LogInformation("Universe {UniverseId} updated successfully", universe.Uuid);
+        }
+        
+        return result;
     }
 
     public async Task<bool> DeleteUniverseAsync(Guid universeId)
     {
         var universe = await _universeRepository.GetByIdAsync(universeId);
-        if (universe == null) return false;
+        if (universe == null)
+        {
+            _logger.LogWarning("Universe deletion failed: Universe {UniverseId} not found", universeId);
+            return false;
+        }
 
-        return await _universeRepository.DeleteAsync(universeId);
+        _logger.LogInformation("Deleting universe {UniverseId} '{Name}'", universeId, universe.Name);
+        
+        var result = await _universeRepository.DeleteAsync(universeId);
+        
+        if (result)
+        {
+            _logger.LogInformation("Universe {UniverseId} deleted successfully", universeId);
+        }
+        
+        return result;
     }
 
     #endregion
@@ -145,9 +186,14 @@ public class EntityService : IEntityService
 
     public async Task<Artifact?> CreateArtifactAsync(Guid universeId, string name, string description, ArtifactTypeEnum artifactType)
     {
+        _logger.LogDebug("Creating artifact '{Name}' in universe {UniverseId}", name, universeId);
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe == null) return null;
+        if (universe == null)
+        {
+            _logger.LogWarning("Artifact creation failed: Universe {UniverseId} not found", universeId);
+            return null;
+        }
 
         var artifact = new Artifact
         {
@@ -162,6 +208,10 @@ public class EntityService : IEntityService
         universe.Artifacts.Add(artifact);
         universe.UpdatedAt = DateTime.UtcNow;
         await _universeRepository.UpdateAsync(universe);
+        
+        _logger.LogInformation("Artifact {ArtifactId} '{Name}' created in universe {UniverseId}", 
+            artifact.Uuid, name, universeId);
+        
         return artifact;
     }
 

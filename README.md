@@ -59,11 +59,15 @@ Glimmer follows a clean 2-tier architecture:
 - **Async/Await**: All database operations are asynchronous for better performance
 - **Embedded Documents**: Universes contain entities for efficient single-query retrieval
 
-### User Interface
-- **Dark Mode**: Always-on dark theme (#1a1a1a background, #e0e0e0 text, #9333ea accents)
-- **File Ribbon Menu**: Top navigation bar with cascading submenus
-- **Responsive Design**: Mobile-friendly Bootstrap 5.3 layout
-- **Authentication Pages**: Login, register, password reset with validation
+### Logging & Monitoring
+- **Serilog Integration**: Structured logging with multiple sinks
+  - Console logging for development
+  - File logging with daily rotation (30-day retention)
+  - MongoDB logging for persistent audit trails
+- **User Context Tracking**: All operations include user identification
+- **Request Logging**: Automatic HTTP request/response logging
+- **Log Enrichment**: Machine name, thread ID, environment info
+- **Configurable Log Levels**: Per-component log level control
 
 ## 🚀 Quick Start
 
@@ -294,8 +298,11 @@ dotnet build /p:TreatWarningsAsErrors=true
 - **[Glimmer.Creator README](Glimmer.Creator/README.md)** - Web application and UI
 - **[Authentication Service Guide](Glimmer.Core/Services/README_AUTHENTICATION.md)** - JWT system
 - **[Entity Service Guide](Glimmer.Core/Services/README_ENTITYSERVICE.md)** - Entity management
+- **[Logging System Guide](Glimmer.Core/Services/README_LOGGING.md)** - Serilog implementation
 - **[Superuser Documentation](Glimmer.Core/SUPERUSER.md)** - Admin account info
 - **[MongoDB Migration](MONGODB_MIGRATION.md)** - Migration history (OUTDATED - see [TODO.md](TODO.md))
+- **[TODO List](TODO.md)** - Complete project roadmap and task list
+- **[TASKS List](TASKS.md)** - Immediate tasks and priorities
 - **[Copilot Instructions](.github/copilot-instructions.md)** - AI coding guidelines
 
 ## 🛡️ Security Considerations
