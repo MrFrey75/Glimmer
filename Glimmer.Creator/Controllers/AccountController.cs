@@ -15,6 +15,10 @@ public class AccountController : BaseController
     [HttpGet]
     public IActionResult Login()
     {
+        if (IsAuthenticated())
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
@@ -49,6 +53,14 @@ public class AccountController : BaseController
                     result.User.Username, result.User.Uuid);
 
                 TempData["SuccessMessage"] = $"Welcome back, {result.User.Username}!";
+                
+                var returnUrl = HttpContext.Session.GetString("ReturnUrl");
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    HttpContext.Session.Remove("ReturnUrl");
+                    return Redirect(returnUrl);
+                }
+                
                 return RedirectToAction("Index", "Home");
             }
 
@@ -69,6 +81,10 @@ public class AccountController : BaseController
     [HttpGet]
     public IActionResult Register()
     {
+        if (IsAuthenticated())
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 

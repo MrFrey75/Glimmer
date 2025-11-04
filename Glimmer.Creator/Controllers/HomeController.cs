@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Glimmer.Creator.Models;
+using Glimmer.Creator.Filters;
 
 namespace Glimmer.Creator.Controllers;
 
+[RequireAuthentication]
 public class HomeController : BaseController
 {
     public HomeController(ILogger<HomeController> logger) : base(logger)
