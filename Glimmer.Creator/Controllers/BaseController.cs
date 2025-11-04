@@ -74,7 +74,7 @@ public abstract class BaseController : Controller
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict,
-            Expires = expiresAt
+            Expires = DateTimeOffset.UtcNow.AddDays(30) // Persist for 30 days
         });
 
         HttpContext.Session.SetString("UserId", userId);

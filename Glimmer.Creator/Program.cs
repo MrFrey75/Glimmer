@@ -35,9 +35,10 @@ try
     // Add session support for authentication
     builder.Services.AddSession(options =>
     {
-        options.IdleTimeout = TimeSpan.FromMinutes(60);
+        options.IdleTimeout = TimeSpan.FromDays(30); // 30 day session timeout
         options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
+        options.Cookie.MaxAge = TimeSpan.FromDays(30); // Persist cookie for 30 days
     });
 
     var app = builder.Build();
