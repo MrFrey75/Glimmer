@@ -21,8 +21,16 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(string usernameOrEmail, string password)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(string usernameOrEmail, string password, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(usernameOrEmail) || string.IsNullOrWhiteSpace(password))
+        {
+            _logger.LogWarning("Login attempt with missing credentials");
+            ModelState.AddModelError(string.Empty, "Username/Email and password are required.");
+            return View();
+        }
+
         _logger.LogInformation("Login attempt for user: {UsernameOrEmail}", usernameOrEmail);
         
         try
@@ -31,7 +39,6 @@ public class AccountController : Controller
 
             if (result.Success)
             {
-                // Store refresh token in HttpOnly cookie
                 Response.Cookies.Append("refresh_token", result.RefreshToken!, new CookieOptions
                 {
                     HttpOnly = true,
@@ -40,7 +47,6 @@ public class AccountController : Controller
                     Expires = result.ExpiresAt
                 });
 
-                // Store user info in session
                 HttpContext.Session.SetString("UserId", result.User!.Uuid.ToString());
                 HttpContext.Session.SetString("Username", result.User.Username);
                 HttpContext.Session.SetString("AccessToken", result.AccessToken!);
@@ -48,19 +54,20 @@ public class AccountController : Controller
                 _logger.LogInformation("User {Username} (ID: {UserId}) logged in successfully", 
                     result.User.Username, result.User.Uuid);
 
+                TempData["SuccessMessage"] = $"Welcome back, {result.User.Username}!";
                 return RedirectToAction("Index", "Home");
             }
 
             _logger.LogWarning("Failed login attempt for user: {UsernameOrEmail}. Reason: {Message}", 
                 usernameOrEmail, result.Message);
             
-            ViewBag.Error = result.Message;
+            ModelState.AddModelError(string.Empty, result.Message ?? "Invalid credentials.");
             return View();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during login for user: {UsernameOrEmail}", usernameOrEmail);
-            ViewBag.Error = "An error occurred during login. Please try again.";
+            ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
             return View();
         }
     }
@@ -72,8 +79,17 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(string username, string email, string password, string confirmPassword)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(string username, string email, string password, string confirmPassword, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || 
+            string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(confirmPassword))
+        {
+            _logger.LogWarning("Registration attempt with missing required fields");
+            ModelState.AddModelError(string.Empty, "All fields are required.");
+            return View();
+        }
+
         _logger.LogInformation("Registration attempt for username: {Username}, email: {Email}", username, email);
         
         try
@@ -81,7 +97,14 @@ public class AccountController : Controller
             if (password != confirmPassword)
             {
                 _logger.LogWarning("Registration failed for {Username}: Passwords do not match", username);
-                ViewBag.Error = "Passwords do not match.";
+                ModelState.AddModelError(string.Empty, "Passwords do not match.");
+                return View();
+            }
+
+            if (password.Length < 8)
+            {
+                _logger.LogWarning("Registration failed for {Username}: Password too short", username);
+                ModelState.AddModelError(string.Empty, "Password must be at least 8 characters long.");
                 return View();
             }
 
@@ -89,7 +112,6 @@ public class AccountController : Controller
 
             if (result.Success)
             {
-                // Store refresh token in HttpOnly cookie
                 Response.Cookies.Append("refresh_token", result.RefreshToken!, new CookieOptions
                 {
                     HttpOnly = true,
@@ -98,7 +120,6 @@ public class AccountController : Controller
                     Expires = result.ExpiresAt
                 });
 
-                // Store user info in session
                 HttpContext.Session.SetString("UserId", result.User!.Uuid.ToString());
                 HttpContext.Session.SetString("Username", result.User.Username);
                 HttpContext.Session.SetString("AccessToken", result.AccessToken!);
@@ -106,39 +127,55 @@ public class AccountController : Controller
                 _logger.LogInformation("User {Username} (ID: {UserId}) registered successfully", 
                     result.User.Username, result.User.Uuid);
 
+                TempData["SuccessMessage"] = $"Welcome to Glimmer, {result.User.Username}!";
                 return RedirectToAction("Index", "Home");
             }
 
             _logger.LogWarning("Registration failed for {Username}: {Message}", username, result.Message);
-            ViewBag.Error = result.Message;
+            ModelState.AddModelError(string.Empty, result.Message ?? "Registration failed.");
             return View();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during registration for username: {Username}, email: {Email}", username, email);
-            ViewBag.Error = "An error occurred during registration. Please try again.";
+            ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
             return View();
         }
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Logout()
     {
         var username = HttpContext.Session.GetString("Username");
         var userId = HttpContext.Session.GetString("UserId");
         
-        var refreshToken = Request.Cookies["refresh_token"];
-        if (!string.IsNullOrEmpty(refreshToken))
+        try
         {
-            _ = _authService.RevokeTokenAsync(refreshToken, "User logout");
+            var refreshToken = Request.Cookies["refresh_token"];
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                _ = _authService.RevokeTokenAsync(refreshToken, "User logout");
+            }
+
+            Response.Cookies.Delete("refresh_token");
+            HttpContext.Session.Clear();
+
+            _logger.LogInformation("User {Username} (ID: {UserId}) logged out", username ?? "Unknown", userId ?? "Unknown");
+
+            TempData["SuccessMessage"] = "You have been logged out successfully.";
+            return RedirectToAction("Login");
         }
-
-        Response.Cookies.Delete("refresh_token");
-        HttpContext.Session.Clear();
-
-        _logger.LogInformation("User {Username} (ID: {UserId}) logged out", username ?? "Unknown", userId ?? "Unknown");
-
-        return RedirectToAction("Login");
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during logout for user {Username} (ID: {UserId})", username ?? "Unknown", userId ?? "Unknown");
+            
+            // Clear session anyway
+            Response.Cookies.Delete("refresh_token");
+            HttpContext.Session.Clear();
+            
+            return RedirectToAction("Login");
+        }
     }
 
     [HttpGet]
@@ -148,34 +185,33 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ForgotPassword(string email)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(string email, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            _logger.LogWarning("Password reset request with missing email");
+            ModelState.AddModelError(string.Empty, "Email address is required.");
+            return View();
+        }
+
         _logger.LogInformation("Password reset requested for email: {Email}", email);
         
         try
         {
             var token = await _authService.GeneratePasswordResetTokenAsync(email);
 
-            if (token != null)
-            {
-                // In production, send this token via email
-                // For now, just show success message
-                ViewBag.Success = "Password reset instructions have been sent to your email.";
-                _logger.LogInformation("Password reset token generated for email: {Email}", email);
-            }
-            else
-            {
-                // Don't reveal if email exists for security
-                ViewBag.Success = "If that email exists, password reset instructions have been sent.";
-                _logger.LogWarning("Password reset requested for non-existent email: {Email}", email);
-            }
+            // Always show success message for security (don't reveal if email exists)
+            TempData["SuccessMessage"] = "If that email address exists, password reset instructions have been sent.";
+            _logger.LogInformation("Password reset token generation attempted for email: {Email}, Success: {Success}", 
+                email, token != null);
 
-            return View();
+            return RedirectToAction("Login");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during password reset request for email: {Email}", email);
-            ViewBag.Error = "An error occurred. Please try again.";
+            ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
             return View();
         }
     }
@@ -188,8 +224,18 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ResetPassword(string token, string password, string confirmPassword)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(string token, string password, string confirmPassword, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(password) || 
+            string.IsNullOrWhiteSpace(confirmPassword))
+        {
+            _logger.LogWarning("Password reset attempt with missing required fields");
+            ModelState.AddModelError(string.Empty, "All fields are required.");
+            ViewBag.Token = token;
+            return View();
+        }
+
         _logger.LogInformation("Password reset attempt with token");
         
         try
@@ -197,7 +243,15 @@ public class AccountController : Controller
             if (password != confirmPassword)
             {
                 _logger.LogWarning("Password reset failed: Passwords do not match");
-                ViewBag.Error = "Passwords do not match.";
+                ModelState.AddModelError(string.Empty, "Passwords do not match.");
+                ViewBag.Token = token;
+                return View();
+            }
+
+            if (password.Length < 8)
+            {
+                _logger.LogWarning("Password reset failed: Password too short");
+                ModelState.AddModelError(string.Empty, "Password must be at least 8 characters long.");
                 ViewBag.Token = token;
                 return View();
             }
@@ -206,20 +260,20 @@ public class AccountController : Controller
 
             if (success)
             {
-                ViewBag.Success = "Password reset successfully. You can now log in.";
+                TempData["SuccessMessage"] = "Password reset successfully. You can now log in with your new password.";
                 _logger.LogInformation("Password reset successfully using token");
-                return View("Login");
+                return RedirectToAction("Login");
             }
 
             _logger.LogWarning("Password reset failed: Invalid or expired token");
-            ViewBag.Error = "Invalid or expired reset token.";
+            ModelState.AddModelError(string.Empty, "Invalid or expired reset token. Please request a new one.");
             ViewBag.Token = token;
             return View();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during password reset");
-            ViewBag.Error = "An error occurred. Please try again.";
+            ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
             ViewBag.Token = token;
             return View();
         }
@@ -238,7 +292,8 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -246,13 +301,36 @@ public class AccountController : Controller
             if (string.IsNullOrEmpty(userIdStr))
             {
                 _logger.LogWarning("Change password attempt without authentication");
+                TempData["ErrorMessage"] = "You must be logged in to change your password.";
                 return RedirectToAction("Login");
+            }
+
+            if (string.IsNullOrWhiteSpace(currentPassword) || string.IsNullOrWhiteSpace(newPassword) || 
+                string.IsNullOrWhiteSpace(confirmPassword))
+            {
+                _logger.LogWarning("Change password attempt with missing required fields for user {UserId}", userIdStr);
+                ModelState.AddModelError(string.Empty, "All fields are required.");
+                return View();
+            }
+
+            if (currentPassword == newPassword)
+            {
+                _logger.LogWarning("Change password failed for user {UserId}: New password same as current", userIdStr);
+                ModelState.AddModelError(string.Empty, "New password must be different from current password.");
+                return View();
             }
 
             if (newPassword != confirmPassword)
             {
                 _logger.LogWarning("Change password failed for user {UserId}: Passwords do not match", userIdStr);
-                ViewBag.Error = "New passwords do not match.";
+                ModelState.AddModelError(string.Empty, "New passwords do not match.");
+                return View();
+            }
+
+            if (newPassword.Length < 8)
+            {
+                _logger.LogWarning("Change password failed for user {UserId}: Password too short", userIdStr);
+                ModelState.AddModelError(string.Empty, "Password must be at least 8 characters long.");
                 return View();
             }
 
@@ -261,19 +339,19 @@ public class AccountController : Controller
 
             if (success)
             {
-                ViewBag.Success = "Password changed successfully.";
+                TempData["SuccessMessage"] = "Password changed successfully.";
                 _logger.LogInformation("Password changed successfully for user {UserId}", userId);
-                return View();
+                return RedirectToAction("Index", "Home");
             }
 
             _logger.LogWarning("Change password failed for user {UserId}: Incorrect current password", userId);
-            ViewBag.Error = "Current password is incorrect.";
+            ModelState.AddModelError(string.Empty, "Current password is incorrect.");
             return View();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during password change");
-            ViewBag.Error = "An error occurred. Please try again.";
+            ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
             return View();
         }
     }

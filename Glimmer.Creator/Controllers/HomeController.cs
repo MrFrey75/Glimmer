@@ -15,17 +15,51 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        try
+        {
+            var username = HttpContext.Session.GetString("Username");
+            ViewBag.Username = username;
+            return View();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error loading home page");
+            return RedirectToAction("Error");
+        }
     }
 
     public IActionResult Privacy()
     {
-        return View();
+        try
+        {
+            return View();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error loading privacy page");
+            return RedirectToAction("Error");
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var statusCode = HttpContext.Response.StatusCode;
+        var errorMessage = HttpContext.Items["ErrorMessage"]?.ToString();
+        var errorDetails = HttpContext.Items["ErrorDetails"]?.ToString();
+
+        var model = new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+            StatusCode = statusCode,
+            Message = errorMessage ?? "An unexpected error occurred.",
+            Details = errorDetails,
+            Path = HttpContext.Request.Path
+        };
+
+        _logger.LogError("Error page displayed: Status {StatusCode}, Path: {Path}, Message: {Message}",
+            statusCode, model.Path, model.Message);
+
+        return View(model);
     }
 }

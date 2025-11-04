@@ -446,8 +446,8 @@
 
 ### Minor Issues 🟡
 - [x] ~~Port configuration inconsistency (5228 vs 7296 in docs)~~ - Fixed, using 5228
-- [ ] Error handling needs improvement in controllers
-- [ ] Validation messages need better UX
+- [x] ~~Error handling needs improvement in controllers~~ - Completed with middleware and validation
+- [x] ~~Validation messages need better UX~~ - Completed with ModelState and TempData notifications
 
 ### Technical Debt 🔵
 - [ ] Remove outdated migration documentation
