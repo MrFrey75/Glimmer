@@ -17,14 +17,15 @@ public static class ServiceCollectionExtensions
         // Configure MongoDB serialization
         if (!BsonClassMap.IsClassMapRegistered(typeof(Glimmer.Core.Models.BaseEntity)))
         {
-            // Register custom GUID serializer with standard representation
-            var guidSerializer = new MongoDB.Bson.Serialization.Serializers.GuidSerializer(GuidRepresentation.Standard);
+            // Register custom GUID serializer with legacy representation for compatibility
+            var guidSerializer = new MongoDB.Bson.Serialization.Serializers.GuidSerializer(GuidRepresentation.CSharpLegacy);
             BsonSerializer.RegisterSerializer(guidSerializer);
             
             // Register conventions for MongoDB
+            // Note: Not using CamelCaseElementNameConvention because we explicitly define
+            // element names with [BsonElement] attributes on our models
             var conventionPack = new ConventionPack
             {
-                new CamelCaseElementNameConvention(),
                 new IgnoreExtraElementsConvention(true),
                 new IgnoreIfNullConvention(true)
             };

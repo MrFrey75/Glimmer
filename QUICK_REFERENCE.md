@@ -28,25 +28,23 @@ Password: Password1234
 
 | File | Purpose |
 |------|---------|
-| `TASKS.md` | **Immediate priorities and next steps** ⭐ |
-| `TODO.md` | Complete project roadmap |
-| `IMPLEMENTATION_SUMMARY.md` | Recent work summary |
+| `TODO.md` | Complete project roadmap ⭐ |
 | `README.md` | Project overview and setup |
-| `Glimmer.Core/Services/README_LOGGING.md` | Logging documentation |
+| `QUICK_REFERENCE.md` | This file - Quick commands |
 
 ---
 
-## 🎯 Current Priorities (See TASKS.md)
+## 🎯 Current Priorities
 
-### 🔴 HIGH PRIORITY
-1. **Error Handling** - Global exception middleware needed
-2. **Validation UX** - Toast notifications and client-side validation
-3. **Universe Management UI** - CRUD interface for universes
+### 🔴 HIGH PRIORITY (See TODO.md)
+1. **Universe Management UI** - CRUD interface for universes
+2. **Entity Management UI** - CRUD for NotableFigures, Locations, etc.
+3. **Relationship Management UI** - Interface for entity relationships
 
 ### 🟡 MEDIUM PRIORITY
-1. **Complete EntityService Logging** - Add to remaining entity types
-2. **MongoDB Health Checks** - Connection validation on startup
-3. **User Context Middleware** - Automatic user context in logs
+1. **Search Functionality** - Global search across entities
+2. **Visualization** - Relationship graphs and timelines
+3. **User Experience** - Improved navigation and feedback
 
 ---
 
@@ -54,11 +52,12 @@ Password: Password1234
 
 - **Core Infrastructure**: 100% ✅
 - **Authentication**: 100% ✅
-- **Logging System**: 100% ✅ (just completed)
-- **Web UI**: 20% 🚧
+- **Logging System**: 100% ✅
+- **Error Handling**: 100% ✅
+- **Web UI**: 25% 🚧
 - **Testing**: 0% ⏳
 
-**Overall**: ~40% complete
+**Overall**: ~45% complete
 
 ---
 
@@ -170,21 +169,20 @@ dotnet build
 
 ## 📞 Need Help?
 
-1. Check **TASKS.md** for current priorities
-2. Check **TODO.md** for full roadmap
-3. Check **IMPLEMENTATION_SUMMARY.md** for recent changes
-4. Check service-specific READMEs in `Glimmer.Core/Services/`
-5. Review error logs in `Glimmer.Creator/Logs/`
-6. Query MongoDB logs collection
+1. Check **README.md** for project overview
+2. Check **TODO.md** for complete roadmap
+3. Check `.github/copilot-instructions.md` for coding patterns
+4. Review error logs in `Glimmer.Creator/Logs/`
+5. Query MongoDB logs collection
 
 ---
 
 ## 🎓 Next Steps for New Developers
 
 1. Read `README.md` for project overview
-2. Review `TASKS.md` for immediate priorities
+2. Review `TODO.md` for development roadmap
 3. Check `.github/copilot-instructions.md` for patterns
-4. Start with highest priority task in TASKS.md
+4. Start with highest priority task in TODO.md
 5. Follow existing logging patterns in services
 
 ---

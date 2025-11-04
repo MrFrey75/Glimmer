@@ -78,6 +78,7 @@ db.users.find().pretty()
 - Required properties: Use `required` keyword for essential fields
 - Repositories: `I{Entity}Repository` interface, `{Entity}Repository` implementation
 - Services: `I{Service}` interface, `{Service}` implementation
+- Controllers: Inherit from `BaseController` for shared functionality
 
 ### MongoDB Integration
 - **All repositories are ALREADY implemented** ✅
@@ -107,6 +108,9 @@ await _universeRepository.UpdateAsync(universe);
 - File ribbon menu at top with cascading submenus
 - Bootstrap 5.3 for responsive design
 - HttpOnly cookies for JWT tokens
+- BaseController provides shared methods for authentication, validation, error handling
+- Serilog structured logging (Console, File, MongoDB sinks)
+- Global exception middleware with friendly error pages
 
 ## Current Implementation Status
 
@@ -124,13 +128,22 @@ await _universeRepository.UpdateAsync(universe);
   - Refresh tokens (7 days)
   - Password hashing (HMACSHA512)
   - Superuser seeding (Admin/Password1234)
+- Logging system
+  - Serilog structured logging (Console, File, MongoDB)
+  - User context enrichment
+  - Request logging middleware
+- Error handling
+  - Global exception middleware
+  - BaseController with HandleException helper
+  - Friendly error pages
 - Basic MVC UI
   - Dark mode layout
-  - AccountController (Login, Register)
-  - HomeController
-  - Navigation ribbon
+  - AccountController (Login, Register, Password Reset)
+  - HomeController (Index, Privacy, Error)
+  - File ribbon navigation
+  - BaseController with shared helpers
 
-### 🚧 In Progress (20%)
+### 🚧 In Progress (25%)
 - Universe management UI
 - Entity CRUD UI
 - Relationship management UI
@@ -148,6 +161,12 @@ await _universeRepository.UpdateAsync(universe);
 - `Glimmer.Core/Enums/RelationTypeEnum.cs` - Semantic relationship types
 - `Glimmer.Core/Repositories/*.cs` - MongoDB repository implementations
 - `Glimmer.Core/Services/AuthenticationService.cs` - Authentication logic (MongoDB)
+- `Glimmer.Core/Services/EntityService.cs` - Entity management (MongoDB)
+- `Glimmer.Core/Extensions/ServiceCollectionExtensions.cs` - DI registration
+- `Glimmer.Creator/Program.cs` - MVC application startup & superuser seeding
+- `Glimmer.Creator/Controllers/BaseController.cs` - Shared controller functionality
+- `Glimmer.Creator/Controllers/AccountController.cs` - Authentication flows
+- `Glimmer.Creator/Views/Shared/_Layout.cshtml` - Dark mode layout with file ribbon
 - `Glimmer.Core/Services/EntityService.cs` - Entity management (MongoDB)
 - `Glimmer.Core/Extensions/ServiceCollectionExtensions.cs` - DI registration
 - `Glimmer.Creator/Program.cs` - MVC application startup

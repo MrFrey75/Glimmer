@@ -23,7 +23,7 @@
                         <li>
                             <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0;">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; width: 100%; text-align: left; padding: 8px 16px;">
+                                <button type="submit" class="dropdown-item">
                                     Logout (@Context.Session.GetString("Username"))
                                 </button>
                             </form>

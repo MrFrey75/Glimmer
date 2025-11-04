@@ -197,7 +197,6 @@ Glimmer/
 │   └── appsettings.json    # Configuration
 ├── .github/                 # GitHub configuration
 │   └── copilot-instructions.md # AI coding guidelines
-├── MONGODB_MIGRATION.md     # Migration documentation (OUTDATED)
 └── README.md               # This file
 ```
 
@@ -296,13 +295,9 @@ dotnet build /p:TreatWarningsAsErrors=true
 
 - **[Glimmer.Core README](Glimmer.Core/README.md)** - Domain layer, services, and repositories
 - **[Glimmer.Creator README](Glimmer.Creator/README.md)** - Web application and UI
-- **[Authentication Service Guide](Glimmer.Core/Services/README_AUTHENTICATION.md)** - JWT system
-- **[Entity Service Guide](Glimmer.Core/Services/README_ENTITYSERVICE.md)** - Entity management
-- **[Logging System Guide](Glimmer.Core/Services/README_LOGGING.md)** - Serilog implementation
-- **[Superuser Documentation](Glimmer.Core/SUPERUSER.md)** - Admin account info
-- **[MongoDB Migration](MONGODB_MIGRATION.md)** - Migration history (OUTDATED - see [TODO.md](TODO.md))
+
 - **[TODO List](TODO.md)** - Complete project roadmap and task list
-- **[TASKS List](TASKS.md)** - Immediate tasks and priorities
+- **[Quick Reference](QUICK_REFERENCE.md)** - Quick start and common commands
 - **[Copilot Instructions](.github/copilot-instructions.md)** - AI coding guidelines
 
 ## 🛡️ Security Considerations
