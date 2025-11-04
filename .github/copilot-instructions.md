@@ -156,11 +156,51 @@ await _universeRepository.UpdateAsync(universe);
 ## Common Development Tasks
 
 ### Adding a New Controller
-1. Create controller in `Glimmer.Creator/Controllers/`
-2. Inject required services (`IEntityService`, `IAuthenticationService`)
-3. Create corresponding views in `Glimmer.Creator/Views/{ControllerName}/`
-4. Add navigation links in `_Layout.cshtml`
-5. Create view models if needed
+1. Create controller in `Glimmer.Creator/Controllers/` **inheriting from `BaseController`**
+2. Inject required services (`IEntityService`, `IAuthenticationService`, `ILogger`)
+3. Pass logger to base constructor: `public MyController(ILogger<MyController> logger) : base(logger)`
+4. Use base controller helper methods:
+   - `GetCurrentUserId()`, `GetCurrentUsername()`, `GetCurrentUserIdAsGuid()`
+   - `IsAuthenticated()`, `RedirectToLogin()`
+   - `ValidatePasswordRequirements(password, confirmPassword, out errorMessage)`
+   - `SetAuthenticationCookieAndSession()`, `ClearAuthenticationCookieAndSession()`
+   - `HandleException(ex, operation, redirectAction, redirectController)`
+5. Create corresponding views in `Glimmer.Creator/Views/{ControllerName}/`
+6. Add navigation links in `_Layout.cshtml`
+7. Create view models if needed
+
+**Example:**
+```csharp
+public class UniverseController : BaseController
+{
+    private readonly IEntityService _entityService;
+    
+    public UniverseController(IEntityService entityService, ILogger<UniverseController> logger) 
+        : base(logger)
+    {
+        _entityService = entityService;
+    }
+    
+    public async Task<IActionResult> Index()
+    {
+        if (!IsAuthenticated())
+        {
+            return RedirectToLogin();
+        }
+        
+        try
+        {
+            var userId = GetCurrentUserIdAsGuid()!.Value;
+            var universes = await _entityService.GetAllUniversesAsync(userId);
+            return View(universes);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex, "loading universes", "Index", "Home");
+        }
+    }
+}
+```
 
 ### Adding a New Entity Type
 1. Create model in `Glimmer.Core/Models/` inheriting `BaseEntity`
@@ -173,20 +213,29 @@ await _universeRepository.UpdateAsync(universe);
 All repositories are already implemented. Use them via dependency injection:
 
 ```csharp
-// In controller
-public class UniverseController : Controller
+// Controllers should inherit from BaseController
+public class UniverseController : BaseController
 {
     private readonly IEntityService _entityService;
     
-    public UniverseController(IEntityService entityService)
+    public UniverseController(IEntityService entityService, ILogger<UniverseController> logger)
+        : base(logger)
     {
         _entityService = entityService;
     }
     
     public async Task<IActionResult> Index()
     {
-        var universes = await _entityService.GetAllUniversesAsync();
-        return View(universes);
+        try
+        {
+            var userId = GetCurrentUserIdAsGuid()!.Value; // From BaseController
+            var universes = await _entityService.GetAllUniversesAsync(userId);
+            return View(universes);
+        }
+        catch (Exception ex)
+        {
+            return HandleException(ex, "loading universes", "Index", "Home");
+        }
     }
 }
 ```

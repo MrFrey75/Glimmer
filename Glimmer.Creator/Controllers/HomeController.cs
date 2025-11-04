@@ -4,27 +4,22 @@ using Glimmer.Creator.Models;
 
 namespace Glimmer.Creator.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger) : base(logger)
     {
-        _logger = logger;
     }
 
     public IActionResult Index()
     {
         try
         {
-            var username = HttpContext.Session.GetString("Username");
-            ViewBag.Username = username;
+            ViewBag.Username = GetCurrentUsername();
             return View();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error loading home page");
-            return RedirectToAction("Error");
+            return HandleException(ex, "loading home page", "Error");
         }
     }
 
@@ -36,8 +31,7 @@ public class HomeController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error loading privacy page");
-            return RedirectToAction("Error");
+            return HandleException(ex, "loading privacy page", "Error");
         }
     }
 
@@ -57,7 +51,7 @@ public class HomeController : Controller
             Path = HttpContext.Request.Path
         };
 
-        _logger.LogError("Error page displayed: Status {StatusCode}, Path: {Path}, Message: {Message}",
+        Logger.LogError("Error page displayed: Status {StatusCode}, Path: {Path}, Message: {Message}",
             statusCode, model.Path, model.Message);
 
         return View(model);

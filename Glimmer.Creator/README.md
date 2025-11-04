@@ -12,8 +12,9 @@ Glimmer.Creator is built with ASP.NET Core MVC following the Model-View-Controll
 ```
 Glimmer.Creator/
 ├── Controllers/          # MVC Controllers
-│   ├── HomeController.cs     # Main application pages
-│   └── AccountController.cs  # Authentication & user management
+│   ├── BaseController.cs      # Base controller with shared functionality
+│   ├── HomeController.cs      # Main application pages
+│   └── AccountController.cs   # Authentication & user management
 ├── Views/               # Razor Views
 │   ├── Home/                # Application views
 │   ├── Account/             # Authentication views  
@@ -106,6 +107,16 @@ ASPNETCORE_DETAILEDERRORS=true dotnet run
 
 ## 🎯 Controllers
 
+### BaseController
+Abstract base controller providing shared functionality:
+- **Session Management**: `GetCurrentUserId()`, `GetCurrentUsername()`, `IsAuthenticated()`
+- **Authentication Helpers**: `SetAuthenticationCookieAndSession()`, `ClearAuthenticationCookieAndSession()`
+- **Password Validation**: `ValidatePasswordRequirements()`
+- **Error Handling**: `HandleException()` with consistent logging
+- **Redirect Helpers**: `RedirectToLogin()` with user-friendly messages
+
+All controllers inherit from BaseController to avoid code duplication.
+
 ### HomeController
 Main application controller handling:
 - **Dashboard**: `/` - User's universe overview
@@ -117,32 +128,37 @@ Authentication controller managing:
 - **Registration**: `GET/POST /Account/Register`
 - **Login**: `GET/POST /Account/Login`
 - **Logout**: `POST /Account/Logout`
-- **Password Reset**: `GET/POST /Account/ForgotPassword`
-- **Profile Management**: `GET/POST /Account/Profile`
+- **Password Reset**: `GET/POST /Account/ForgotPassword`, `GET/POST /Account/ResetPassword`
+- **Password Change**: `GET/POST /Account/ChangePassword`
+
+Inherits from `BaseController` to leverage shared authentication and validation methods.
 
 **Key Features:**
 ```csharp
-[HttpPost]
-public async Task<IActionResult> Login(string usernameOrEmail, string password)
+public class AccountController : BaseController
 {
-    var result = await _authService.LoginAsync(usernameOrEmail, password);
-    
-    if (result.Success)
+    [HttpPost]
+    public async Task<IActionResult> Login(string usernameOrEmail, string password)
     {
-        // Set authentication cookies
-        Response.Cookies.Append("access_token", result.AccessToken, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = result.ExpiresAt
-        });
+        var result = await _authService.LoginAsync(usernameOrEmail, password);
         
-        return RedirectToAction("Index", "Home");
+        if (result.Success)
+        {
+            // Use base controller helper method
+            SetAuthenticationCookieAndSession(
+                result.User!.Uuid.ToString(),
+                result.User.Username,
+                result.AccessToken!,
+                result.RefreshToken!,
+                result.ExpiresAt
+            );
+            
+            return RedirectToAction("Index", "Home");
+        }
+        
+        ModelState.AddModelError("", result.Message);
+        return View();
     }
-    
-    ModelState.AddModelError("", result.Message);
-    return View();
 }
 ```
 
