@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Glimmer.Core.Models;
+using Glimmer.Core.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -23,12 +24,15 @@ public interface IAuthenticationService
     Task<User?> GetUserByEmailAsync(string email);
     Task<bool> DeleteUserAsync(Guid userId);
     Task<bool> DeactivateUserAsync(Guid userId);
+    Task EnsureSuperUserExistsAsync();
     string HashPassword(string password, out string salt);
     bool VerifyPassword(string password, string hash, string salt);
 }
 
 public class AuthenticationService : IAuthenticationService
 {
+    private readonly IUserRepository _userRepository;
+    private readonly ITokenRepository _tokenRepository;
     private readonly IConfiguration _configuration;
     private readonly string _jwtSecret;
     private readonly string _jwtIssuer;
@@ -36,28 +40,26 @@ public class AuthenticationService : IAuthenticationService
     private readonly int _accessTokenExpirationMinutes;
     private readonly int _refreshTokenExpirationDays;
 
-    // In-memory stores (replace with MongoDB repositories in production)
-    private readonly List<User> _users = new();
-    private readonly List<RefreshToken> _refreshTokens = new();
-    private readonly List<PasswordResetToken> _passwordResetTokens = new();
-
-    public AuthenticationService(IConfiguration configuration)
+    public AuthenticationService(
+        IUserRepository userRepository,
+        ITokenRepository tokenRepository,
+        IConfiguration configuration)
     {
+        _userRepository = userRepository;
+        _tokenRepository = tokenRepository;
         _configuration = configuration;
         _jwtSecret = configuration["Jwt:Secret"] ?? "GlimmerSecretKey-ChangeInProduction-MinLength32Characters!";
         _jwtIssuer = configuration["Jwt:Issuer"] ?? "Glimmer.Creator";
         _jwtAudience = configuration["Jwt:Audience"] ?? "Glimmer.Users";
-        _accessTokenExpirationMinutes = int.Parse(configuration["EntityFrameworkCoreJwt:AccessTokenExpirationMinutes"] ?? "60");
+        _accessTokenExpirationMinutes = int.Parse(configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
         _refreshTokenExpirationDays = int.Parse(configuration["Jwt:RefreshTokenExpirationDays"] ?? "7");
-        
-        // Seed superuser on initialization
-        SeedSuperUser();
     }
 
-    private void SeedSuperUser()
+    public async Task EnsureSuperUserExistsAsync()
     {
         // Check if superuser already exists
-        if (_users.Any(u => u.Username == "Admin" && u.IsSuperUser))
+        var existingSuperUser = await _userRepository.GetByUsernameAsync("Admin");
+        if (existingSuperUser != null && existingSuperUser.IsSuperUser)
         {
             return;
         }
@@ -66,7 +68,7 @@ public class AuthenticationService : IAuthenticationService
 
         var superUser = new User
         {
-            Uuid = Guid.Parse("00000000-0000-0000-0000-000000000001"), // Fixed UUID for superuser
+            Uuid = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             Name = "Administrator",
             Description = "System Administrator - Cannot be deleted",
             Username = "Admin",
@@ -80,24 +82,22 @@ public class AuthenticationService : IAuthenticationService
             UpdatedAt = DateTime.UtcNow
         };
 
-        _users.Add(superUser);
+        await _userRepository.CreateAsync(superUser);
     }
 
     public async Task<AuthenticationResult> RegisterAsync(string username, string email, string password)
     {
-        await Task.CompletedTask;
-
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             return new AuthenticationResult { Success = false, Message = "Username, email, and password are required." };
         }
 
-        if (_users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
+        if (await _userRepository.GetByUsernameAsync(username) != null)
         {
             return new AuthenticationResult { Success = false, Message = "Username already exists." };
         }
 
-        if (_users.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+        if (await _userRepository.GetByEmailAsync(email) != null)
         {
             return new AuthenticationResult { Success = false, Message = "Email already exists." };
         }
@@ -119,10 +119,10 @@ public class AuthenticationService : IAuthenticationService
             UpdatedAt = DateTime.UtcNow
         };
 
-        _users.Add(user);
+        await _userRepository.CreateAsync(user);
 
         var accessToken = GenerateAccessToken(user);
-        var refreshToken = GenerateRefreshToken(user.Uuid);
+        var refreshToken = await GenerateRefreshTokenAsync(user.Uuid);
 
         return new AuthenticationResult
         {
@@ -137,11 +137,11 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<AuthenticationResult> LoginAsync(string usernameOrEmail, string password)
     {
-        await Task.CompletedTask;
-
-        var user = _users.FirstOrDefault(u =>
-            u.Username.Equals(usernameOrEmail, StringComparison.OrdinalIgnoreCase) ||
-            u.Email.Equals(usernameOrEmail, StringComparison.OrdinalIgnoreCase));
+        var user = await _userRepository.GetByUsernameAsync(usernameOrEmail);
+        if (user == null)
+        {
+            user = await _userRepository.GetByEmailAsync(usernameOrEmail);
+        }
 
         if (user == null)
         {
@@ -160,9 +160,11 @@ public class AuthenticationService : IAuthenticationService
 
         user.LastLoginAt = DateTime.UtcNow;
         user.UpdatedAt = DateTime.UtcNow;
+        await _userRepository.UpdateAsync(user);
+        await _userRepository.UpdateAsync(user);
 
         var accessToken = GenerateAccessToken(user);
-        var refreshToken = GenerateRefreshToken(user.Uuid);
+        var refreshToken = await GenerateRefreshTokenAsync(user.Uuid);
 
         return new AuthenticationResult
         {
@@ -177,16 +179,14 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<AuthenticationResult> RefreshTokenAsync(string refreshToken)
     {
-        await Task.CompletedTask;
-
-        var token = _refreshTokens.FirstOrDefault(t => t.Token == refreshToken);
+        var token = await _tokenRepository.GetRefreshTokenAsync(refreshToken);
 
         if (token == null || !token.IsActive)
         {
             return new AuthenticationResult { Success = false, Message = "Invalid or expired refresh token." };
         }
 
-        var user = _users.FirstOrDefault(u => u.Uuid == token.UserId);
+        var user = await _userRepository.GetByIdAsync(token.UserId);
 
         if (user == null || !user.IsActive)
         {
@@ -194,11 +194,13 @@ public class AuthenticationService : IAuthenticationService
         }
 
         var newAccessToken = GenerateAccessToken(user);
-        var newRefreshToken = GenerateRefreshToken(user.Uuid);
+        var newRefreshToken = await GenerateRefreshTokenAsync(user.Uuid);
 
         token.RevokedAt = DateTime.UtcNow;
+        await _tokenRepository.UpdateRefreshTokenAsync(token);
         token.RevokedReason = "Replaced by new token";
         token.ReplacedByToken = newRefreshToken.Token;
+        await _tokenRepository.UpdateRefreshTokenAsync(token);
 
         return new AuthenticationResult
         {
@@ -213,9 +215,7 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<bool> RevokeTokenAsync(string refreshToken, string? reason = null)
     {
-        await Task.CompletedTask;
-
-        var token = _refreshTokens.FirstOrDefault(t => t.Token == refreshToken);
+        var token = await _tokenRepository.GetRefreshTokenAsync(refreshToken);
 
         if (token == null || token.IsRevoked)
         {
@@ -224,15 +224,15 @@ public class AuthenticationService : IAuthenticationService
 
         token.RevokedAt = DateTime.UtcNow;
         token.RevokedReason = reason ?? "Manually revoked";
+        await _tokenRepository.UpdateRefreshTokenAsync(token);
 
         return true;
     }
 
     public async Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
     {
-        await Task.CompletedTask;
 
-        var user = _users.FirstOrDefault(u => u.Uuid == userId);
+        var user = await _userRepository.GetByIdAsync(userId);
 
         if (user == null)
         {
@@ -248,17 +248,16 @@ public class AuthenticationService : IAuthenticationService
         user.PasswordHash = newPasswordHash;
         user.PasswordSalt = salt;
         user.UpdatedAt = DateTime.UtcNow;
+        await _userRepository.UpdateAsync(user);
 
-        _refreshTokens.RemoveAll(t => t.UserId == userId);
+        await _tokenRepository.DeleteRefreshTokensByUserIdAsync(userId);
 
         return true;
     }
 
     public async Task<string?> GeneratePasswordResetTokenAsync(string email)
     {
-        await Task.CompletedTask;
-
-        var user = _users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        var user = await _userRepository.GetByEmailAsync(email);
 
         if (user == null)
         {
@@ -273,23 +272,21 @@ public class AuthenticationService : IAuthenticationService
             CreatedAt = DateTime.UtcNow
         };
 
-        _passwordResetTokens.Add(token);
+        await _tokenRepository.CreatePasswordResetTokenAsync(token);
 
         return token.Token;
     }
 
     public async Task<bool> ResetPasswordAsync(string token, string newPassword)
     {
-        await Task.CompletedTask;
-
-        var resetToken = _passwordResetTokens.FirstOrDefault(t => t.Token == token);
+        var resetToken = await _tokenRepository.GetPasswordResetTokenAsync(token);
 
         if (resetToken == null || !resetToken.IsValid)
         {
             return false;
         }
 
-        var user = _users.FirstOrDefault(u => u.Uuid == resetToken.UserId);
+        var user = await _userRepository.GetByIdAsync(resetToken.UserId);
 
         if (user == null)
         {
@@ -300,20 +297,26 @@ public class AuthenticationService : IAuthenticationService
         user.PasswordHash = newPasswordHash;
         user.PasswordSalt = salt;
         user.UpdatedAt = DateTime.UtcNow;
+        await _userRepository.UpdateAsync(user);
 
         resetToken.IsUsed = true;
         resetToken.UsedAt = DateTime.UtcNow;
+        await _tokenRepository.UpdatePasswordResetTokenAsync(resetToken);
 
-        _refreshTokens.RemoveAll(t => t.UserId == user.Uuid);
+        await _tokenRepository.DeleteRefreshTokensByUserIdAsync(user.Uuid);
 
         return true;
     }
 
     public async Task<bool> VerifyEmailAsync(string token)
     {
-        await Task.CompletedTask;
+        // Token here is the user's UUID for email verification
+        if (!Guid.TryParse(token, out Guid userId))
+        {
+            return false;
+        }
 
-        var user = _users.FirstOrDefault(u => u.Uuid.ToString() == token);
+        var user = await _userRepository.GetByIdAsync(userId);
 
         if (user == null)
         {
@@ -322,33 +325,30 @@ public class AuthenticationService : IAuthenticationService
 
         user.EmailVerified = true;
         user.UpdatedAt = DateTime.UtcNow;
+        await _userRepository.UpdateAsync(user);
 
         return true;
     }
 
     public async Task<User?> GetUserByIdAsync(Guid userId)
     {
-        await Task.CompletedTask;
-        return _users.FirstOrDefault(u => u.Uuid == userId);
+        return await _userRepository.GetByIdAsync(userId);
     }
 
     public async Task<User?> GetUserByUsernameAsync(string username)
     {
-        await Task.CompletedTask;
-        return _users.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+        return await _userRepository.GetByUsernameAsync(username);
     }
 
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        await Task.CompletedTask;
-        return _users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        return await _userRepository.GetByEmailAsync(email);
     }
 
     public async Task<bool> DeleteUserAsync(Guid userId)
     {
-        await Task.CompletedTask;
 
-        var user = _users.FirstOrDefault(u => u.Uuid == userId);
+        var user = await _userRepository.GetByIdAsync(userId);
 
         if (user == null)
         {
@@ -361,18 +361,17 @@ public class AuthenticationService : IAuthenticationService
             return false;
         }
 
-        _users.Remove(user);
-        _refreshTokens.RemoveAll(t => t.UserId == userId);
-        _passwordResetTokens.RemoveAll(t => t.UserId == userId);
+        await _userRepository.DeleteAsync(userId);
+        await _tokenRepository.DeleteRefreshTokensByUserIdAsync(userId);
+        // Note: Password reset tokens will be handled by MongoDB TTL indexes or cleanup jobs
 
         return true;
     }
 
     public async Task<bool> DeactivateUserAsync(Guid userId)
     {
-        await Task.CompletedTask;
 
-        var user = _users.FirstOrDefault(u => u.Uuid == userId);
+        var user = await _userRepository.GetByIdAsync(userId);
 
         if (user == null)
         {
@@ -387,9 +386,10 @@ public class AuthenticationService : IAuthenticationService
 
         user.IsActive = false;
         user.UpdatedAt = DateTime.UtcNow;
+        await _userRepository.UpdateAsync(user);
 
         // Revoke all refresh tokens
-        _refreshTokens.RemoveAll(t => t.UserId == userId);
+        await _tokenRepository.DeleteRefreshTokensByUserIdAsync(userId);
 
         return true;
     }
@@ -441,7 +441,7 @@ public class AuthenticationService : IAuthenticationService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private RefreshToken GenerateRefreshToken(Guid userId)
+    private async Task<RefreshToken> GenerateRefreshTokenAsync(Guid userId)
     {
         var token = new RefreshToken
         {
@@ -451,7 +451,7 @@ public class AuthenticationService : IAuthenticationService
             CreatedAt = DateTime.UtcNow
         };
 
-        _refreshTokens.Add(token);
+        await _tokenRepository.CreateRefreshTokenAsync(token);
         return token;
     }
 

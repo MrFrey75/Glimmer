@@ -1,5 +1,6 @@
 using Glimmer.Core.Models;
 using Glimmer.Core.Enums;
+using Glimmer.Core.Repositories;
 
 namespace Glimmer.Core.Services;
 
@@ -71,17 +72,19 @@ public interface IEntityService
 
 public class EntityService : IEntityService
 {
-    // In-memory stores (replace with MongoDB repositories in production)
-    private readonly List<Universe> _universes = new();
-    private readonly Dictionary<Guid, List<EntityRelation>> _relations = new();
-    private int _nextRelationId = 1;
+    private readonly IUniverseRepository _universeRepository;
+    private readonly IRelationRepository _relationRepository;
+
+    public EntityService(IUniverseRepository universeRepository, IRelationRepository relationRepository)
+    {
+        _universeRepository = universeRepository;
+        _relationRepository = relationRepository;
+    }
 
     #region Universe Operations
 
     public async Task<Universe?> CreateUniverseAsync(string name, string description, User createdBy)
     {
-        await Task.CompletedTask;
-
         var universe = new Universe
         {
             Uuid = Guid.NewGuid(),
@@ -92,55 +95,42 @@ public class EntityService : IEntityService
             UpdatedAt = DateTime.UtcNow
         };
 
-        _universes.Add(universe);
-        _relations[universe.Uuid] = new List<EntityRelation>();
-
-        return universe;
+        return await _universeRepository.CreateAsync(universe);
     }
 
     public async Task<Universe?> GetUniverseByIdAsync(Guid universeId)
     {
-        await Task.CompletedTask;
-        return _universes.FirstOrDefault(u => u.Uuid == universeId);
+        return await _universeRepository.GetByIdAsync(universeId);
     }
 
     public async Task<List<Universe>> GetUniversesByUserAsync(Guid userId)
     {
-        await Task.CompletedTask;
-        return _universes.Where(u => u.CreatedBy.Uuid == userId).ToList();
+        return await _universeRepository.GetByUserIdAsync(userId);
     }
 
     public async Task<List<Universe>> GetAllUniversesAsync()
     {
-        await Task.CompletedTask;
-        return _universes.ToList();
+        return await _universeRepository.GetAllAsync();
     }
 
     public async Task<bool> UpdateUniverseAsync(Universe universe)
     {
-        await Task.CompletedTask;
-
-        var existing = _universes.FirstOrDefault(u => u.Uuid == universe.Uuid);
+        var existing = await _universeRepository.GetByIdAsync(universe.Uuid);
         if (existing == null) return false;
 
         existing.Name = universe.Name;
         existing.Description = universe.Description;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        return true;
+        return await _universeRepository.UpdateAsync(existing);
     }
 
     public async Task<bool> DeleteUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
-
-        var universe = _universes.FirstOrDefault(u => u.Uuid == universeId);
+        var universe = await _universeRepository.GetByIdAsync(universeId);
         if (universe == null) return false;
 
-        _universes.Remove(universe);
-        _relations.Remove(universeId);
-
-        return true;
+        return await _universeRepository.DeleteAsync(universeId);
     }
 
     #endregion
@@ -149,7 +139,6 @@ public class EntityService : IEntityService
 
     public async Task<Artifact?> CreateArtifactAsync(Guid universeId, string name, string description, ArtifactTypeEnum artifactType)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -166,13 +155,12 @@ public class EntityService : IEntityService
 
         universe.Artifacts.Add(artifact);
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
         return artifact;
     }
 
     public async Task<Artifact?> GetArtifactByIdAsync(Guid universeId, Guid artifactId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Artifacts.FirstOrDefault(a => a.Uuid == artifactId && !a.IsDeleted);
@@ -180,7 +168,6 @@ public class EntityService : IEntityService
 
     public async Task<List<Artifact>> GetArtifactsByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Artifacts.Where(a => !a.IsDeleted).ToList() ?? new List<Artifact>();
@@ -188,7 +175,6 @@ public class EntityService : IEntityService
 
     public async Task<bool> UpdateArtifactAsync(Guid universeId, Artifact artifact)
     {
-        await Task.CompletedTask;
 
         var existing = await GetArtifactByIdAsync(universeId, artifact.Uuid);
         if (existing == null) return false;
@@ -206,17 +192,15 @@ public class EntityService : IEntityService
 
     public async Task<bool> DeleteArtifactAsync(Guid universeId, Guid artifactId)
     {
-        await Task.CompletedTask;
 
         var artifact = await GetArtifactByIdAsync(universeId, artifactId);
         if (artifact == null) return false;
 
         artifact.IsDeleted = true;
         artifact.UpdatedAt = DateTime.UtcNow;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
-
+        if (universe != null) await _universeRepository.UpdateAsync(universe);
         return true;
     }
 
@@ -226,7 +210,6 @@ public class EntityService : IEntityService
 
     public async Task<CannonEvent?> CreateCannonEventAsync(Guid universeId, string name, string description, CannonEventTypeEnum eventType)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -243,13 +226,12 @@ public class EntityService : IEntityService
 
         universe.CannonEvents.Add(cannonEvent);
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
         return cannonEvent;
     }
 
     public async Task<CannonEvent?> GetCannonEventByIdAsync(Guid universeId, Guid eventId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.CannonEvents.FirstOrDefault(e => e.Uuid == eventId && !e.IsDeleted);
@@ -257,7 +239,6 @@ public class EntityService : IEntityService
 
     public async Task<List<CannonEvent>> GetCannonEventsByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.CannonEvents.Where(e => !e.IsDeleted).ToList() ?? new List<CannonEvent>();
@@ -265,7 +246,6 @@ public class EntityService : IEntityService
 
     public async Task<bool> UpdateCannonEventAsync(Guid universeId, CannonEvent cannonEvent)
     {
-        await Task.CompletedTask;
 
         var existing = await GetCannonEventByIdAsync(universeId, cannonEvent.Uuid);
         if (existing == null) return false;
@@ -283,17 +263,15 @@ public class EntityService : IEntityService
 
     public async Task<bool> DeleteCannonEventAsync(Guid universeId, Guid eventId)
     {
-        await Task.CompletedTask;
 
         var cannonEvent = await GetCannonEventByIdAsync(universeId, eventId);
         if (cannonEvent == null) return false;
 
         cannonEvent.IsDeleted = true;
         cannonEvent.UpdatedAt = DateTime.UtcNow;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
-
+        if (universe != null) await _universeRepository.UpdateAsync(universe);
         return true;
     }
 
@@ -303,7 +281,6 @@ public class EntityService : IEntityService
 
     public async Task<Faction?> CreateFactionAsync(Guid universeId, string name, string description, FactionTypeEnum factionType)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -320,13 +297,12 @@ public class EntityService : IEntityService
 
         universe.Factions.Add(faction);
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
         return faction;
     }
 
     public async Task<Faction?> GetFactionByIdAsync(Guid universeId, Guid factionId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Factions.FirstOrDefault(f => f.Uuid == factionId && !f.IsDeleted);
@@ -334,7 +310,6 @@ public class EntityService : IEntityService
 
     public async Task<List<Faction>> GetFactionsByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Factions.Where(f => !f.IsDeleted).ToList() ?? new List<Faction>();
@@ -342,7 +317,6 @@ public class EntityService : IEntityService
 
     public async Task<bool> UpdateFactionAsync(Guid universeId, Faction faction)
     {
-        await Task.CompletedTask;
 
         var existing = await GetFactionByIdAsync(universeId, faction.Uuid);
         if (existing == null) return false;
@@ -360,17 +334,15 @@ public class EntityService : IEntityService
 
     public async Task<bool> DeleteFactionAsync(Guid universeId, Guid factionId)
     {
-        await Task.CompletedTask;
 
         var faction = await GetFactionByIdAsync(universeId, factionId);
         if (faction == null) return false;
 
         faction.IsDeleted = true;
         faction.UpdatedAt = DateTime.UtcNow;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
-
+        if (universe != null) await _universeRepository.UpdateAsync(universe);
         return true;
     }
 
@@ -380,7 +352,6 @@ public class EntityService : IEntityService
 
     public async Task<Location?> CreateLocationAsync(Guid universeId, string name, string description, LocationTypeEnum locationType, Location? parentLocation = null)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -398,13 +369,12 @@ public class EntityService : IEntityService
 
         universe.Locations.Add(location);
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
         return location;
     }
 
     public async Task<Location?> GetLocationByIdAsync(Guid universeId, Guid locationId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Locations.FirstOrDefault(l => l.Uuid == locationId && !l.IsDeleted);
@@ -412,7 +382,6 @@ public class EntityService : IEntityService
 
     public async Task<List<Location>> GetLocationsByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Locations.Where(l => !l.IsDeleted).ToList() ?? new List<Location>();
@@ -420,7 +389,6 @@ public class EntityService : IEntityService
 
     public async Task<bool> UpdateLocationAsync(Guid universeId, Location location)
     {
-        await Task.CompletedTask;
 
         var existing = await GetLocationByIdAsync(universeId, location.Uuid);
         if (existing == null) return false;
@@ -439,17 +407,15 @@ public class EntityService : IEntityService
 
     public async Task<bool> DeleteLocationAsync(Guid universeId, Guid locationId)
     {
-        await Task.CompletedTask;
 
         var location = await GetLocationByIdAsync(universeId, locationId);
         if (location == null) return false;
 
         location.IsDeleted = true;
         location.UpdatedAt = DateTime.UtcNow;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
-
+        if (universe != null) await _universeRepository.UpdateAsync(universe);
         return true;
     }
 
@@ -459,7 +425,6 @@ public class EntityService : IEntityService
 
     public async Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, string name, string description, FigureTypeEnum figureType)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -476,13 +441,12 @@ public class EntityService : IEntityService
 
         universe.Figures.Add(figure);
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
         return figure;
     }
 
     public async Task<NotableFigure?> GetNotableFigureByIdAsync(Guid universeId, Guid figureId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Figures.FirstOrDefault(f => f.Uuid == figureId && !f.IsDeleted);
@@ -490,7 +454,6 @@ public class EntityService : IEntityService
 
     public async Task<List<NotableFigure>> GetNotableFiguresByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Figures.Where(f => !f.IsDeleted).ToList() ?? new List<NotableFigure>();
@@ -498,7 +461,6 @@ public class EntityService : IEntityService
 
     public async Task<bool> UpdateNotableFigureAsync(Guid universeId, NotableFigure figure)
     {
-        await Task.CompletedTask;
 
         var existing = await GetNotableFigureByIdAsync(universeId, figure.Uuid);
         if (existing == null) return false;
@@ -516,17 +478,15 @@ public class EntityService : IEntityService
 
     public async Task<bool> DeleteNotableFigureAsync(Guid universeId, Guid figureId)
     {
-        await Task.CompletedTask;
 
         var figure = await GetNotableFigureByIdAsync(universeId, figureId);
         if (figure == null) return false;
 
         figure.IsDeleted = true;
         figure.UpdatedAt = DateTime.UtcNow;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
-
+        if (universe != null) await _universeRepository.UpdateAsync(universe);
         return true;
     }
 
@@ -536,7 +496,6 @@ public class EntityService : IEntityService
 
     public async Task<Fact?> CreateFactAsync(Guid universeId, string name, string description, string value, FactTypeEnum factType)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -554,13 +513,12 @@ public class EntityService : IEntityService
 
         universe.Facts.Add(fact);
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
         return fact;
     }
 
     public async Task<Fact?> GetFactByIdAsync(Guid universeId, Guid factId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Facts.FirstOrDefault(f => f.Uuid == factId && !f.IsDeleted);
@@ -568,7 +526,6 @@ public class EntityService : IEntityService
 
     public async Task<List<Fact>> GetFactsByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         return universe?.Facts.Where(f => !f.IsDeleted).ToList() ?? new List<Fact>();
@@ -576,7 +533,6 @@ public class EntityService : IEntityService
 
     public async Task<bool> UpdateFactAsync(Guid universeId, Fact fact)
     {
-        await Task.CompletedTask;
 
         var existing = await GetFactByIdAsync(universeId, fact.Uuid);
         if (existing == null) return false;
@@ -595,17 +551,15 @@ public class EntityService : IEntityService
 
     public async Task<bool> DeleteFactAsync(Guid universeId, Guid factId)
     {
-        await Task.CompletedTask;
 
         var fact = await GetFactByIdAsync(universeId, factId);
         if (fact == null) return false;
 
         fact.IsDeleted = true;
         fact.UpdatedAt = DateTime.UtcNow;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
-
+        if (universe != null) await _universeRepository.UpdateAsync(universe);
         return true;
     }
 
@@ -615,85 +569,67 @@ public class EntityService : IEntityService
 
     public async Task<EntityRelation?> CreateRelationAsync(Guid universeId, BaseEntity fromEntity, BaseEntity toEntity, RelationTypeEnum relationType)
     {
-        await Task.CompletedTask;
-
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        if (!_relations.ContainsKey(universeId))
-        {
-            _relations[universeId] = new List<EntityRelation>();
-        }
-
         var relation = new EntityRelation(universeId, fromEntity, toEntity, relationType)
         {
-            Oid = _nextRelationId++
+            Oid = await _relationRepository.GetNextIdAsync()
         };
 
-        _relations[universeId].Add(relation);
+        await _relationRepository.CreateAsync(relation);
+        
         universe.UpdatedAt = DateTime.UtcNow;
-
+        await _universeRepository.UpdateAsync(universe);
+        
         return relation;
     }
 
     public async Task<EntityRelation?> GetRelationByIdAsync(Guid universeId, int relationId)
     {
-        await Task.CompletedTask;
-
-        if (!_relations.ContainsKey(universeId)) return null;
-
-        return _relations[universeId].FirstOrDefault(r => r.Oid == relationId && !r.IsDeleted);
+        return await _relationRepository.GetByIdAsync(relationId);
     }
 
     public async Task<List<EntityRelation>> GetRelationsByUniverseAsync(Guid universeId)
     {
-        await Task.CompletedTask;
-
-        if (!_relations.ContainsKey(universeId)) return new List<EntityRelation>();
-
-        return _relations[universeId].Where(r => !r.IsDeleted).ToList();
+        return await _relationRepository.GetByUniverseIdAsync(universeId);
     }
 
     public async Task<List<EntityRelation>> GetRelationsByEntityAsync(Guid universeId, Guid entityId)
     {
-        await Task.CompletedTask;
-
-        if (!_relations.ContainsKey(universeId)) return new List<EntityRelation>();
-
-        return _relations[universeId]
-            .Where(r => !r.IsDeleted && 
-                       (r.FromEntity.Uuid == entityId || r.ToEntity.Uuid == entityId))
-            .ToList();
+        return await _relationRepository.GetByEntityIdAsync(universeId, entityId);
     }
 
     public async Task<bool> UpdateRelationAsync(Guid universeId, EntityRelation relation)
     {
-        await Task.CompletedTask;
-
         var existing = await GetRelationByIdAsync(universeId, relation.Oid);
         if (existing == null) return false;
 
         existing.RelationType = relation.RelationType;
         existing.UpdatedAt = DateTime.UtcNow;
+        await _relationRepository.UpdateAsync(existing);
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }
 
     public async Task<bool> DeleteRelationAsync(Guid universeId, int relationId)
     {
-        await Task.CompletedTask;
-
-        var relation = await GetRelationByIdAsync(universeId, relationId);
-        if (relation == null) return false;
-
-        relation.IsDeleted = true;
-        relation.UpdatedAt = DateTime.UtcNow;
+        var success = await _relationRepository.DeleteAsync(relationId);
+        if (!success) return false;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }
@@ -704,7 +640,6 @@ public class EntityService : IEntityService
 
     public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
@@ -732,7 +667,6 @@ public class EntityService : IEntityService
 
     public async Task<List<BaseEntity>> SearchEntitiesAsync(Guid universeId, string searchTerm)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return new List<BaseEntity>();
@@ -775,7 +709,6 @@ public class EntityService : IEntityService
 
     public async Task<int> GetEntityCountAsync(Guid universeId)
     {
-        await Task.CompletedTask;
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return 0;
