@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add Glimmer Core services (includes AuthenticationService)
-builder.Services.AddGlimmerCore();
+// Add Glimmer Core services (includes AuthenticationService with MongoDB infrastructure ready)
+builder.Services.AddGlimmerCore(builder.Configuration);
 
 // Add session support for authentication
 builder.Services.AddSession(options =>
@@ -17,6 +17,14 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+// Note: Superuser is currently seeded in-memory by AuthenticationService constructor
+// When services are refactored to use MongoDB, uncomment the following:
+// using (var scope = app.Services.CreateScope())
+// {
+//     var authService = scope.ServiceProvider.GetRequiredService<IAuthenticationService>();
+//     await authService.EnsureSuperUserExistsAsync();
+// }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

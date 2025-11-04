@@ -625,7 +625,7 @@ public class EntityService : IEntityService
             _relations[universeId] = new List<EntityRelation>();
         }
 
-        var relation = new EntityRelation(fromEntity, toEntity, relationType)
+        var relation = new EntityRelation(universeId, fromEntity, toEntity, relationType)
         {
             Oid = _nextRelationId++
         };

@@ -5,6 +5,7 @@ namespace Glimmer.Core.Models;
 public class EntityRelation
 {
     public int Oid { get; set; } = 0;
+    public Guid UniverseId { get; set; }
     public BaseEntity FromEntity { get; set; }
     public BaseEntity ToEntity { get; set; }
     public RelationTypeEnum RelationType { get; set; } = RelationTypeEnum.Unknown;
@@ -21,8 +22,9 @@ public class EntityRelation
         ToEntity = null!;
     }
 
-    public EntityRelation(BaseEntity fromEntity, BaseEntity toEntity, RelationTypeEnum relationType)
+    public EntityRelation(Guid universeId, BaseEntity fromEntity, BaseEntity toEntity, RelationTypeEnum relationType)
     {
+        UniverseId = universeId;
         FromEntity = fromEntity;
         ToEntity = toEntity;
         RelationType = relationType;
