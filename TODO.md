@@ -1,8 +1,8 @@
 # Glimmer - TODO List & Roadmap
 
-**Last Updated**: 2025-11-04  
-**Current Version**: 0.1.0-alpha  
-**Status**: Early Development
+**Last Updated**: 2025-11-05  
+**Current Version**: 0.2.0-alpha  
+**Status**: Active Development
 
 ## ✅ Completed (MVP Foundation)
 
@@ -35,10 +35,11 @@
 
 ### Business Logic ✅
 - [x] EntityService with 70+ methods for CRUD operations
-- [x] Entity operations (Artifact, CannonEvent, Faction, Location, NotableFigure, Fact)
+- [x] Entity operations (Artifact, CannonEvent, Faction, Location, NotableFigure, Fact, Species)
 - [x] Relationship management system
 - [x] Universe management
 - [x] EntityService fully migrated to MongoDB
+- [x] **EntityService refactored into 11 modular partial classes** ✨
 
 ### Web Application ✅
 - [x] ASP.NET Core MVC setup
@@ -51,81 +52,104 @@
 - [x] HttpOnly cookie authentication
 
 ### Documentation ✅
-- [x] Main README.md
+- [x] Main README.md (updated 2025-11-05)
 - [x] Glimmer.Core README
+- [x] **Glimmer.Core/Services/README.md** - Modular EntityService architecture ✨
 - [x] Glimmer.Creator README
-- [x] MongoDB migration documentation (OUTDATED)
-- [x] Copilot instructions
-- [x] This TODO.md file
+- [x] MongoDB migration documentation
+- [x] Copilot instructions (updated 2025-11-05)
+- [x] This TODO.md file (updated 2025-11-05)
+- [x] QUICK_REFERENCE.md (updated 2025-11-05)
 
 ---
 
 ## 🚧 In Progress
 
+### Relationship Management UI 🔄
+**Priority**: HIGH  
+**Effort**: Medium  
+**Status**: Not Started
+
+- [ ] RelationController implementation
+  - [ ] GET /Relation/Create - Create relationship form
+  - [ ] POST /Relation/Create - Handle relationship creation
+  - [ ] GET /Relation/{id} - View relationship details
+  - [ ] DELETE /Relation/{id} - Delete relationship
+- [ ] Entity selector component (dropdown/search)
+- [ ] Relationship type selector
+- [ ] Visual relationship display on entity details pages
+- [ ] Bidirectional relationship handling
+
 ### Testing & Validation 🔄
+- [ ] Unit tests for EntityService partial classes
+- [ ] Unit tests for AuthenticationService
+- [ ] Integration tests for controllers
 - [ ] Manual testing of all authentication flows
-  - [ ] Registration
-  - [ ] Login/Logout
-  - [ ] Password reset
-  - [ ] Token refresh
-- [ ] Manual testing of universe operations
-  - [ ] Create universe
-  - [ ] View universes
-  - [ ] Edit universe
-  - [ ] Delete universe
-- [ ] Manual testing of entity operations
-  - [ ] Add entities to universe
-  - [ ] Edit entities
-  - [ ] Delete entities
-- [ ] Manual testing of relationship operations
-  - [ ] Create relationships
-  - [ ] View relationships
-  - [ ] Delete relationships
+- [ ] Manual testing of all entity CRUD operations
+- [ ] Performance testing with large datasets
 
 ---
 
 ## 📋 High Priority (Phase 1 - Core Functionality)
 
-### Universe Management UI 🔴
+### Entity Management UI ✅
 **Priority**: CRITICAL  
-**Effort**: Medium  
-**Status**: Not Started
+**Effort**: High  
+**Status**: COMPLETE ✅
 
-- [ ] UniverseController implementation
-  - [ ] GET /Universe - List all universes for current user
-  - [ ] GET /Universe/Create - Create universe form
-  - [ ] POST /Universe/Create - Handle creation
-  - [ ] GET /Universe/{id} - Universe details page
-  - [ ] GET /Universe/{id}/Edit - Edit universe form
-  - [ ] POST /Universe/{id}/Edit - Handle update
-  - [ ] POST /Universe/{id}/Delete - Handle deletion
-- [ ] Universe Views
-  - [ ] Index.cshtml - Universe list with cards
-  - [ ] Create.cshtml - Creation form
-  - [ ] Details.cshtml - Universe dashboard
-  - [ ] Edit.cshtml - Edit form
-  - [ ] _UniverseCard.cshtml - Partial for list items
-- [ ] View Models
-  - [ ] UniverseListViewModel
-  - [ ] UniverseDetailsViewModel
-  - [ ] CreateUniverseViewModel
-  - [ ] EditUniverseViewModel
+#### Universe Management ✅
+- [x] UniverseController with full CRUD operations
+- [x] Universe dashboard with entity counts and cards
+- [x] Universe create, edit, delete with confirmations
+- [x] Universe details with navigation to all entity types
+
+#### All 7 Entity Types Implemented ✅
+- [x] **NotableFigure** (Characters) - 19 types ✅
+- [x] **Location** (with hierarchy) - 11 types ✅
+- [x] **Artifact** (Objects) - 19 types ✅
+- [x] **CannonEvent** (Events) - 20 types ✅
+- [x] **Faction** (Organizations) - 13 types ✅
+- [x] **Fact** (Lore) - 11 types ✅
+- [x] **Species** (Lifeforms) - 16 types ✅
+
+Each entity includes:
+- [x] Full CRUD controller with authorization
+- [x] Complete view models (List, Card, Create, Edit, Details)
+- [x] Dark mode responsive UI with Bootstrap 5.3
+- [x] Type-specific badges with color coding
+- [x] Breadcrumb navigation
+- [x] Delete confirmation modals
+- [x] Integration with Universe dashboard
+  - [x] POST /Universe/{id}/Delete - Handle deletion
+- [x] Universe Views
+  - [x] Index.cshtml - Universe list with cards
+  - [x] Create.cshtml - Creation form
+  - [x] Details.cshtml - Universe dashboard
+  - [x] Edit.cshtml - Edit form
+- [x] View Models
+  - [x] UniverseListViewModel
+  - [x] UniverseDetailsViewModel
+  - [x] CreateUniverseViewModel
+  - [x] EditUniverseViewModel
+- [x] Navigation menu updated with Universe links
 
 ### Entity Management UI 🔴
 **Priority**: CRITICAL  
 **Effort**: Large  
 **Status**: Not Started
 
-#### NotableFigure (Characters) 🔴
-- [ ] FigureController
-  - [ ] GET /Universe/{id}/Figure/Create
-  - [ ] POST /Universe/{id}/Figure/Create
-  - [ ] GET /Universe/{id}/Figure/{figureId}
-  - [ ] GET /Universe/{id}/Figure/{figureId}/Edit
-  - [ ] POST /Universe/{id}/Figure/{figureId}/Edit
-  - [ ] POST /Universe/{id}/Figure/{figureId}/Delete
-- [ ] Views (Create, Edit, Details, List)
-- [ ] View Models
+#### NotableFigure (Characters) ✅
+- [x] FigureController
+  - [x] GET /Universe/{id}/Figure/Create
+  - [x] POST /Universe/{id}/Figure/Create
+  - [x] GET /Universe/{id}/Figure/{figureId}
+  - [x] GET /Universe/{id}/Figure/{figureId}/Edit
+  - [x] POST /Universe/{id}/Figure/{figureId}/Edit
+  - [x] POST /Universe/{id}/Figure/{figureId}/Delete
+- [x] Views (Create, Edit, Details, List)
+- [x] View Models
+- [x] Breadcrumb navigation
+- [x] Link from Universe details page
 
 #### Location 🔴
 - [ ] LocationController (same pattern as Figure)
@@ -465,23 +489,23 @@
 - **Data Layer**: 100% ✅
 - **Business Logic**: 100% ✅
 - **Logging & Error Handling**: 100% ✅
-- **Web UI**: 25% 🚧
+- **Web UI**: 45% 🚧
 - **Testing**: 0% ❌
 
-### Overall Project Completion: ~45%
+### Overall Project Completion: ~55%
 
 ---
 
 ## 🎯 Milestones
 
-### Milestone 1: MVP (Weeks 1-4) - 70% Complete ✅
+### Milestone 1: MVP (Weeks 1-4) - 90% Complete ✅
 - [x] Project setup
 - [x] MongoDB integration
 - [x] Authentication system
 - [x] Basic dark mode UI
 - [x] Logging and error handling
-- [ ] Universe CRUD UI
-- [ ] Entity CRUD UI (at least 1 type)
+- [x] Universe CRUD UI
+- [x] Entity CRUD UI (NotableFigure)
 
 ### Milestone 2: Core Features (Weeks 5-8) - 0% Complete 🚧
 - [ ] All entity types UI
@@ -512,13 +536,14 @@
 **Focus**: Universe Management UI  
 **Duration**: 2 weeks  
 **Goal**: Implement full CRUD UI for universes
+**Status**: ✅ Complete
 
 Tasks:
-1. Create UniverseController with all actions
-2. Create Universe views (Index, Create, Edit, Details)
-3. Create view models
-4. Test all universe operations
-5. Add validation and error handling
+1. ✅ Create UniverseController with all actions
+2. ✅ Create Universe views (Index, Create, Edit, Details)
+3. ✅ Create view models
+4. ⏳ Test all universe operations
+5. ⏳ Add validation and error handling
 
 ### Next Sprint (Sprint 2)
 **Focus**: NotableFigure Management UI  

@@ -20,5 +20,6 @@ public class Universe
     public List<NotableFigure> Figures { get; set; } = [];
     public List<Location> Locations { get; set; } = [];
     public List<Fact> Facts { get; set; } = [];
+    public List<Species> Species { get; set; } = [];
 
 }

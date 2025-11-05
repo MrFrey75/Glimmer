@@ -1,0 +1,75 @@
+@model Glimmer.Creator.Models.EditArtifactViewModel
+@using Glimmer.Core.Enums
+@{
+    ViewData["Title"] = "Edit Artifact";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Index">Universes</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Details" asp-route-id="@Model.UniverseId">Universe</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-route-universeId="@Model.UniverseId">Artifacts</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                </ol>
+            </nav>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="bi bi-pencil"></i> Edit Artifact</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" asp-route-universeId="@Model.UniverseId" asp-route-id="@Model.Uuid" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="UniverseId" />
+                        <input type="hidden" asp-for="Uuid" />
+                        <input type="hidden" asp-for="CreatedAt" />
+                        <input type="hidden" asp-for="UpdatedAt" />
+                        
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Artifact Name</label>
+                            <input asp-for="Name" class="form-control" autofocus />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ArtifactType" class="form-label">Artifact Type</label>
+                            <select asp-for="ArtifactType" class="form-select" asp-items="Html.GetEnumSelectList<ArtifactTypeEnum>()">
+                            </select>
+                            <span asp-validation-for="ArtifactType" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <small>
+                                <i class="bi bi-info-circle"></i>
+                                Created: @Model.CreatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt") UTC<br />
+                                Last Updated: @Model.UpdatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt") UTC
+                            </small>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Details" asp-route-universeId="@Model.UniverseId" asp-route-id="@Model.Uuid" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

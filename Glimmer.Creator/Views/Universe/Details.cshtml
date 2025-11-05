@@ -1,0 +1,287 @@
+@model Glimmer.Creator.Models.UniverseDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4">
+                <i class="bi bi-globe2"></i> @Model.Name
+            </h1>
+            <p class="text-muted">Created by @Model.CreatedByUsername on @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
+        </div>
+        <div class="col-auto">
+            <div class="btn-group" role="group">
+                <a asp-action="Edit" asp-route-id="@Model.Uuid" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Edit
+                </a>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Description</h5>
+                    <p class="card-text">@Model.Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <h3>Universe Statistics</h3>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-4 mb-4">
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-person-fill stat-icon text-primary"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="NotableFigure" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.FigureCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Figures</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-geo-alt-fill stat-icon text-success"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="Location" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.LocationCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Locations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-gem stat-icon text-warning"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="Artifact" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.ArtifactCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Artifacts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-calendar-event stat-icon text-danger"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="CannonEvent" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.EventCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Events</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-flag-fill stat-icon text-info"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="Faction" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.FactionCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Factions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-book-fill stat-icon text-secondary"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="Fact" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.FactCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Facts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-bug-fill stat-icon text-success"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="Species" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.SpeciesCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Species</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <h3>Quick Actions</h3>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-plus action-icon text-primary"></i>
+                    <h5 class="card-title">Create Figure</h5>
+                    <p class="card-text">Add a new notable figure to your universe</p>
+                    <a asp-controller="NotableFigure" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-geo-alt-fill action-icon text-success"></i>
+                    <h5 class="card-title">Create Location</h5>
+                    <p class="card-text">Add a new location to your universe</p>
+                    <a asp-controller="Location" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-gem action-icon text-warning"></i>
+                    <h5 class="card-title">Create Artifact</h5>
+                    <p class="card-text">Add a new artifact to your universe</p>
+                    <a asp-controller="Artifact" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-warning">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-event action-icon text-danger"></i>
+                    <h5 class="card-title">Create Event</h5>
+                    <p class="card-text">Add a new cannon event to your universe</p>
+                    <a asp-controller="CannonEvent" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-danger">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-flag-fill action-icon text-info"></i>
+                    <h5 class="card-title">Create Faction</h5>
+                    <p class="card-text">Add a new faction to your universe</p>
+                    <a asp-controller="Faction" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-info">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-book-fill action-icon text-secondary"></i>
+                    <h5 class="card-title">Add Fact/Lore</h5>
+                    <p class="card-text">Add a new fact or lore to your universe</p>
+                    <a asp-controller="Fact" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-secondary">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-bug-fill action-icon text-success"></i>
+                    <h5 class="card-title">Create Species</h5>
+                    <p class="card-text">Add a new species to your universe</p>
+                    <a asp-controller="Species" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the universe <strong>@Model.Name</strong>?</p>
+                <p class="text-danger mb-0">
+                    <i class="bi bi-exclamation-triangle"></i> 
+                    This will permanently delete all @Model.TotalEntityCount entities in this universe. This action cannot be undone!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </button>
+                <form asp-action="Delete" asp-route-id="@Model.Uuid" method="post" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Delete Universe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .action-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+        }
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+}

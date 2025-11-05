@@ -42,20 +42,8 @@
             <li class="ribbon-item">
                 <a href="#">Universe</a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">New Universe</a></li>
-                    <li><a href="#">Open Universe</a></li>
-                    <li><a href="#">Save Universe</a></li>
-                    <li class="separator"></li>
-                    <li class="has-submenu">
-                        <a href="#">Recent Universes</a>
-                        <ul class="submenu">
-                            <li><a href="#">Universe 1</a></li>
-                            <li><a href="#">Universe 2</a></li>
-                            <li><a href="#">Universe 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="separator"></li>
-                    <li><a href="#">Universe Properties</a></li>
+                    <li><a asp-controller="Universe" asp-action="Create">New Universe</a></li>
+                    <li><a asp-controller="Universe" asp-action="Index">My Universes</a></li>
                 </ul>
             </li>
             
@@ -128,6 +116,14 @@
                             <li><a href="#">Create Lore</a></li>
                             <li><a href="#">Browse Lore</a></li>
                             <li><a href="#">Lore Relations</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-submenu">
+                        <a href="#">Species</a>
+                        <ul class="submenu">
+                            <li><a href="#">Create Species</a></li>
+                            <li><a href="#">Browse Species</a></li>
+                            <li><a href="#">Species Relations</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -205,35 +201,37 @@
     </header>
     
     <!-- Notification area for success/error messages -->
-    <div class="container mt-3">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-        @if (TempData["WarningMessage"] != null)
-        {
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-circle-fill"></i> @TempData["WarningMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
-        @if (TempData["InfoMessage"] != null)
-        {
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle-fill"></i> @TempData["InfoMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+    <div class="notification-container">
+        <div class="container mt-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["WarningMessage"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i> @TempData["WarningMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <i class="bi bi-info-circle-fill"></i> @TempData["InfoMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+        </div>
     </div>
     
     <div class="main-content">
@@ -241,12 +239,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="footer">
-        <div class="container text-center">
-            &copy; 2025 - Glimmer Creator - Universe Building Tool - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
