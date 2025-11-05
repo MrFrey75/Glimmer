@@ -239,6 +239,31 @@ Entities connect via `EntityRelation` with semantic `RelationTypeEnum`:
 
 ## 🔧 Development
 
+### Branching Strategy
+
+**⚠️ IMPORTANT: Never develop directly on the `main` branch!**
+
+The project follows a simple branching workflow:
+
+- **`main`** - Production-ready code only. Protected branch for stable releases.
+- **`development`** - Active development branch. All feature work happens here.
+- **`feature/*`** - Feature branches (optional) for larger changes, merge to `development`.
+
+#### Development Workflow
+```bash
+# Always work in the development branch
+git checkout development
+
+# For larger features, create a feature branch
+git checkout -b feature/my-feature
+
+# When complete, merge back to development
+git checkout development
+git merge feature/my-feature
+
+# Main branch is updated only through pull requests from development
+```
+
 ### Running with Hot Reload
 ```bash
 cd Glimmer.Creator
