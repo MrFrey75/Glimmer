@@ -71,7 +71,11 @@
             <div class="card text-center stat-card">
                 <div class="card-body">
                     <i class="bi bi-gem stat-icon text-warning"></i>
-                    <h4 class="mb-0">@Model.ArtifactCount</h4>
+                    <h4 class="mb-0">
+                        <a asp-controller="Artifact" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.ArtifactCount
+                        </a>
+                    </h4>
                     <p class="text-muted mb-0">Artifacts</p>
                 </div>
             </div>
@@ -80,7 +84,11 @@
             <div class="card text-center stat-card">
                 <div class="card-body">
                     <i class="bi bi-calendar-event stat-icon text-danger"></i>
-                    <h4 class="mb-0">@Model.EventCount</h4>
+                    <h4 class="mb-0">
+                        <a asp-controller="CannonEvent" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.EventCount
+                        </a>
+                    </h4>
                     <p class="text-muted mb-0">Events</p>
                 </div>
             </div>
@@ -89,7 +97,11 @@
             <div class="card text-center stat-card">
                 <div class="card-body">
                     <i class="bi bi-flag-fill stat-icon text-info"></i>
-                    <h4 class="mb-0">@Model.FactionCount</h4>
+                    <h4 class="mb-0">
+                        <a asp-controller="Faction" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.FactionCount
+                        </a>
+                    </h4>
                     <p class="text-muted mb-0">Factions</p>
                 </div>
             </div>
@@ -98,7 +110,11 @@
             <div class="card text-center stat-card">
                 <div class="card-body">
                     <i class="bi bi-book-fill stat-icon text-secondary"></i>
-                    <h4 class="mb-0">@Model.FactCount</h4>
+                    <h4 class="mb-0">
+                        <a asp-controller="Fact" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.FactCount
+                        </a>
+                    </h4>
                     <p class="text-muted mb-0">Facts</p>
                 </div>
             </div>
@@ -155,7 +171,7 @@
                     <i class="bi bi-gem action-icon text-warning"></i>
                     <h5 class="card-title">Create Artifact</h5>
                     <p class="card-text">Add a new artifact to your universe</p>
-                    <a href="#" class="btn btn-warning">
+                    <a asp-controller="Artifact" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-warning">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>
@@ -167,7 +183,7 @@
                     <i class="bi bi-calendar-event action-icon text-danger"></i>
                     <h5 class="card-title">Create Event</h5>
                     <p class="card-text">Add a new cannon event to your universe</p>
-                    <a href="#" class="btn btn-danger">
+                    <a asp-controller="CannonEvent" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-danger">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>
@@ -179,7 +195,7 @@
                     <i class="bi bi-flag-fill action-icon text-info"></i>
                     <h5 class="card-title">Create Faction</h5>
                     <p class="card-text">Add a new faction to your universe</p>
-                    <a href="#" class="btn btn-info">
+                    <a asp-controller="Faction" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-info">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>
@@ -191,7 +207,7 @@
                     <i class="bi bi-book-fill action-icon text-secondary"></i>
                     <h5 class="card-title">Add Fact/Lore</h5>
                     <p class="card-text">Add a new fact or lore to your universe</p>
-                    <a href="#" class="btn btn-secondary">
+                    <a asp-controller="Fact" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-secondary">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>
