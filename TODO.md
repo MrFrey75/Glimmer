@@ -116,16 +116,18 @@
 **Effort**: Large  
 **Status**: Not Started
 
-#### NotableFigure (Characters) 🔴
-- [ ] FigureController
-  - [ ] GET /Universe/{id}/Figure/Create
-  - [ ] POST /Universe/{id}/Figure/Create
-  - [ ] GET /Universe/{id}/Figure/{figureId}
-  - [ ] GET /Universe/{id}/Figure/{figureId}/Edit
-  - [ ] POST /Universe/{id}/Figure/{figureId}/Edit
-  - [ ] POST /Universe/{id}/Figure/{figureId}/Delete
-- [ ] Views (Create, Edit, Details, List)
-- [ ] View Models
+#### NotableFigure (Characters) ✅
+- [x] FigureController
+  - [x] GET /Universe/{id}/Figure/Create
+  - [x] POST /Universe/{id}/Figure/Create
+  - [x] GET /Universe/{id}/Figure/{figureId}
+  - [x] GET /Universe/{id}/Figure/{figureId}/Edit
+  - [x] POST /Universe/{id}/Figure/{figureId}/Edit
+  - [x] POST /Universe/{id}/Figure/{figureId}/Delete
+- [x] Views (Create, Edit, Details, List)
+- [x] View Models
+- [x] Breadcrumb navigation
+- [x] Link from Universe details page
 
 #### Location 🔴
 - [ ] LocationController (same pattern as Figure)
@@ -465,23 +467,23 @@
 - **Data Layer**: 100% ✅
 - **Business Logic**: 100% ✅
 - **Logging & Error Handling**: 100% ✅
-- **Web UI**: 35% 🚧
+- **Web UI**: 45% 🚧
 - **Testing**: 0% ❌
 
-### Overall Project Completion: ~50%
+### Overall Project Completion: ~55%
 
 ---
 
 ## 🎯 Milestones
 
-### Milestone 1: MVP (Weeks 1-4) - 85% Complete ✅
+### Milestone 1: MVP (Weeks 1-4) - 90% Complete ✅
 - [x] Project setup
 - [x] MongoDB integration
 - [x] Authentication system
 - [x] Basic dark mode UI
 - [x] Logging and error handling
 - [x] Universe CRUD UI
-- [ ] Entity CRUD UI (at least 1 type)
+- [x] Entity CRUD UI (NotableFigure)
 
 ### Milestone 2: Core Features (Weeks 5-8) - 0% Complete 🚧
 - [ ] All entity types UI

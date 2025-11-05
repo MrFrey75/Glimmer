@@ -1,0 +1,70 @@
+@model Glimmer.Creator.Models.CreateNotableFigureViewModel
+@using Glimmer.Core.Enums
+@{
+    ViewData["Title"] = "Create Notable Figure";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Index">Universes</a></li>
+                    <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Details" asp-route-id="@Model.UniverseId">Universe</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-route-universeId="@Model.UniverseId">Figures</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Create</li>
+                </ol>
+            </nav>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="bi bi-person-plus"></i> Create New Notable Figure
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" asp-route-universeId="@Model.UniverseId" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="UniverseId" />
+                        
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Figure Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter character name" autofocus />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FigureType" class="form-label">Figure Type</label>
+                            <select asp-for="FigureType" class="form-select" asp-items="Html.GetEnumSelectList<FigureTypeEnum>()">
+                            </select>
+                            <span asp-validation-for="FigureType" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="8" 
+                                      placeholder="Describe this character..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <div class="form-text">
+                                Provide a detailed description including background, personality, appearance, etc.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" asp-route-universeId="@Model.UniverseId" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Create Figure
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

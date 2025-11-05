@@ -45,7 +45,11 @@
             <div class="card text-center stat-card">
                 <div class="card-body">
                     <i class="bi bi-person-fill stat-icon text-primary"></i>
-                    <h4 class="mb-0">@Model.FigureCount</h4>
+                    <h4 class="mb-0">
+                        <a asp-controller="NotableFigure" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.FigureCount
+                        </a>
+                    </h4>
                     <p class="text-muted mb-0">Figures</p>
                 </div>
             </div>
@@ -110,7 +114,7 @@
                     <i class="bi bi-person-plus action-icon text-primary"></i>
                     <h5 class="card-title">Create Figure</h5>
                     <p class="card-text">Add a new notable figure to your universe</p>
-                    <a href="#" class="btn btn-primary">
+                    <a asp-controller="NotableFigure" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>
