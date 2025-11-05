@@ -147,9 +147,10 @@ public class UniverseController : BaseController
                 EventCount = universe.CannonEvents.Count,
                 FactionCount = universe.Factions.Count,
                 FactCount = universe.Facts.Count,
+                SpeciesCount = universe.Species.Count,
                 TotalEntityCount = universe.Figures.Count + universe.Locations.Count + 
                                   universe.Artifacts.Count + universe.CannonEvents.Count + 
-                                  universe.Factions.Count + universe.Facts.Count
+                                  universe.Factions.Count + universe.Facts.Count + universe.Species.Count
             };
 
             return View(viewModel);

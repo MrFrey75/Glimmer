@@ -99,6 +99,19 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card text-center stat-card">
+                <div class="card-body">
+                    <i class="bi bi-bug-fill stat-icon text-success"></i>
+                    <h4 class="mb-0">
+                        <a asp-controller="Species" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                            @Model.SpeciesCount
+                        </a>
+                    </h4>
+                    <p class="text-muted mb-0">Species</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row mb-4">
@@ -175,6 +188,18 @@
                     <h5 class="card-title">Add Fact/Lore</h5>
                     <p class="card-text">Add a new fact or lore to your universe</p>
                     <a href="#" class="btn btn-secondary">
+                        <i class="bi bi-plus-circle"></i> Create
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card action-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-bug-fill action-icon text-success"></i>
+                    <h5 class="card-title">Create Species</h5>
+                    <p class="card-text">Add a new species to your universe</p>
+                    <a asp-controller="Species" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-success">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>

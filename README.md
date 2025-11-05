@@ -40,7 +40,7 @@ Glimmer follows a clean 2-tier architecture:
 
 ### Domain Modeling
 - **Universe Management**: Create and manage multiple universes with full CRUD operations
-- **Entity Types**: NotableFigures, Locations, Artifacts, CannonEvents, Factions, Facts
+- **Entity Types**: NotableFigures, Locations, Artifacts, CannonEvents, Factions, Facts, Species
 - **Relationship System**: Rich semantic relationships between any entities (ParentOf, LocatedIn, AllyOf, etc.)
 - **Soft Delete**: Safe entity removal with recovery options
 - **Embedded Collections**: Entities stored within universes for efficient queries

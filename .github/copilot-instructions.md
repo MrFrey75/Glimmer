@@ -15,6 +15,7 @@ The domain centers around **Universe** as the root aggregate containing collecti
 - `CannonEvent` - Historical events and occurrences
 - `Faction` - Groups, organizations, and political entities
 - `Fact` - Miscellaneous facts, lore, and trivia
+- `Species` - Lifeforms and creatures in the universe
 
 ### Entity Patterns
 
