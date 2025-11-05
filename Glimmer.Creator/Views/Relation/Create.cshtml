@@ -1,0 +1,121 @@
+@model Glimmer.Creator.Models.EntityRelationViewModel
+
+@{
+    ViewData["Title"] = "Create Relationship";
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Index" class="text-decoration-none" style="color: #9333ea;">Universes</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Details" asp-route-id="@Model.UniverseId" class="text-decoration-none" style="color: #9333ea;">@Model.UniverseName</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index" asp-route-id="@Model.UniverseId" class="text-decoration-none" style="color: #9333ea;">Relationships</a></li>
+        <li class="breadcrumb-item active text-light" aria-current="page">Create</li>
+    </ol>
+</nav>
+
+<h2 class="text-light mb-4">
+    <i class="bi bi-diagram-3 me-2" style="color: #9333ea;"></i>Create Relationship
+</h2>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <form asp-action="Create" asp-route-id="@Model.UniverseId" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label for="fromEntity" class="form-label text-light">From Entity *</label>
+                        <select asp-for="FromEntityId" class="form-select bg-dark text-light border-secondary" id="fromEntity" required>
+                            <option value="">-- Select Entity --</option>
+                            @foreach (var group in ((List<Glimmer.Creator.Models.EntityPickerItem>)ViewBag.Entities).GroupBy(e => e.EntityType))
+                            {
+                                <optgroup label="@group.Key">
+                                    @foreach (var entity in group)
+                                    {
+                                        <option value="@entity.EntityId">@entity.EntityName</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                        <span asp-validation-for="FromEntityId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="relationType" class="form-label text-light">Relationship Type *</label>
+                        <select asp-for="RelationType" class="form-select bg-dark text-light border-secondary" id="relationType" required>
+                            <option value="">-- Select Type --</option>
+                            @foreach (var type in ViewBag.RelationTypes)
+                            {
+                                <option value="@type.Value">@type.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RelationType" class="text-danger"></span>
+                        <div class="form-text text-muted">
+                            <small>Examples: ParentOf, LocatedIn, MemberOf, BornIn, AllyOf, etc.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="toEntity" class="form-label text-light">To Entity *</label>
+                        <select asp-for="ToEntityId" class="form-select bg-dark text-light border-secondary" id="toEntity" required>
+                            <option value="">-- Select Entity --</option>
+                            @foreach (var group in ((List<Glimmer.Creator.Models.EntityPickerItem>)ViewBag.Entities).GroupBy(e => e.EntityType))
+                            {
+                                <optgroup label="@group.Key">
+                                    @foreach (var entity in group)
+                                    {
+                                        <option value="@entity.EntityId">@entity.EntityName</option>
+                                    }
+                                </optgroup>
+                            }
+                        </select>
+                        <span asp-validation-for="ToEntityId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label text-light">Description</label>
+                        <textarea asp-for="Description" class="form-control bg-dark text-light border-secondary" rows="3" placeholder="Optional description or notes about this relationship..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>Create Relationship
+                        </button>
+                        <a asp-action="Index" asp-route-id="@Model.UniverseId" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-1"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header border-secondary">
+                <h6 class="text-light mb-0"><i class="bi bi-info-circle me-2"></i>About Relationships</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    Relationships connect two entities in your universe with a semantic meaning.
+                </p>
+                <h6 class="text-light small mb-2">Common Patterns:</h6>
+                <ul class="text-muted small mb-0">
+                    <li><strong>People:</strong> ParentOf, ChildOf, AllyOf, EnemyOf</li>
+                    <li><strong>Places:</strong> LocatedIn, RuledOver, BornIn</li>
+                    <li><strong>Groups:</strong> MemberOf, LeaderOf, FounderOf</li>
+                    <li><strong>Events:</strong> ParticipatedIn, CausedBy</li>
+                    <li><strong>Objects:</strong> OwnedBy, CreatedBy, UsedIn</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
