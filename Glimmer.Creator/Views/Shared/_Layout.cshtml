@@ -42,20 +42,8 @@
             <li class="ribbon-item">
                 <a href="#">Universe</a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">New Universe</a></li>
-                    <li><a href="#">Open Universe</a></li>
-                    <li><a href="#">Save Universe</a></li>
-                    <li class="separator"></li>
-                    <li class="has-submenu">
-                        <a href="#">Recent Universes</a>
-                        <ul class="submenu">
-                            <li><a href="#">Universe 1</a></li>
-                            <li><a href="#">Universe 2</a></li>
-                            <li><a href="#">Universe 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="separator"></li>
-                    <li><a href="#">Universe Properties</a></li>
+                    <li><a asp-controller="Universe" asp-action="Create">New Universe</a></li>
+                    <li><a asp-controller="Universe" asp-action="Index">My Universes</a></li>
                 </ul>
             </li>
             
