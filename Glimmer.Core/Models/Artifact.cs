@@ -8,45 +8,25 @@ public class Artifact : BaseEntity
 
     // Physical Characteristics
     public MaterialCompositionEnmum MaterialComposition { get; set; } = MaterialCompositionEnmum.Unknown;
-    public string? Dimensions { get; set; } = 
-    public string? Weight { get; set; }
-    public string? Color { get; set; }
+    public string Dimensions { get; set; } = string.Empty;
+    public string Weight { get; set; } = string.Empty;
+    public string Color { get; set; } = string.Empty;
     public ConditionEnum Condition { get; set; } = ConditionEnum.Unknown;
 
     // Historical and Cultural Significance
-    public string? Origin { get; set; }
-    public string? HistoricalPeriod { get; set; }
-    public string? CulturalSignificance { get; set; }
-    public string? NotableOwners { get; set; }
+    public string Origin { get; set; } = string.Empty;
+    public string HistoricalPeriod { get; set; } = string.Empty;
+    public string CulturalSignificance { get; set; } = string.Empty;
+    public string NotableOwners { get; set; } = string.Empty;
 
     // Magical or Special Properties
     public bool HasMagicalProperties { get; set; } = false;
-    public string? MagicalPropertiesDescription { get; set; }
+    public string MagicalPropertiesDescription { get; set; } = string.Empty;
 
     // Additional Information
-    public string? AdditionalNotes { get; set; }
+    public string AdditionalNotes { get; set; } = string.Empty;
 }
 
-public enum MaterialCompositionEnmum
-{
-    Unknown = 0,
-    Wood = 1,
-    Metal = 2,
-    Stone = 3,
-    Fabric = 4,
-    Glass = 5,
-    Composite = 6,
-    Organic = 7,
-    Synthetic = 8
-}
 
-public enum ConditionEnum
-{
-    Unknown = 0,
-    Pristine = 1,
-    Good = 2,
-    Fair = 3,
-    Poor = 4,
-    Damaged = 5,
-    Ruined = 6
-}
+
+

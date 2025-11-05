@@ -3,7 +3,6 @@ namespace Glimmer.Core.Enums;
 public enum SpeciesTypeEnum
 {
     Unknown = 0,
-    Human = 1,
     Humanoid = 2,
     Mammal = 3,
     Bird = 4,
@@ -28,5 +27,11 @@ public enum SpeciesTypeEnum
     Undead = 21,
     Phantom = 22,
 
-    Other = 23
+    Other = 23,
+    Ethereal = 24,
+    Invertebrate = 25,
+    Cryptid = 26,
+    Mythical = 27,
+    AugmentedHumanoid = 28,
+    Guardian = 29
 }

@@ -1,12 +1,13 @@
 @model Glimmer.Creator.Models.CreateFactionViewModel
 @using Glimmer.Core.Enums
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = "Create Faction";
 }
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Index">Universes</a></li>
@@ -25,24 +26,103 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="UniverseId" />
                         
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label">Faction Name</label>
-                            <input asp-for="Name" class="form-control" placeholder="Enter faction name" autofocus />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="FactionType" class="form-label">Faction Type</label>
-                            <select asp-for="FactionType" class="form-select" asp-items="Html.GetEnumSelectList<FactionTypeEnum>()">
-                            </select>
-                            <span asp-validation-for="FactionType" class="text-danger"></span>
+                        <!-- Basic Information -->
+                        <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-info-circle"></i> Basic Information</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Name" class="form-label">Faction Name</label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter faction name" autofocus />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="FactionType" class="form-label">Faction Type</label>
+                                <select asp-for="FactionType" class="form-select" asp-items="Html.GetEnumSelectList<FactionTypeEnum>()">
+                                </select>
+                                <span asp-validation-for="FactionType" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="8" 
-                                      placeholder="Describe this faction..."></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="3" 
+                                      placeholder="Brief description of this faction..."></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Organizational Structure -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-diagram-3"></i> Organizational Structure</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="LeadershipStructure" class="form-label">Leadership Structure</label>
+                            <select asp-for="LeadershipStructure" class="form-select" asp-items="Html.GetEnumSelectList<LeadershipStructureEnum>()">
+                            </select>
+                            <div class="form-text">How is the faction led? (e.g., SingleLeader, Council, Democratic)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MembershipCriteria" class="form-label">Membership Criteria</label>
+                            <textarea asp-for="MembershipCriteria" class="form-control" rows="2" 
+                                      placeholder="Requirements to join (e.g., noble birth, skills, oaths...)"></textarea>
+                            <span asp-validation-for="MembershipCriteria" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Hierarchy" class="form-label">Hierarchy</label>
+                            <textarea asp-for="Hierarchy" class="form-control" rows="3" 
+                                      placeholder="Organizational ranks and structure..."></textarea>
+                            <span asp-validation-for="Hierarchy" class="text-danger"></span>
+                        </div>
+
+                        <!-- Goals and Objectives -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-bullseye"></i> Goals and Objectives</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="PrimaryGoals" class="form-label">Primary Goals</label>
+                            <textarea asp-for="PrimaryGoals" class="form-control" rows="3" 
+                                      placeholder="Main objectives (e.g., conquest, protection, profit...)"></textarea>
+                            <span asp-validation-for="PrimaryGoals" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Motivations" class="form-label">Motivations</label>
+                            <textarea asp-for="Motivations" class="form-control" rows="2" 
+                                      placeholder="What drives the faction? (ideology, revenge, power...)"></textarea>
+                            <span asp-validation-for="Motivations" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="KeyActivities" class="form-label">Key Activities</label>
+                            <textarea asp-for="KeyActivities" class="form-control" rows="2" 
+                                      placeholder="Main operations and activities..."></textarea>
+                            <span asp-validation-for="KeyActivities" class="text-danger"></span>
+                        </div>
+
+                        <!-- Historical Background -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-clock-history"></i> Historical Background</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="FoundingHistory" class="form-label">Founding History</label>
+                            <textarea asp-for="FoundingHistory" class="form-control" rows="3" 
+                                      placeholder="How and when was the faction founded?"></textarea>
+                            <span asp-validation-for="FoundingHistory" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EvolutionOverTime" class="form-label">Evolution Over Time</label>
+                            <textarea asp-for="EvolutionOverTime" class="form-control" rows="3" 
+                                      placeholder="Major changes and developments in the faction's history..."></textarea>
+                            <span asp-validation-for="EvolutionOverTime" class="text-danger"></span>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-pencil-square"></i> Additional Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="AdditionalNotes" class="form-label">Additional Notes</label>
+                            <textarea asp-for="AdditionalNotes" class="form-control" rows="3" 
+                                      placeholder="Any other relevant information..."></textarea>
+                            <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">

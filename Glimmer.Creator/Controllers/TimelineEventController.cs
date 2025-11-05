@@ -48,6 +48,7 @@ public class TimelineEventController : BaseController
                         Name = e.Name,
                         Description = e.Description,
                         EventType = e.EventType,
+                        IsAnchorEvent = e.IsAnchorEvent,
                         CreatedAt = e.CreatedAt
                     }).ToList()
             };
@@ -172,6 +173,7 @@ public class TimelineEventController : BaseController
                 Name = entity.Name,
                 Description = entity.Description,
                 EventType = entity.EventType,
+                IsAnchorEvent = entity.IsAnchorEvent,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -219,6 +221,7 @@ public class TimelineEventController : BaseController
                 Name = entity.Name,
                 Description = entity.Description,
                 EventType = entity.EventType,
+                IsAnchorEvent = entity.IsAnchorEvent,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -318,6 +321,13 @@ public class TimelineEventController : BaseController
             {
                 TempData["ErrorMessage"] = "TimelineEvent not found.";
                 return RedirectToAction(nameof(Index), new { universeId });
+            }
+
+            // Check if it's an anchor event
+            if (entity.IsAnchorEvent)
+            {
+                TempData["ErrorMessage"] = "Cannot delete anchor event. Anchor events are required for relative dating and cannot be removed.";
+                return RedirectToAction(nameof(Details), new { universeId, id });
             }
 
             var success = await _entityService.DeleteTimelineEventAsync(universeId, id);

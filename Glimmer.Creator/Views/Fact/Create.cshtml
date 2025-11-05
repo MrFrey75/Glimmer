@@ -39,10 +39,23 @@
                         </div>
 
                         <div class="mb-3">
+                            <label asp-for="Value" class="form-label">Value</label>
+                            <input asp-for="Value" class="form-control" placeholder="Enter fact value (optional)" />
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="8" 
+                            <textarea asp-for="Description" class="form-control" rows="5" 
                                       placeholder="Describe this fact..."></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AdditionalNotes" class="form-label">Additional Notes</label>
+                            <textarea asp-for="AdditionalNotes" class="form-control" rows="3" 
+                                      placeholder="Any other relevant information..."></textarea>
+                            <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">

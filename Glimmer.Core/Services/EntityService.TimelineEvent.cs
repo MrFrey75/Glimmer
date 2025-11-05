@@ -73,9 +73,16 @@ public async Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, stri
 
     public async Task<bool> DeleteTimelineEventAsync(Guid universeId, Guid eventId)
     {
-
         var timelineEvent = await GetTimelineEventByIdAsync(universeId, eventId);
         if (timelineEvent == null) return false;
+
+        // Prevent deletion of anchor events
+        if (timelineEvent.IsAnchorEvent)
+        {
+            _logger.LogWarning("Attempted to delete anchor event {EventId} in universe {UniverseId}. Anchor events cannot be deleted.", 
+                eventId, universeId);
+            return false;
+        }
 
         timelineEvent.IsDeleted = true;
         timelineEvent.UpdatedAt = DateTime.UtcNow;

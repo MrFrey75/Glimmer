@@ -1,4 +1,6 @@
 @model Glimmer.Creator.Models.FactionDetailsViewModel
+@using Glimmer.Core.Enums
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -15,10 +17,14 @@
                 </ol>
             </nav>
             <h1 class="display-4">
-                <i class="bi bi-flag-fill"></i> @Model.Name
+                <i class="bi bi-shield-fill"></i> @Model.Name
             </h1>
             <p class="text-muted">
-                <span class="badge bg-info">@Model.FactionType</span>
+                <span class="badge bg-primary">@Model.FactionType</span>
+                @if (Model.LeadershipStructure != LeadershipStructureEnum.Unknown)
+                {
+                    <span class="badge bg-secondary">@Model.LeadershipStructure</span>
+                }
                 Created @Model.CreatedAt.ToString("MMMM dd, yyyy")
             </p>
         </div>
@@ -41,9 +47,94 @@
                     <h5><i class="bi bi-file-text"></i> Description</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">@Model.Description</p>
+                    <p class="mb-0">@Model.Description</p>
                 </div>
             </div>
+
+            @if (Model.LeadershipStructure != LeadershipStructureEnum.Unknown || !string.IsNullOrEmpty(Model.MembershipCriteria) || !string.IsNullOrEmpty(Model.Hierarchy))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-diagram-3"></i> Organizational Structure</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.LeadershipStructure != LeadershipStructureEnum.Unknown)
+                        {
+                            <h6>Leadership Structure</h6>
+                            <p><span class="badge bg-secondary">@Model.LeadershipStructure</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.MembershipCriteria))
+                        {
+                            <h6>Membership Criteria</h6>
+                            <p>@Model.MembershipCriteria</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Hierarchy))
+                        {
+                            <h6>Hierarchy</h6>
+                            <p class="mb-0">@Model.Hierarchy</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.PrimaryGoals) || !string.IsNullOrEmpty(Model.Motivations) || !string.IsNullOrEmpty(Model.KeyActivities))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-bullseye"></i> Goals and Objectives</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.PrimaryGoals))
+                        {
+                            <h6>Primary Goals</h6>
+                            <p>@Model.PrimaryGoals</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Motivations))
+                        {
+                            <h6>Motivations</h6>
+                            <p>@Model.Motivations</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.KeyActivities))
+                        {
+                            <h6>Key Activities</h6>
+                            <p class="mb-0">@Model.KeyActivities</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.FoundingHistory) || !string.IsNullOrEmpty(Model.EvolutionOverTime))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-clock-history"></i> Historical Background</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.FoundingHistory))
+                        {
+                            <h6>Founding History</h6>
+                            <p>@Model.FoundingHistory</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.EvolutionOverTime))
+                        {
+                            <h6>Evolution Over Time</h6>
+                            <p class="mb-0">@Model.EvolutionOverTime</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.AdditionalNotes))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-pencil-square"></i> Additional Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.AdditionalNotes</p>
+                    </div>
+                </div>
+            }
 
             <div class="card">
                 <div class="card-header">
@@ -61,15 +152,27 @@
                     <h5><i class="bi bi-info-circle"></i> Information</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">Type:</dt>
-                        <dd class="col-sm-8"><span class="badge bg-info">@Model.FactionType</span></dd>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Type:</dt>
+                        <dd class="col-sm-7"><span class="badge bg-primary">@Model.FactionType</span></dd>
                         
-                        <dt class="col-sm-4">Created:</dt>
-                        <dd class="col-sm-8">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+                        <dt class="col-sm-5">Leadership:</dt>
+                        <dd class="col-sm-7">
+                            @if (Model.LeadershipStructure != LeadershipStructureEnum.Unknown)
+                            {
+                                <span class="badge bg-secondary">@Model.LeadershipStructure</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Not specified</span>
+                            }
+                        </dd>
                         
-                        <dt class="col-sm-4">Updated:</dt>
-                        <dd class="col-sm-8">@Model.UpdatedAt.ToString("MMM dd, yyyy")</dd>
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+                        
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7 mb-0">@Model.UpdatedAt.ToString("MMM dd, yyyy")</dd>
                     </dl>
                 </div>
             </div>

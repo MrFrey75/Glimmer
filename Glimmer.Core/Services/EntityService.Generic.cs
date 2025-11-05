@@ -33,6 +33,9 @@ public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId
         entity = universe.Facts.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
         if (entity != null) return entity;
 
+        entity = universe.Species.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
+        if (entity != null) return entity;
+
         return null;
     }
 
@@ -75,6 +78,11 @@ public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId
                         e.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                         e.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))));
 
+        results.AddRange(universe.Species
+            .Where(e => !e.IsDeleted && 
+                       (e.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                        e.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))));
+
         return results;
     }
 
@@ -89,6 +97,7 @@ public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId
                universe.Factions.Count(e => !e.IsDeleted) +
                universe.Figures.Count(e => !e.IsDeleted) +
                universe.Locations.Count(e => !e.IsDeleted) +
-               universe.Facts.Count(e => !e.IsDeleted);
+               universe.Facts.Count(e => !e.IsDeleted) + 
+               universe.Species.Count(e => !e.IsDeleted);
     }
 }

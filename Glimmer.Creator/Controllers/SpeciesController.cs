@@ -1,4 +1,5 @@
 using Glimmer.Core.Services;
+using Glimmer.Core.Models;
 using Glimmer.Creator.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -130,22 +131,48 @@ public class SpeciesController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var species = await _entityService.CreateSpeciesAsync(
-                model.UniverseId,
-                model.Name,
-                model.Description,
-                model.SpeciesType);
+            var species = new Species
+            {
+                Name = model.Name,
+                Description = model.Description,
+                SpeciesType = model.SpeciesType,
+                AverageHeight = model.AverageHeight,
+                HeightMeasure = model.HeightMeasure,
+                AverageWeight = model.AverageWeight,
+                WeightMeasure = model.WeightMeasure,
+                SkinColor = model.SkinColor,
+                EyeColor = model.EyeColor,
+                HairColor = model.HairColor,
+                DistinguishingFeatures = model.DistinguishingFeatures,
+                NaturalHabitat = model.NaturalHabitat,
+                GeographicDistribution = model.GeographicDistribution,
+                SocialStructure = model.SocialStructure,
+                BehavioralTraits = model.BehavioralTraits,
+                Diet = model.Diet,
+                AverageLifespan = model.AverageLifespan,
+                ReproductiveMethods = model.ReproductiveMethods,
+                GestationPeriod = model.GestationPeriod,
+                OffspringPerBirth = model.OffspringPerBirth,
+                CommunicationMethods = model.CommunicationMethods,
+                PredatorsAndThreats = model.PredatorsAndThreats,
+                ConservationStatus = model.ConservationStatus,
+                HasMagicalAbilities = model.HasMagicalAbilities,
+                MagicalAbilitiesDescription = model.MagicalAbilitiesDescription,
+                AdditionalNotes = model.AdditionalNotes
+            };
 
-            if (species == null)
+            var entity = await _entityService.CreateSpeciesAsync(model.UniverseId, species);
+
+            if (entity == null)
             {
                 TempData["ErrorMessage"] = "Failed to create species. Please try again.";
                 return View(model);
             }
 
             Logger.LogInformation("Species created: {SpeciesName} in universe {UniverseName}", 
-                species.Name, universe.Name);
-            TempData["SuccessMessage"] = $"Species '{species.Name}' created successfully!";
-            return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = species.Uuid });
+                entity.Name, universe.Name);
+            TempData["SuccessMessage"] = $"Species '{entity.Name}' created successfully!";
+            return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = entity.Uuid });
         }
         catch (Exception ex)
         {
@@ -192,6 +219,29 @@ public class SpeciesController : BaseController
                 Name = species.Name,
                 Description = species.Description,
                 SpeciesType = species.SpeciesType,
+                AverageHeight = species.AverageHeight,
+                HeightMeasure = species.HeightMeasure,
+                AverageWeight = species.AverageWeight,
+                WeightMeasure = species.WeightMeasure,
+                SkinColor = species.SkinColor,
+                EyeColor = species.EyeColor,
+                HairColor = species.HairColor,
+                DistinguishingFeatures = species.DistinguishingFeatures,
+                NaturalHabitat = species.NaturalHabitat,
+                GeographicDistribution = species.GeographicDistribution,
+                SocialStructure = species.SocialStructure,
+                BehavioralTraits = species.BehavioralTraits,
+                Diet = species.Diet,
+                AverageLifespan = species.AverageLifespan,
+                ReproductiveMethods = species.ReproductiveMethods,
+                GestationPeriod = species.GestationPeriod,
+                OffspringPerBirth = species.OffspringPerBirth,
+                CommunicationMethods = species.CommunicationMethods,
+                PredatorsAndThreats = species.PredatorsAndThreats,
+                ConservationStatus = species.ConservationStatus,
+                HasMagicalAbilities = species.HasMagicalAbilities,
+                MagicalAbilitiesDescription = species.MagicalAbilitiesDescription,
+                AdditionalNotes = species.AdditionalNotes,
                 CreatedAt = species.CreatedAt,
                 UpdatedAt = species.UpdatedAt
             };
@@ -242,6 +292,29 @@ public class SpeciesController : BaseController
                 Name = species.Name,
                 Description = species.Description,
                 SpeciesType = species.SpeciesType,
+                AverageHeight = species.AverageHeight,
+                HeightMeasure = species.HeightMeasure,
+                AverageWeight = species.AverageWeight,
+                WeightMeasure = species.WeightMeasure,
+                SkinColor = species.SkinColor,
+                EyeColor = species.EyeColor,
+                HairColor = species.HairColor,
+                DistinguishingFeatures = species.DistinguishingFeatures,
+                NaturalHabitat = species.NaturalHabitat,
+                GeographicDistribution = species.GeographicDistribution,
+                SocialStructure = species.SocialStructure,
+                BehavioralTraits = species.BehavioralTraits,
+                Diet = species.Diet,
+                AverageLifespan = species.AverageLifespan,
+                ReproductiveMethods = species.ReproductiveMethods,
+                GestationPeriod = species.GestationPeriod,
+                OffspringPerBirth = species.OffspringPerBirth,
+                CommunicationMethods = species.CommunicationMethods,
+                PredatorsAndThreats = species.PredatorsAndThreats,
+                ConservationStatus = species.ConservationStatus,
+                HasMagicalAbilities = species.HasMagicalAbilities,
+                MagicalAbilitiesDescription = species.MagicalAbilitiesDescription,
+                AdditionalNotes = species.AdditionalNotes,
                 CreatedAt = species.CreatedAt,
                 UpdatedAt = species.UpdatedAt
             };
@@ -300,6 +373,29 @@ public class SpeciesController : BaseController
             species.Name = model.Name;
             species.Description = model.Description;
             species.SpeciesType = model.SpeciesType;
+            species.AverageHeight = model.AverageHeight;
+            species.HeightMeasure = model.HeightMeasure;
+            species.AverageWeight = model.AverageWeight;
+            species.WeightMeasure = model.WeightMeasure;
+            species.SkinColor = model.SkinColor;
+            species.EyeColor = model.EyeColor;
+            species.HairColor = model.HairColor;
+            species.DistinguishingFeatures = model.DistinguishingFeatures;
+            species.NaturalHabitat = model.NaturalHabitat;
+            species.GeographicDistribution = model.GeographicDistribution;
+            species.SocialStructure = model.SocialStructure;
+            species.BehavioralTraits = model.BehavioralTraits;
+            species.Diet = model.Diet;
+            species.AverageLifespan = model.AverageLifespan;
+            species.ReproductiveMethods = model.ReproductiveMethods;
+            species.GestationPeriod = model.GestationPeriod;
+            species.OffspringPerBirth = model.OffspringPerBirth;
+            species.CommunicationMethods = model.CommunicationMethods;
+            species.PredatorsAndThreats = model.PredatorsAndThreats;
+            species.ConservationStatus = model.ConservationStatus;
+            species.HasMagicalAbilities = model.HasMagicalAbilities;
+            species.MagicalAbilitiesDescription = model.MagicalAbilitiesDescription;
+            species.AdditionalNotes = model.AdditionalNotes;
             species.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateSpeciesAsync(universeId, species);

@@ -1,4 +1,5 @@
 using Glimmer.Core.Services;
+using Glimmer.Core.Models;
 using Glimmer.Creator.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -156,14 +157,27 @@ public class LocationController : BaseController
                 ? await _entityService.GetLocationByIdAsync(model.UniverseId, model.ParentLocationId.Value)
                 : null;
 
-            var location = await _entityService.CreateLocationAsync(
-                model.UniverseId,
-                model.Name,
-                model.Description,
-                model.LocationType,
-                parentLocation);
+            var location = new Location
+            {
+                Name = model.Name,
+                Description = model.Description,
+                LocationType = model.LocationType,
+                ParentLocation = parentLocation,
+                Coordinates = model.Coordinates,
+                Climate = model.Climate,
+                Terrain = model.Terrain,
+                NaturalResources = model.NaturalResources,
+                Address = model.Address,
+                PoliticalAffiliation = model.PoliticalAffiliation,
+                Inhabitants = model.Inhabitants,
+                LanguagesSpoken = model.LanguagesSpoken,
+                HistoricalSignificance = model.HistoricalSignificance,
+                AdditionalNotes = model.AdditionalNotes
+            };
 
-            if (location == null)
+            var entity = await _entityService.CreateLocationAsync(model.UniverseId, location);
+
+            if (entity == null)
             {
                 TempData["ErrorMessage"] = "Failed to create location. Please try again.";
                 model.AvailableParentLocations = universe.Locations
@@ -178,9 +192,9 @@ public class LocationController : BaseController
             }
 
             Logger.LogInformation("Location created: {LocationName} in universe {UniverseName}", 
-                location.Name, universe.Name);
-            TempData["SuccessMessage"] = $"Location '{location.Name}' created successfully!";
-            return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = location.Uuid });
+                entity.Name, universe.Name);
+            TempData["SuccessMessage"] = $"Location '{entity.Name}' created successfully!";
+            return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = entity.Uuid });
         }
         catch (Exception ex)
         {
@@ -242,6 +256,16 @@ public class LocationController : BaseController
                 ParentLocationName = location.ParentLocation?.Name,
                 ParentLocationId = location.ParentLocation?.Uuid,
                 ChildLocations = childLocations,
+                Coordinates = location.Coordinates,
+                Climate = location.Climate,
+                Terrain = location.Terrain,
+                NaturalResources = location.NaturalResources,
+                Address = location.Address,
+                PoliticalAffiliation = location.PoliticalAffiliation,
+                Inhabitants = location.Inhabitants,
+                LanguagesSpoken = location.LanguagesSpoken,
+                HistoricalSignificance = location.HistoricalSignificance,
+                AdditionalNotes = location.AdditionalNotes,
                 CreatedAt = location.CreatedAt,
                 UpdatedAt = location.UpdatedAt
             };
@@ -293,6 +317,16 @@ public class LocationController : BaseController
                 Description = location.Description,
                 LocationType = location.LocationType,
                 ParentLocationId = location.ParentLocation?.Uuid,
+                Coordinates = location.Coordinates,
+                Climate = location.Climate,
+                Terrain = location.Terrain,
+                NaturalResources = location.NaturalResources,
+                Address = location.Address,
+                PoliticalAffiliation = location.PoliticalAffiliation,
+                Inhabitants = location.Inhabitants,
+                LanguagesSpoken = location.LanguagesSpoken,
+                HistoricalSignificance = location.HistoricalSignificance,
+                AdditionalNotes = location.AdditionalNotes,
                 CreatedAt = location.CreatedAt,
                 UpdatedAt = location.UpdatedAt,
                 AvailableParentLocations = universe.Locations
@@ -377,6 +411,16 @@ public class LocationController : BaseController
             location.Description = model.Description;
             location.LocationType = model.LocationType;
             location.ParentLocation = parentLocation;
+            location.Coordinates = model.Coordinates;
+            location.Climate = model.Climate;
+            location.Terrain = model.Terrain;
+            location.NaturalResources = model.NaturalResources;
+            location.Address = model.Address;
+            location.PoliticalAffiliation = model.PoliticalAffiliation;
+            location.Inhabitants = model.Inhabitants;
+            location.LanguagesSpoken = model.LanguagesSpoken;
+            location.HistoricalSignificance = model.HistoricalSignificance;
+            location.AdditionalNotes = model.AdditionalNotes;
             location.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateLocationAsync(universeId, location);

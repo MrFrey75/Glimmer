@@ -9,21 +9,15 @@ namespace Glimmer.Core.Services;
 /// </summary>
 public partial class EntityService
 {
-public async Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, string name, string description, FigureTypeEnum figureType)
+public async Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, NotableFigure figure)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        var figure = new NotableFigure
-        {
-            Uuid = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            FigureType = figureType,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        figure.Uuid = Guid.NewGuid();
+        figure.CreatedAt = DateTime.UtcNow;
+        figure.UpdatedAt = DateTime.UtcNow;
 
         universe.Figures.Add(figure);
         universe.UpdatedAt = DateTime.UtcNow;
@@ -54,10 +48,33 @@ public async Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, stri
         existing.Name = figure.Name;
         existing.Description = figure.Description;
         existing.FigureType = figure.FigureType;
+        existing.Species = figure.Species;
+        existing.Height = figure.Height;
+        existing.Weight = figure.Weight;
+        existing.HeightMeasure = figure.HeightMeasure;
+        existing.WeightMeasure = figure.WeightMeasure;
+        existing.EyeColor = figure.EyeColor;
+        existing.HairColor = figure.HairColor;
+        existing.SkinColor = figure.SkinColor;
+        existing.DistinguishingFeatures = figure.DistinguishingFeatures;
+        existing.Gender = figure.Gender;
+        existing.SexualOrientation = figure.SexualOrientation;
+        existing.HasMagicalAbilities = figure.HasMagicalAbilities;
+        existing.MagicalAbilitiesDescription = figure.MagicalAbilitiesDescription;
+        existing.BirthDate = figure.BirthDate;
+        existing.DeathDate = figure.DeathDate;
+        existing.Occupation = figure.Occupation;
+        existing.NotableAchievements = figure.NotableAchievements;
+        existing.Biography = figure.Biography;
+        existing.AdditionalNotes = figure.AdditionalNotes;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }

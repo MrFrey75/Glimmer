@@ -36,6 +36,9 @@ public class CreateFactViewModel
     
     [Required(ErrorMessage = "Fact type is required")]
     public FactTypeEnum FactType { get; set; } = FactTypeEnum.Historical;
+    
+    [StringLength(2000, ErrorMessage = "Additional notes cannot exceed 2000 characters")]
+    public string AdditionalNotes { get; set; } = string.Empty;
 }
 
 public class EditFactViewModel
@@ -51,8 +54,14 @@ public class EditFactViewModel
     [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
     public string Description { get; set; } = string.Empty;
     
+    [StringLength(500, ErrorMessage = "Value cannot exceed 500 characters")]
+    public string Value { get; set; } = string.Empty;
+    
     [Required(ErrorMessage = "Fact type is required")]
     public FactTypeEnum FactType { get; set; }
+    
+    [StringLength(2000, ErrorMessage = "Additional notes cannot exceed 2000 characters")]
+    public string AdditionalNotes { get; set; } = string.Empty;
     
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -65,7 +74,9 @@ public class FactDetailsViewModel
     public Guid Uuid { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
     public FactTypeEnum FactType { get; set; }
+    public string AdditionalNotes { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

@@ -1,4 +1,5 @@
 @model Glimmer.Creator.Models.CreateUniverseViewModel
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = "Create Universe";
 }
@@ -29,6 +30,17 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                             <div class="form-text">
                                 Provide a detailed description of your universe. You can always edit this later.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TimelineType" class="form-label">Timeline Type</label>
+                            <select asp-for="TimelineType" class="form-select" asp-items="Html.GetEnumSelectList<TimelineTypeEnum>()">
+                            </select>
+                            <span asp-validation-for="TimelineType" class="text-danger"></span>
+                            <div class="form-text">
+                                <strong>Calendar-Based:</strong> Events use specific dates (Year/Month/Day with optional eras).<br/>
+                                <strong>Relative Dating:</strong> Events are anchored relative to other events (e.g., "10 years after X").
                             </div>
                         </div>
 

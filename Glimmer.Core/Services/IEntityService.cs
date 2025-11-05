@@ -10,7 +10,7 @@ namespace Glimmer.Core.Services;
 public interface IEntityService
 {
     // Universe Operations
-    Task<Universe?> CreateUniverseAsync(string name, string description, User createdBy);
+    Task<Universe?> CreateUniverseAsync(string name, string description, User createdBy, TimelineTypeEnum timelineType = TimelineTypeEnum.CalendarBased);
     Task<Universe?> GetUniverseByIdAsync(Guid universeId);
     Task<List<Universe>> GetUniversesByUserAsync(Guid userId);
     Task<List<Universe>> GetAllUniversesAsync();
@@ -18,7 +18,7 @@ public interface IEntityService
     Task<bool> DeleteUniverseAsync(Guid universeId);
 
     // Artifact Operations
-    Task<Artifact?> CreateArtifactAsync(Guid universeId, string name, string description, ArtifactTypeEnum artifactType);
+    Task<Artifact?> CreateArtifactAsync(Guid universeId, Artifact artifact);
     Task<Artifact?> GetArtifactByIdAsync(Guid universeId, Guid artifactId);
     Task<List<Artifact>> GetArtifactsByUniverseAsync(Guid universeId);
     Task<bool> UpdateArtifactAsync(Guid universeId, Artifact artifact);
@@ -32,35 +32,35 @@ public interface IEntityService
     Task<bool> DeleteTimelineEventAsync(Guid universeId, Guid eventId);
 
     // Faction Operations
-    Task<Faction?> CreateFactionAsync(Guid universeId, string name, string description, FactionTypeEnum factionType);
+    Task<Faction?> CreateFactionAsync(Guid universeId, Faction faction);
     Task<Faction?> GetFactionByIdAsync(Guid universeId, Guid factionId);
     Task<List<Faction>> GetFactionsByUniverseAsync(Guid universeId);
     Task<bool> UpdateFactionAsync(Guid universeId, Faction faction);
     Task<bool> DeleteFactionAsync(Guid universeId, Guid factionId);
 
     // Location Operations
-    Task<Location?> CreateLocationAsync(Guid universeId, string name, string description, LocationTypeEnum locationType, Location? parentLocation = null);
+    Task<Location?> CreateLocationAsync(Guid universeId, Location location);
     Task<Location?> GetLocationByIdAsync(Guid universeId, Guid locationId);
     Task<List<Location>> GetLocationsByUniverseAsync(Guid universeId);
     Task<bool> UpdateLocationAsync(Guid universeId, Location location);
     Task<bool> DeleteLocationAsync(Guid universeId, Guid locationId);
 
     // NotableFigure Operations
-    Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, string name, string description, FigureTypeEnum figureType);
+    Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, NotableFigure figure);
     Task<NotableFigure?> GetNotableFigureByIdAsync(Guid universeId, Guid figureId);
     Task<List<NotableFigure>> GetNotableFiguresByUniverseAsync(Guid universeId);
     Task<bool> UpdateNotableFigureAsync(Guid universeId, NotableFigure figure);
     Task<bool> DeleteNotableFigureAsync(Guid universeId, Guid figureId);
 
     // Fact Operations
-    Task<Fact?> CreateFactAsync(Guid universeId, string name, string description, string value, FactTypeEnum factType);
+    Task<Fact?> CreateFactAsync(Guid universeId, string name, string description, string value, FactTypeEnum factType, string additionalNotes);
     Task<Fact?> GetFactByIdAsync(Guid universeId, Guid factId);
     Task<List<Fact>> GetFactsByUniverseAsync(Guid universeId);
     Task<bool> UpdateFactAsync(Guid universeId, Fact fact);
     Task<bool> DeleteFactAsync(Guid universeId, Guid factId);
 
     // Species Operations
-    Task<Species?> CreateSpeciesAsync(Guid universeId, string name, string description, SpeciesTypeEnum speciesType);
+    Task<Species?> CreateSpeciesAsync(Guid universeId, Species species);
     Task<Species?> GetSpeciesByIdAsync(Guid universeId, Guid speciesId);
     Task<List<Species>> GetSpeciesByUniverseAsync(Guid universeId);
     Task<bool> UpdateSpeciesAsync(Guid universeId, Species species);

@@ -1,4 +1,6 @@
 @model Glimmer.Creator.Models.NotableFigureDetailsViewModel
+@using Glimmer.Core.Models
+@using Glimmer.Core.Enums
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -15,10 +17,14 @@
                 </ol>
             </nav>
             <h1 class="display-4">
-                <i class="bi bi-person-circle"></i> @Model.Name
+                <i class="bi bi-person-fill"></i> @Model.Name
             </h1>
             <p class="text-muted">
                 <span class="badge bg-primary">@Model.FigureType</span>
+                @if (Model.Species != null)
+                {
+                    <span class="badge bg-success">@Model.Species.Name</span>
+                }
                 Created @Model.CreatedAt.ToString("MMMM dd, yyyy")
             </p>
         </div>
@@ -41,9 +47,158 @@
                     <h5><i class="bi bi-file-text"></i> Description</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">@Model.Description</p>
+                    <p class="mb-0">@Model.Description</p>
                 </div>
             </div>
+
+            @if (Model.Species != null)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-bug-fill"></i> Species</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            <strong>@Model.Species.Name</strong> (<span class="badge bg-success">@Model.Species.SpeciesType</span>)
+                            <br/>
+                            <small class="text-muted">@Model.Species.Description</small>
+                        </p>
+                        <a asp-controller="Species" asp-action="Details" asp-route-universeId="@Model.UniverseId" asp-route-id="@Model.Species.Uuid" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-arrow-right"></i> View Species Details
+                        </a>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.Height) || !string.IsNullOrEmpty(Model.Weight) || !string.IsNullOrEmpty(Model.SkinColor) || 
+                 !string.IsNullOrEmpty(Model.EyeColor) || !string.IsNullOrEmpty(Model.HairColor) || !string.IsNullOrEmpty(Model.DistinguishingFeatures) ||
+                 Model.Gender != Glimmer.Core.Enums.GenderEnum.Unknown || Model.SexualOrientation != Glimmer.Core.Enums.SexualOrientationEnum.Unknown)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-person"></i> Physical Characteristics</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (!string.IsNullOrEmpty(Model.Height))
+                            {
+                                <dt class="col-sm-3">Height:</dt>
+                                <dd class="col-sm-9">@Model.Height @Model.HeightMeasure</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Weight))
+                            {
+                                <dt class="col-sm-3">Weight:</dt>
+                                <dd class="col-sm-9">@Model.Weight @Model.WeightMeasure</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.SkinColor))
+                            {
+                                <dt class="col-sm-3">Skin Color:</dt>
+                                <dd class="col-sm-9">@Model.SkinColor</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.EyeColor))
+                            {
+                                <dt class="col-sm-3">Eye Color:</dt>
+                                <dd class="col-sm-9">@Model.EyeColor</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.HairColor))
+                            {
+                                <dt class="col-sm-3">Hair Color:</dt>
+                                <dd class="col-sm-9">@Model.HairColor</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.DistinguishingFeatures))
+                            {
+                                <dt class="col-sm-3">Features:</dt>
+                                <dd class="col-sm-9">@Model.DistinguishingFeatures</dd>
+                            }
+                            @if (Model.Gender != Glimmer.Core.Enums.GenderEnum.Unknown)
+                            {
+                                <dt class="col-sm-3">Gender:</dt>
+                                <dd class="col-sm-9"><span class="badge bg-info">@Model.Gender</span></dd>
+                            }
+                            @if (Model.SexualOrientation != Glimmer.Core.Enums.SexualOrientationEnum.Unknown)
+                            {
+                                <dt class="col-sm-3">Orientation:</dt>
+                                <dd class="col-sm-9 mb-0"><span class="badge bg-secondary">@Model.SexualOrientation</span></dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            @if (Model.HasMagicalAbilities || !string.IsNullOrEmpty(Model.MagicalAbilitiesDescription))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-stars"></i> Magical or Special Abilities</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.HasMagicalAbilities)
+                        {
+                            <p class="text-success"><i class="bi bi-check-circle-fill"></i> This figure has magical abilities</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.MagicalAbilitiesDescription))
+                        {
+                            <p class="mb-0">@Model.MagicalAbilitiesDescription</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.BirthDate.HasValue || Model.DeathDate.HasValue || !string.IsNullOrEmpty(Model.Occupation) || 
+                 !string.IsNullOrEmpty(Model.NotableAchievements) || !string.IsNullOrEmpty(Model.Biography))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-calendar"></i> Biographical Information</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.BirthDate.HasValue || Model.DeathDate.HasValue)
+                        {
+                            <h6>Lifespan</h6>
+                            <p>
+                                @if (Model.BirthDate.HasValue)
+                                {
+                                    <span>Born: @Model.BirthDate.Value.ToString("MMMM dd, yyyy")</span>
+                                }
+                                @if (Model.DeathDate.HasValue)
+                                {
+                                    <span>
+                                        @if (Model.BirthDate.HasValue) { <text> - </text> }
+                                        Died: @Model.DeathDate.Value.ToString("MMMM dd, yyyy")
+                                    </span>
+                                }
+                            </p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Occupation))
+                        {
+                            <h6>Occupation</h6>
+                            <p>@Model.Occupation</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.NotableAchievements))
+                        {
+                            <h6>Notable Achievements</h6>
+                            <p>@Model.NotableAchievements</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Biography))
+                        {
+                            <h6>Biography</h6>
+                            <p class="mb-0">@Model.Biography</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.AdditionalNotes))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-pencil-square"></i> Additional Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.AdditionalNotes</p>
+                    </div>
+                </div>
+            }
 
             <div class="card">
                 <div class="card-header">
@@ -61,15 +216,15 @@
                     <h5><i class="bi bi-info-circle"></i> Information</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">Type:</dt>
-                        <dd class="col-sm-8"><span class="badge bg-primary">@Model.FigureType</span></dd>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Type:</dt>
+                        <dd class="col-sm-7"><span class="badge bg-primary">@Model.FigureType</span></dd>
                         
-                        <dt class="col-sm-4">Created:</dt>
-                        <dd class="col-sm-8">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
                         
-                        <dt class="col-sm-4">Updated:</dt>
-                        <dd class="col-sm-8">@Model.UpdatedAt.ToString("MMM dd, yyyy")</dd>
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7 mb-0">@Model.UpdatedAt.ToString("MMM dd, yyyy")</dd>
                     </dl>
                 </div>
             </div>

@@ -18,13 +18,29 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h2><i class="bi bi-pencil"></i> Edit TimelineEvent</h2>
+                    <h2>
+                        <i class="bi bi-pencil"></i> Edit TimelineEvent
+                        @if (Model.IsAnchorEvent)
+                        {
+                            <span class="badge bg-warning text-dark ms-2">
+                                <i class="bi bi-anchor"></i> Anchor Event
+                            </span>
+                        }
+                    </h2>
                 </div>
                 <div class="card-body">
+                    @if (Model.IsAnchorEvent)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle"></i> 
+                            This is the primary anchor event for relative dating. It can be edited but cannot be deleted.
+                        </div>
+                    }
                     <form asp-action="Edit" asp-route-universeId="@Model.UniverseId" asp-route-id="@Model.Uuid" method="post">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="UniverseId" />
                         <input type="hidden" asp-for="Uuid" />
+                        <input type="hidden" asp-for="IsAnchorEvent" />
                         <input type="hidden" asp-for="CreatedAt" />
                         <input type="hidden" asp-for="UpdatedAt" />
                         

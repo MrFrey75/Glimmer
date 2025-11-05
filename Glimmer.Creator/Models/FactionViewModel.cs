@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Glimmer.Core.Enums;
+using Glimmer.Core.Models;
 
 namespace Glimmer.Creator.Models;
 
@@ -33,6 +34,36 @@ public class CreateFactionViewModel
     
     [Required(ErrorMessage = "Faction type is required")]
     public FactionTypeEnum FactionType { get; set; } = FactionTypeEnum.Government;
+    
+    // Organizational Structure
+    public LeadershipStructureEnum LeadershipStructure { get; set; } = LeadershipStructureEnum.Unknown;
+    
+    [StringLength(1000)]
+    public string MembershipCriteria { get; set; } = string.Empty;
+    
+    [StringLength(1000)]
+    public string Hierarchy { get; set; } = string.Empty;
+    
+    // Goals and Objectives
+    [StringLength(1000)]
+    public string PrimaryGoals { get; set; } = string.Empty;
+    
+    [StringLength(1000)]
+    public string Motivations { get; set; } = string.Empty;
+    
+    [StringLength(1000)]
+    public string KeyActivities { get; set; } = string.Empty;
+    
+    // Historical Background
+    [StringLength(2000)]
+    public string FoundingHistory { get; set; } = string.Empty;
+    
+    [StringLength(2000)]
+    public string EvolutionOverTime { get; set; } = string.Empty;
+    
+    // Additional Information
+    [StringLength(2000)]
+    public string AdditionalNotes { get; set; } = string.Empty;
 }
 
 public class EditFactionViewModel
@@ -51,6 +82,36 @@ public class EditFactionViewModel
     [Required(ErrorMessage = "Faction type is required")]
     public FactionTypeEnum FactionType { get; set; }
     
+    // Organizational Structure
+    public LeadershipStructureEnum LeadershipStructure { get; set; } = LeadershipStructureEnum.Unknown;
+    
+    [StringLength(1000)]
+    public string MembershipCriteria { get; set; } = string.Empty;
+    
+    [StringLength(1000)]
+    public string Hierarchy { get; set; } = string.Empty;
+    
+    // Goals and Objectives
+    [StringLength(1000)]
+    public string PrimaryGoals { get; set; } = string.Empty;
+    
+    [StringLength(1000)]
+    public string Motivations { get; set; } = string.Empty;
+    
+    [StringLength(1000)]
+    public string KeyActivities { get; set; } = string.Empty;
+    
+    // Historical Background
+    [StringLength(2000)]
+    public string FoundingHistory { get; set; } = string.Empty;
+    
+    [StringLength(2000)]
+    public string EvolutionOverTime { get; set; } = string.Empty;
+    
+    // Additional Information
+    [StringLength(2000)]
+    public string AdditionalNotes { get; set; } = string.Empty;
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
@@ -63,6 +124,24 @@ public class FactionDetailsViewModel
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public FactionTypeEnum FactionType { get; set; }
+    
+    // Organizational Structure
+    public LeadershipStructureEnum LeadershipStructure { get; set; }
+    public string MembershipCriteria { get; set; } = string.Empty;
+    public string Hierarchy { get; set; } = string.Empty;
+    
+    // Goals and Objectives
+    public string PrimaryGoals { get; set; } = string.Empty;
+    public string Motivations { get; set; } = string.Empty;
+    public string KeyActivities { get; set; } = string.Empty;
+    
+    // Historical Background
+    public string FoundingHistory { get; set; } = string.Empty;
+    public string EvolutionOverTime { get; set; } = string.Empty;
+    
+    // Additional Information
+    public string AdditionalNotes { get; set; } = string.Empty;
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

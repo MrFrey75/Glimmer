@@ -54,6 +54,104 @@
                 </div>
             </div>
 
+            <!-- Geographical Information -->
+            @if (!string.IsNullOrEmpty(Model.Coordinates) || Model.Climate != Glimmer.Core.Models.ClimateEnum.Unknown || 
+                 Model.Terrain != Glimmer.Core.Models.TerrainEnum.Unknown || !string.IsNullOrEmpty(Model.NaturalResources))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-geo-alt"></i> Geographical Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (!string.IsNullOrEmpty(Model.Coordinates))
+                            {
+                                <dt class="col-sm-4">Coordinates:</dt>
+                                <dd class="col-sm-8">@Model.Coordinates</dd>
+                            }
+                            @if (Model.Climate != Glimmer.Core.Models.ClimateEnum.Unknown)
+                            {
+                                <dt class="col-sm-4">Climate:</dt>
+                                <dd class="col-sm-8"><span class="badge bg-info">@Model.Climate</span></dd>
+                            }
+                            @if (Model.Terrain != Glimmer.Core.Models.TerrainEnum.Unknown)
+                            {
+                                <dt class="col-sm-4">Terrain:</dt>
+                                <dd class="col-sm-8"><span class="badge bg-secondary">@Model.Terrain</span></dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.NaturalResources))
+                            {
+                                <dt class="col-sm-4">Resources:</dt>
+                                <dd class="col-sm-8">@Model.NaturalResources</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- Address and Political Information -->
+            @if (!string.IsNullOrEmpty(Model.Address) || !string.IsNullOrEmpty(Model.PoliticalAffiliation))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-building"></i> Address & Political Information</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.Address))
+                        {
+                            <h6>Address</h6>
+                            <p>@Model.Address</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PoliticalAffiliation))
+                        {
+                            <h6>Political Affiliation</h6>
+                            <p class="mb-0">@Model.PoliticalAffiliation</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Cultural and Societal Information -->
+            @if (!string.IsNullOrEmpty(Model.Inhabitants) || !string.IsNullOrEmpty(Model.LanguagesSpoken) || 
+                 !string.IsNullOrEmpty(Model.HistoricalSignificance))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-people"></i> Cultural & Societal Information</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.Inhabitants))
+                        {
+                            <h6>Inhabitants</h6>
+                            <p>@Model.Inhabitants</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.LanguagesSpoken))
+                        {
+                            <h6>Languages Spoken</h6>
+                            <p>@Model.LanguagesSpoken</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.HistoricalSignificance))
+                        {
+                            <h6>Historical Significance</h6>
+                            <p class="mb-0">@Model.HistoricalSignificance</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Additional Notes -->
+            @if (!string.IsNullOrEmpty(Model.AdditionalNotes))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-pencil-square"></i> Additional Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.AdditionalNotes</p>
+                    </div>
+                </div>
+            }
+
             @if (Model.ChildLocations.Any())
             {
                 <div class="card mb-4">

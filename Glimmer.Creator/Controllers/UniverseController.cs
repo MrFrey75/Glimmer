@@ -90,7 +90,7 @@ public class UniverseController : BaseController
                 return RedirectToAction("Login", "Account");
             }
 
-            var universe = await _entityService.CreateUniverseAsync(model.Name, model.Description, user);
+            var universe = await _entityService.CreateUniverseAsync(model.Name, model.Description, user, model.TimelineType);
 
             if (universe == null)
             {
@@ -138,6 +138,7 @@ public class UniverseController : BaseController
                 Uuid = universe.Uuid,
                 Name = universe.Name,
                 Description = universe.Description,
+                TimelineType = universe.TimelineType,
                 CreatedAt = universe.CreatedAt,
                 UpdatedAt = universe.UpdatedAt,
                 CreatedByUsername = universe.CreatedBy.Username,
@@ -191,6 +192,7 @@ public class UniverseController : BaseController
                 Uuid = universe.Uuid,
                 Name = universe.Name,
                 Description = universe.Description,
+                TimelineType = universe.TimelineType,
                 CreatedAt = universe.CreatedAt,
                 UpdatedAt = universe.UpdatedAt
             };
@@ -242,6 +244,7 @@ public class UniverseController : BaseController
 
             universe.Name = model.Name;
             universe.Description = model.Description;
+            // TimelineType is immutable after creation - do NOT update it
             universe.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateUniverseAsync(universe);

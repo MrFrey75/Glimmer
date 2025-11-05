@@ -118,7 +118,8 @@ public class FactController : BaseController
                 model.Name,
                 model.Description,
                 model.Value,
-                model.FactType);
+                model.FactType,
+                model.AdditionalNotes);
 
             if (entity == null)
             {
@@ -172,7 +173,9 @@ public class FactController : BaseController
                 Uuid = entity.Uuid,
                 Name = entity.Name,
                 Description = entity.Description,
+                Value = entity.Value,
                 FactType = entity.FactType,
+                AdditionalNotes = entity.AdditionalNotes,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -219,7 +222,9 @@ public class FactController : BaseController
                 Uuid = entity.Uuid,
                 Name = entity.Name,
                 Description = entity.Description,
+                Value = entity.Value,
                 FactType = entity.FactType,
+                AdditionalNotes = entity.AdditionalNotes,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -271,7 +276,9 @@ public class FactController : BaseController
 
             entity.Name = model.Name;
             entity.Description = model.Description;
+            entity.Value = model.Value;
             entity.FactType = model.FactType;
+            entity.AdditionalNotes = model.AdditionalNotes;
             entity.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateFactAsync(universeId, entity);

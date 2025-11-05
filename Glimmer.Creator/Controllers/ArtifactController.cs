@@ -1,4 +1,5 @@
 using Glimmer.Core.Services;
+using Glimmer.Core.Models;
 using Glimmer.Creator.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -113,11 +114,26 @@ public class ArtifactController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.CreateArtifactAsync(
-                model.UniverseId,
-                model.Name,
-                model.Description,
-                model.ArtifactType);
+            var artifact = new Artifact
+            {
+                Name = model.Name,
+                Description = model.Description,
+                ArtifactType = model.ArtifactType,
+                MaterialComposition = model.MaterialComposition,
+                Dimensions = model.Dimensions,
+                Weight = model.Weight,
+                Color = model.Color,
+                Condition = model.Condition,
+                Origin = model.Origin,
+                HistoricalPeriod = model.HistoricalPeriod,
+                CulturalSignificance = model.CulturalSignificance,
+                NotableOwners = model.NotableOwners,
+                HasMagicalProperties = model.HasMagicalProperties,
+                MagicalPropertiesDescription = model.MagicalPropertiesDescription,
+                AdditionalNotes = model.AdditionalNotes
+            };
+
+            var entity = await _entityService.CreateArtifactAsync(model.UniverseId, artifact);
 
             if (entity == null)
             {
@@ -172,6 +188,18 @@ public class ArtifactController : BaseController
                 Name = entity.Name,
                 Description = entity.Description,
                 ArtifactType = entity.ArtifactType,
+                MaterialComposition = entity.MaterialComposition,
+                Dimensions = entity.Dimensions,
+                Weight = entity.Weight,
+                Color = entity.Color,
+                Condition = entity.Condition,
+                Origin = entity.Origin,
+                HistoricalPeriod = entity.HistoricalPeriod,
+                CulturalSignificance = entity.CulturalSignificance,
+                NotableOwners = entity.NotableOwners,
+                HasMagicalProperties = entity.HasMagicalProperties,
+                MagicalPropertiesDescription = entity.MagicalPropertiesDescription,
+                AdditionalNotes = entity.AdditionalNotes,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -219,6 +247,18 @@ public class ArtifactController : BaseController
                 Name = entity.Name,
                 Description = entity.Description,
                 ArtifactType = entity.ArtifactType,
+                MaterialComposition = entity.MaterialComposition,
+                Dimensions = entity.Dimensions,
+                Weight = entity.Weight,
+                Color = entity.Color,
+                Condition = entity.Condition,
+                Origin = entity.Origin,
+                HistoricalPeriod = entity.HistoricalPeriod,
+                CulturalSignificance = entity.CulturalSignificance,
+                NotableOwners = entity.NotableOwners,
+                HasMagicalProperties = entity.HasMagicalProperties,
+                MagicalPropertiesDescription = entity.MagicalPropertiesDescription,
+                AdditionalNotes = entity.AdditionalNotes,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -271,6 +311,18 @@ public class ArtifactController : BaseController
             entity.Name = model.Name;
             entity.Description = model.Description;
             entity.ArtifactType = model.ArtifactType;
+            entity.MaterialComposition = model.MaterialComposition;
+            entity.Dimensions = model.Dimensions;
+            entity.Weight = model.Weight;
+            entity.Color = model.Color;
+            entity.Condition = model.Condition;
+            entity.Origin = model.Origin;
+            entity.HistoricalPeriod = model.HistoricalPeriod;
+            entity.CulturalSignificance = model.CulturalSignificance;
+            entity.NotableOwners = model.NotableOwners;
+            entity.HasMagicalProperties = model.HasMagicalProperties;
+            entity.MagicalPropertiesDescription = model.MagicalPropertiesDescription;
+            entity.AdditionalNotes = model.AdditionalNotes;
             entity.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateArtifactAsync(universeId, entity);

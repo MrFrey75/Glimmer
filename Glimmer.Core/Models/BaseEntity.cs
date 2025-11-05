@@ -9,7 +9,7 @@ public class BaseEntity
     [BsonElement("_id")]
     public Guid Uuid { get; set; } = Guid.NewGuid();
     public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public bool IsDeleted { get; set; } = false;

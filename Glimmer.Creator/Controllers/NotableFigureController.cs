@@ -1,6 +1,8 @@
 using Glimmer.Core.Services;
+using Glimmer.Core.Models;
 using Glimmer.Creator.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Glimmer.Creator.Controllers;
 
@@ -92,6 +94,10 @@ public class NotableFigureController : BaseController
                 UniverseId = universeId
             };
 
+            // Load species list for dropdown
+            var species = await _entityService.GetSpeciesByUniverseAsync(universeId);
+            ViewBag.SpeciesList = new SelectList(species, "Uuid", "Name");
+
             return View(viewModel);
         }
         catch (Exception ex)
@@ -111,6 +117,9 @@ public class NotableFigureController : BaseController
 
         if (!ModelState.IsValid)
         {
+            // Reload species list
+            var speciesList = await _entityService.GetSpeciesByUniverseAsync(model.UniverseId);
+            ViewBag.SpeciesList = new SelectList(speciesList, "Uuid", "Name");
             return View(model);
         }
 
@@ -130,22 +139,54 @@ public class NotableFigureController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var figure = await _entityService.CreateNotableFigureAsync(
-                model.UniverseId,
-                model.Name,
-                model.Description,
-                model.FigureType);
+            // Get species if selected
+            Species? species = null;
+            if (model.SpeciesId.HasValue)
+            {
+                species = universe.Species.FirstOrDefault(s => s.Uuid == model.SpeciesId.Value);
+            }
 
-            if (figure == null)
+            var figure = new NotableFigure
+            {
+                Name = model.Name,
+                Description = model.Description,
+                FigureType = model.FigureType,
+                Species = species,
+                Height = model.Height ?? string.Empty,
+                HeightMeasure = model.HeightMeasure,
+                Weight = model.Weight ?? string.Empty,
+                WeightMeasure = model.WeightMeasure,
+                EyeColor = model.EyeColor ?? string.Empty,
+                HairColor = model.HairColor ?? string.Empty,
+                SkinColor = model.SkinColor ?? string.Empty,
+                DistinguishingFeatures = model.DistinguishingFeatures ?? string.Empty,
+                Gender = model.Gender,
+                SexualOrientation = model.SexualOrientation,
+                HasMagicalAbilities = model.HasMagicalAbilities,
+                MagicalAbilitiesDescription = model.MagicalAbilitiesDescription ?? string.Empty,
+                BirthDate = model.BirthDate,
+                DeathDate = model.DeathDate,
+                Occupation = model.Occupation ?? string.Empty,
+                NotableAchievements = model.NotableAchievements ?? string.Empty,
+                Biography = model.Biography ?? string.Empty,
+                AdditionalNotes = model.AdditionalNotes ?? string.Empty
+            };
+
+            var entity = await _entityService.CreateNotableFigureAsync(model.UniverseId, figure);
+
+            if (entity == null)
             {
                 TempData["ErrorMessage"] = "Failed to create figure. Please try again.";
+                // Reload species list
+                var speciesListReload = await _entityService.GetSpeciesByUniverseAsync(model.UniverseId);
+                ViewBag.SpeciesList = new SelectList(speciesListReload, "Uuid", "Name");
                 return View(model);
             }
 
             Logger.LogInformation("NotableFigure created: {FigureName} in universe {UniverseName}", 
-                figure.Name, universe.Name);
-            TempData["SuccessMessage"] = $"Figure '{figure.Name}' created successfully!";
-            return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = figure.Uuid });
+                entity.Name, universe.Name);
+            TempData["SuccessMessage"] = $"Figure '{entity.Name}' created successfully!";
+            return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = entity.Uuid });
         }
         catch (Exception ex)
         {
@@ -192,6 +233,25 @@ public class NotableFigureController : BaseController
                 Name = figure.Name,
                 Description = figure.Description,
                 FigureType = figure.FigureType,
+                Species = figure.Species,
+                Height = figure.Height,
+                HeightMeasure = figure.HeightMeasure,
+                Weight = figure.Weight,
+                WeightMeasure = figure.WeightMeasure,
+                EyeColor = figure.EyeColor,
+                HairColor = figure.HairColor,
+                SkinColor = figure.SkinColor,
+                DistinguishingFeatures = figure.DistinguishingFeatures,
+                Gender = figure.Gender,
+                SexualOrientation = figure.SexualOrientation,
+                HasMagicalAbilities = figure.HasMagicalAbilities,
+                MagicalAbilitiesDescription = figure.MagicalAbilitiesDescription,
+                BirthDate = figure.BirthDate,
+                DeathDate = figure.DeathDate,
+                Occupation = figure.Occupation,
+                NotableAchievements = figure.NotableAchievements,
+                Biography = figure.Biography,
+                AdditionalNotes = figure.AdditionalNotes,
                 CreatedAt = figure.CreatedAt,
                 UpdatedAt = figure.UpdatedAt
             };
@@ -242,9 +302,32 @@ public class NotableFigureController : BaseController
                 Name = figure.Name,
                 Description = figure.Description,
                 FigureType = figure.FigureType,
+                SpeciesId = figure.Species?.Uuid,
+                Height = figure.Height,
+                HeightMeasure = figure.HeightMeasure,
+                Weight = figure.Weight,
+                WeightMeasure = figure.WeightMeasure,
+                EyeColor = figure.EyeColor,
+                HairColor = figure.HairColor,
+                SkinColor = figure.SkinColor,
+                DistinguishingFeatures = figure.DistinguishingFeatures,
+                Gender = figure.Gender,
+                SexualOrientation = figure.SexualOrientation,
+                HasMagicalAbilities = figure.HasMagicalAbilities,
+                MagicalAbilitiesDescription = figure.MagicalAbilitiesDescription,
+                BirthDate = figure.BirthDate,
+                DeathDate = figure.DeathDate,
+                Occupation = figure.Occupation,
+                NotableAchievements = figure.NotableAchievements,
+                Biography = figure.Biography,
+                AdditionalNotes = figure.AdditionalNotes,
                 CreatedAt = figure.CreatedAt,
                 UpdatedAt = figure.UpdatedAt
             };
+
+            // Load species list for dropdown
+            var species = await _entityService.GetSpeciesByUniverseAsync(universeId);
+            ViewBag.SpeciesList = new SelectList(species, "Uuid", "Name");
 
             return View(viewModel);
         }
@@ -297,15 +380,44 @@ public class NotableFigureController : BaseController
                 return RedirectToAction(nameof(Index), new { universeId });
             }
 
+            // Get species if selected
+            Species? species = null;
+            if (model.SpeciesId.HasValue)
+            {
+                species = universe.Species.FirstOrDefault(s => s.Uuid == model.SpeciesId.Value);
+            }
+
             figure.Name = model.Name;
             figure.Description = model.Description;
             figure.FigureType = model.FigureType;
+            figure.Species = species;
+            figure.Height = model.Height ?? string.Empty;
+            figure.HeightMeasure = model.HeightMeasure;
+            figure.Weight = model.Weight ?? string.Empty;
+            figure.WeightMeasure = model.WeightMeasure;
+            figure.EyeColor = model.EyeColor ?? string.Empty;
+            figure.HairColor = model.HairColor ?? string.Empty;
+            figure.SkinColor = model.SkinColor ?? string.Empty;
+            figure.DistinguishingFeatures = model.DistinguishingFeatures ?? string.Empty;
+            figure.Gender = model.Gender;
+            figure.SexualOrientation = model.SexualOrientation;
+            figure.HasMagicalAbilities = model.HasMagicalAbilities;
+            figure.MagicalAbilitiesDescription = model.MagicalAbilitiesDescription ?? string.Empty;
+            figure.BirthDate = model.BirthDate;
+            figure.DeathDate = model.DeathDate;
+            figure.Occupation = model.Occupation ?? string.Empty;
+            figure.NotableAchievements = model.NotableAchievements ?? string.Empty;
+            figure.Biography = model.Biography ?? string.Empty;
+            figure.AdditionalNotes = model.AdditionalNotes ?? string.Empty;
             figure.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateNotableFigureAsync(universeId, figure);
             if (!success)
             {
                 TempData["ErrorMessage"] = "Failed to update figure. Please try again.";
+                // Reload species list
+                var speciesList = await _entityService.GetSpeciesByUniverseAsync(universeId);
+                ViewBag.SpeciesList = new SelectList(speciesList, "Uuid", "Name");
                 return View(model);
             }
 

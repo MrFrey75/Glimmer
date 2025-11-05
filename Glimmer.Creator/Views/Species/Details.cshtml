@@ -1,4 +1,5 @@
 @model Glimmer.Creator.Models.SpeciesDetailsViewModel
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -41,9 +42,214 @@
                     <h5><i class="bi bi-file-text"></i> Description</h5>
                 </div>
                 <div class="card-body">
-                    <p class="card-text">@Model.Description</p>
+                    <p class="mb-0">@Model.Description</p>
                 </div>
             </div>
+
+            <!-- Physical Characteristics -->
+            @if (!string.IsNullOrEmpty(Model.AverageHeight) || !string.IsNullOrEmpty(Model.AverageWeight) || 
+                 !string.IsNullOrEmpty(Model.SkinColor) || !string.IsNullOrEmpty(Model.EyeColor) || 
+                 !string.IsNullOrEmpty(Model.HairColor) || !string.IsNullOrEmpty(Model.DistinguishingFeatures))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-person"></i> Physical Characteristics</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (!string.IsNullOrEmpty(Model.AverageHeight))
+                            {
+                                <dt class="col-sm-4">Average Height:</dt>
+                                <dd class="col-sm-8">@Model.AverageHeight @Model.HeightMeasure</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.AverageWeight))
+                            {
+                                <dt class="col-sm-4">Average Weight:</dt>
+                                <dd class="col-sm-8">@Model.AverageWeight @Model.WeightMeasure</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.SkinColor))
+                            {
+                                <dt class="col-sm-4">Skin Color:</dt>
+                                <dd class="col-sm-8">@Model.SkinColor</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.EyeColor))
+                            {
+                                <dt class="col-sm-4">Eye Color:</dt>
+                                <dd class="col-sm-8">@Model.EyeColor</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.HairColor))
+                            {
+                                <dt class="col-sm-4">Hair Color:</dt>
+                                <dd class="col-sm-8">@Model.HairColor</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.DistinguishingFeatures))
+                            {
+                                <dt class="col-sm-4">Features:</dt>
+                                <dd class="col-sm-8 mb-0">@Model.DistinguishingFeatures</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- Habitat & Distribution -->
+            @if (Model.NaturalHabitat != NaturalHabitatEnum.Unknown || Model.GeographicDistribution != GeographicDistributionEnum.Unknown)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-geo"></i> Habitat & Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (Model.NaturalHabitat != NaturalHabitatEnum.Unknown)
+                            {
+                                <dt class="col-sm-4">Natural Habitat:</dt>
+                                <dd class="col-sm-8"><span class="badge bg-info">@Model.NaturalHabitat</span></dd>
+                            }
+                            @if (Model.GeographicDistribution != GeographicDistributionEnum.Unknown)
+                            {
+                                <dt class="col-sm-4">Distribution:</dt>
+                                <dd class="col-sm-8 mb-0"><span class="badge bg-secondary">@Model.GeographicDistribution</span></dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- Behavior & Social Structure -->
+            @if (Model.SocialStructure != SocialStructureEnum.Unknown || !string.IsNullOrEmpty(Model.BehavioralTraits))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-people"></i> Behavior & Social Structure</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.SocialStructure != SocialStructureEnum.Unknown)
+                        {
+                            <h6>Social Structure</h6>
+                            <p><span class="badge bg-primary">@Model.SocialStructure</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.BehavioralTraits))
+                        {
+                            <h6>Behavioral Traits</h6>
+                            <p class="mb-0">@Model.BehavioralTraits</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Diet & Lifespan -->
+            @if (Model.Diet != DietTypeEnum.Unknown || !string.IsNullOrEmpty(Model.AverageLifespan))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-heart-pulse"></i> Diet & Lifespan</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (Model.Diet != DietTypeEnum.Unknown)
+                            {
+                                <dt class="col-sm-3">Diet:</dt>
+                                <dd class="col-sm-9"><span class="badge bg-warning text-dark">@Model.Diet</span></dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.AverageLifespan))
+                            {
+                                <dt class="col-sm-3">Lifespan:</dt>
+                                <dd class="col-sm-9 mb-0">@Model.AverageLifespan</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- Reproduction -->
+            @if (Model.ReproductiveMethods != ReproductiveMethodEnum.Unknown || !string.IsNullOrEmpty(Model.GestationPeriod) || !string.IsNullOrEmpty(Model.OffspringPerBirth))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-egg"></i> Reproduction</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (Model.ReproductiveMethods != ReproductiveMethodEnum.Unknown)
+                            {
+                                <dt class="col-sm-4">Method:</dt>
+                                <dd class="col-sm-8"><span class="badge bg-info">@Model.ReproductiveMethods</span></dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.GestationPeriod))
+                            {
+                                <dt class="col-sm-4">Gestation:</dt>
+                                <dd class="col-sm-8">@Model.GestationPeriod</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.OffspringPerBirth))
+                            {
+                                <dt class="col-sm-4">Offspring:</dt>
+                                <dd class="col-sm-8 mb-0">@Model.OffspringPerBirth</dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- Communication & Threats -->
+            @if (Model.CommunicationMethods != CommunicationMethodEnum.Unknown || !string.IsNullOrEmpty(Model.PredatorsAndThreats) || !string.IsNullOrEmpty(Model.ConservationStatus))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-chat-dots"></i> Communication & Threats</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.CommunicationMethods != CommunicationMethodEnum.Unknown)
+                        {
+                            <h6>Communication</h6>
+                            <p><span class="badge bg-primary">@Model.CommunicationMethods</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PredatorsAndThreats))
+                        {
+                            <h6>Predators & Threats</h6>
+                            <p>@Model.PredatorsAndThreats</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ConservationStatus))
+                        {
+                            <h6>Conservation Status</h6>
+                            <p class="mb-0">@Model.ConservationStatus</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Magical Abilities -->
+            @if (Model.HasMagicalAbilities || !string.IsNullOrEmpty(Model.MagicalAbilitiesDescription))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-stars"></i> Magical or Special Abilities</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.HasMagicalAbilities)
+                        {
+                            <p class="text-success"><i class="bi bi-check-circle-fill"></i> This species has magical abilities</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.MagicalAbilitiesDescription))
+                        {
+                            <p class="mb-0">@Model.MagicalAbilitiesDescription</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Additional Notes -->
+            @if (!string.IsNullOrEmpty(Model.AdditionalNotes))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-pencil-square"></i> Additional Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.AdditionalNotes</p>
+                    </div>
+                </div>
+            }
 
             <div class="card">
                 <div class="card-header">
@@ -61,15 +267,15 @@
                     <h5><i class="bi bi-info-circle"></i> Information</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">Type:</dt>
-                        <dd class="col-sm-8"><span class="badge bg-success">@Model.SpeciesType</span></dd>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Type:</dt>
+                        <dd class="col-sm-7"><span class="badge bg-success">@Model.SpeciesType</span></dd>
                         
-                        <dt class="col-sm-4">Created:</dt>
-                        <dd class="col-sm-8">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
                         
-                        <dt class="col-sm-4">Updated:</dt>
-                        <dd class="col-sm-8">@Model.UpdatedAt.ToString("MMM dd, yyyy")</dd>
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7 mb-0">@Model.UpdatedAt.ToString("MMM dd, yyyy")</dd>
                     </dl>
                 </div>
             </div>

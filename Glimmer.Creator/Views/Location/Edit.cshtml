@@ -1,12 +1,13 @@
 @model Glimmer.Creator.Models.EditLocationViewModel
 @using Glimmer.Core.Enums
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = "Edit Location";
 }
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Index">Universes</a></li>
@@ -28,17 +29,22 @@
                         <input type="hidden" asp-for="CreatedAt" />
                         <input type="hidden" asp-for="UpdatedAt" />
                         
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label">Location Name</label>
-                            <input asp-for="Name" class="form-control" autofocus />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
+                        <!-- Basic Information -->
+                        <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-info-circle"></i> Basic Information</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Name" class="form-label">Location Name</label>
+                                <input asp-for="Name" class="form-control" autofocus />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
 
-                        <div class="mb-3">
-                            <label asp-for="LocationType" class="form-label">Location Type</label>
-                            <select asp-for="LocationType" class="form-select" asp-items="Html.GetEnumSelectList<LocationTypeEnum>()">
-                            </select>
-                            <span asp-validation-for="LocationType" class="text-danger"></span>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="LocationType" class="form-label">Location Type</label>
+                                <select asp-for="LocationType" class="form-select" asp-items="Html.GetEnumSelectList<LocationTypeEnum>()">
+                                </select>
+                                <span asp-validation-for="LocationType" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -55,8 +61,78 @@
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Geographical Information -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-geo-alt"></i> Geographical Information</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Coordinates" class="form-label">Coordinates</label>
+                                <input asp-for="Coordinates" class="form-control" placeholder="e.g., 40.7128° N, 74.0060° W" />
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="Climate" class="form-label">Climate</label>
+                                <select asp-for="Climate" class="form-select" asp-items="Html.GetEnumSelectList<ClimateEnum>()">
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="Terrain" class="form-label">Terrain</label>
+                                <select asp-for="Terrain" class="form-select" asp-items="Html.GetEnumSelectList<TerrainEnum>()">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NaturalResources" class="form-label">Natural Resources</label>
+                            <textarea asp-for="NaturalResources" class="form-control" rows="2" 
+                                      placeholder="e.g., Iron ore, timber, fresh water..."></textarea>
+                        </div>
+
+                        <!-- Address and Political Information -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-building"></i> Address & Political Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label">Address</label>
+                            <input asp-for="Address" class="form-control" placeholder="Enter address or general location" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PoliticalAffiliation" class="form-label">Political Affiliation</label>
+                            <input asp-for="PoliticalAffiliation" class="form-control" placeholder="e.g., Kingdom of Eldoria" />
+                        </div>
+
+                        <!-- Cultural and Societal Information -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-people"></i> Cultural & Societal Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Inhabitants" class="form-label">Inhabitants</label>
+                            <textarea asp-for="Inhabitants" class="form-control" rows="2" 
+                                      placeholder="Describe the people/creatures living here..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LanguagesSpoken" class="form-label">Languages Spoken</label>
+                            <input asp-for="LanguagesSpoken" class="form-control" placeholder="e.g., Common, Elvish, Dwarvish" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="HistoricalSignificance" class="form-label">Historical Significance</label>
+                            <textarea asp-for="HistoricalSignificance" class="form-control" rows="3" 
+                                      placeholder="Describe any historical importance..."></textarea>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-pencil-square"></i> Additional Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="AdditionalNotes" class="form-label">Additional Notes</label>
+                            <textarea asp-for="AdditionalNotes" class="form-control" rows="3" 
+                                      placeholder="Any other relevant information..."></textarea>
                         </div>
 
                         <div class="alert alert-info">
@@ -83,5 +159,7 @@
 </div>
 
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

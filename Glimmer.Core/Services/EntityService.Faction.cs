@@ -9,21 +9,15 @@ namespace Glimmer.Core.Services;
 /// </summary>
 public partial class EntityService
 {
-public async Task<Faction?> CreateFactionAsync(Guid universeId, string name, string description, FactionTypeEnum factionType)
+public async Task<Faction?> CreateFactionAsync(Guid universeId, Faction faction)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        var faction = new Faction
-        {
-            Uuid = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            FactionType = factionType,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        faction.Uuid = Guid.NewGuid();
+        faction.CreatedAt = DateTime.UtcNow;
+        faction.UpdatedAt = DateTime.UtcNow;
 
         universe.Factions.Add(faction);
         universe.UpdatedAt = DateTime.UtcNow;
@@ -54,10 +48,23 @@ public async Task<Faction?> CreateFactionAsync(Guid universeId, string name, str
         existing.Name = faction.Name;
         existing.Description = faction.Description;
         existing.FactionType = faction.FactionType;
+        existing.LeadershipStructure = faction.LeadershipStructure;
+        existing.MembershipCriteria = faction.MembershipCriteria;
+        existing.Hierarchy = faction.Hierarchy;
+        existing.PrimaryGoals = faction.PrimaryGoals;
+        existing.Motivations = faction.Motivations;
+        existing.KeyActivities = faction.KeyActivities;
+        existing.FoundingHistory = faction.FoundingHistory;
+        existing.EvolutionOverTime = faction.EvolutionOverTime;
+        existing.AdditionalNotes = faction.AdditionalNotes;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }

@@ -1,12 +1,13 @@
 @model Glimmer.Creator.Models.EditSpeciesViewModel
 @using Glimmer.Core.Enums
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = "Edit Species";
 }
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-controller="Universe" asp-action="Index">Universes</a></li>
@@ -18,9 +19,7 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h2>
-                        <i class="bi bi-pencil"></i> Edit Species
-                    </h2>
+                    <h2><i class="bi bi-pencil"></i> Edit Species</h2>
                 </div>
                 <div class="card-body">
                     <form asp-action="Edit" asp-route-universeId="@Model.UniverseId" asp-route-id="@Model.Uuid" method="post">
@@ -30,23 +29,174 @@
                         <input type="hidden" asp-for="CreatedAt" />
                         <input type="hidden" asp-for="UpdatedAt" />
                         
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label">Species Name</label>
-                            <input asp-for="Name" class="form-control" autofocus />
-                            <span asp-validation-for="Name" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="SpeciesType" class="form-label">Species Type</label>
-                            <select asp-for="SpeciesType" class="form-select" asp-items="Html.GetEnumSelectList<SpeciesTypeEnum>()">
-                            </select>
-                            <span asp-validation-for="SpeciesType" class="text-danger"></span>
+                        <!-- Basic Information -->
+                        <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-info-circle"></i> Basic Information</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="Name" class="form-label">Species Name</label>
+                                <input asp-for="Name" class="form-control" autofocus />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="SpeciesType" class="form-label">Species Type</label>
+                                <select asp-for="SpeciesType" class="form-select" asp-items="Html.GetEnumSelectList<SpeciesTypeEnum>()">
+                                </select>
+                                <span asp-validation-for="SpeciesType" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Physical Characteristics -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-person"></i> Physical Characteristics</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AverageHeight" class="form-label">Average Height</label>
+                                <input asp-for="AverageHeight" class="form-control" />
+                                <select asp-for="HeightMeasure" class="form-select" asp-items="Html.GetEnumSelectList<HeightMeasureEnum>()">
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AverageWeight" class="form-label">Average Weight</label>
+                                <input asp-for="AverageWeight" class="form-control" />
+                                <select asp-for="WeightMeasure" class="form-select" asp-items="Html.GetEnumSelectList<WeightMeasureEnum>()">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="SkinColor" class="form-label">Skin Color</label>
+                                <input asp-for="SkinColor" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="EyeColor" class="form-label">Eye Color</label>
+                                <input asp-for="EyeColor" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="HairColor" class="form-label">Hair Color</label>
+                                <input asp-for="HairColor" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DistinguishingFeatures" class="form-label">Distinguishing Features</label>
+                            <textarea asp-for="DistinguishingFeatures" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <!-- Habitat and Distribution -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-geo"></i> Habitat & Distribution</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NaturalHabitat" class="form-label">Natural Habitat</label>
+                                <select asp-for="NaturalHabitat" class="form-select" asp-items="Html.GetEnumSelectList<NaturalHabitatEnum>()">
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="GeographicDistribution" class="form-label">Geographic Distribution</label>
+                                <select asp-for="GeographicDistribution" class="form-select" asp-items="Html.GetEnumSelectList<GeographicDistributionEnum>()">
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Behavior -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-people"></i> Behavior & Social Structure</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="SocialStructure" class="form-label">Social Structure</label>
+                            <select asp-for="SocialStructure" class="form-select" asp-items="Html.GetEnumSelectList<SocialStructureEnum>()">
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BehavioralTraits" class="form-label">Behavioral Traits</label>
+                            <textarea asp-for="BehavioralTraits" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <!-- Diet & Lifespan -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-heart-pulse"></i> Diet & Lifespan</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Diet" class="form-label">Diet</label>
+                                <select asp-for="Diet" class="form-select" asp-items="Html.GetEnumSelectList<DietTypeEnum>()">
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AverageLifespan" class="form-label">Average Lifespan</label>
+                                <input asp-for="AverageLifespan" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!-- Reproduction -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-egg"></i> Reproduction</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ReproductiveMethods" class="form-label">Reproductive Method</label>
+                            <select asp-for="ReproductiveMethods" class="form-select" asp-items="Html.GetEnumSelectList<ReproductiveMethodEnum>()">
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="GestationPeriod" class="form-label">Gestation Period</label>
+                                <input asp-for="GestationPeriod" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OffspringPerBirth" class="form-label">Offspring Per Birth</label>
+                                <input asp-for="OffspringPerBirth" class="form-control" />
+                            </div>
+                        </div>
+
+                        <!-- Communication & Threats -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-chat-dots"></i> Communication & Threats</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="CommunicationMethods" class="form-label">Communication Method</label>
+                            <select asp-for="CommunicationMethods" class="form-select" asp-items="Html.GetEnumSelectList<CommunicationMethodEnum>()">
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PredatorsAndThreats" class="form-label">Predators and Threats</label>
+                            <textarea asp-for="PredatorsAndThreats" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConservationStatus" class="form-label">Conservation Status</label>
+                            <input asp-for="ConservationStatus" class="form-control" />
+                        </div>
+
+                        <!-- Magical Abilities -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-stars"></i> Magical or Special Abilities</h5>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="HasMagicalAbilities" class="form-check-input" type="checkbox" />
+                                <label class="form-check-label" asp-for="HasMagicalAbilities">
+                                    This species has magical or special abilities
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MagicalAbilitiesDescription" class="form-label">Magical Abilities Description</label>
+                            <textarea asp-for="MagicalAbilitiesDescription" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <h5 class="border-bottom pb-2 mb-3 mt-4"><i class="bi bi-pencil-square"></i> Additional Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="AdditionalNotes" class="form-label">Additional Notes</label>
+                            <textarea asp-for="AdditionalNotes" class="form-control" rows="3"></textarea>
                         </div>
 
                         <div class="alert alert-info">

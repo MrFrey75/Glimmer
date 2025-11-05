@@ -37,6 +37,12 @@
                                 <a asp-action="Details" asp-route-universeId="@Model.UniverseId" asp-route-id="@item.Uuid" class="text-decoration-none">
                                     <i class="bi bi-calendar-event"></i> @item.Name
                                 </a>
+                                @if (item.IsAnchorEvent)
+                                {
+                                    <span class="badge bg-warning text-dark ms-1" title="Anchor Event - Cannot be deleted">
+                                        <i class="bi bi-anchor"></i>
+                                    </span>
+                                }
                             </h5>
                             <p class="card-text text-truncate-3">@item.Description</p>
                             <div class="mt-3">

@@ -9,22 +9,15 @@ namespace Glimmer.Core.Services;
 /// </summary>
 public partial class EntityService
 {
-public async Task<Location?> CreateLocationAsync(Guid universeId, string name, string description, LocationTypeEnum locationType, Location? parentLocation = null)
+public async Task<Location?> CreateLocationAsync(Guid universeId, Location location)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        var location = new Location
-        {
-            Uuid = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            LocationType = locationType,
-            ParentLocation = parentLocation,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        location.Uuid = Guid.NewGuid();
+        location.CreatedAt = DateTime.UtcNow;
+        location.UpdatedAt = DateTime.UtcNow;
 
         universe.Locations.Add(location);
         universe.UpdatedAt = DateTime.UtcNow;
@@ -56,10 +49,24 @@ public async Task<Location?> CreateLocationAsync(Guid universeId, string name, s
         existing.Description = location.Description;
         existing.LocationType = location.LocationType;
         existing.ParentLocation = location.ParentLocation;
+        existing.Coordinates = location.Coordinates;
+        existing.Climate = location.Climate;
+        existing.Terrain = location.Terrain;
+        existing.NaturalResources = location.NaturalResources;
+        existing.Address = location.Address;
+        existing.PoliticalAffiliation = location.PoliticalAffiliation;
+        existing.Inhabitants = location.Inhabitants;
+        existing.LanguagesSpoken = location.LanguagesSpoken;
+        existing.HistoricalSignificance = location.HistoricalSignificance;
+        existing.AdditionalNotes = location.AdditionalNotes;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }

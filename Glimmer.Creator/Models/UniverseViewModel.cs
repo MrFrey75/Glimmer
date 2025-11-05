@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Glimmer.Core.Enums;
+using Glimmer.Core.Models;
 
 namespace Glimmer.Creator.Models;
 
@@ -26,6 +28,9 @@ public class CreateUniverseViewModel
     [Required(ErrorMessage = "Description is required")]
     [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
     public string Description { get; set; } = string.Empty;
+    
+    [Required(ErrorMessage = "Timeline type is required")]
+    public TimelineTypeEnum TimelineType { get; set; } = TimelineTypeEnum.CalendarBased;
 }
 
 public class EditUniverseViewModel
@@ -40,6 +45,9 @@ public class EditUniverseViewModel
     [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
     public string Description { get; set; } = string.Empty;
     
+    [Required(ErrorMessage = "Timeline type is required")]
+    public TimelineTypeEnum TimelineType { get; set; }
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
@@ -49,6 +57,7 @@ public class UniverseDetailsViewModel
     public Guid Uuid { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public TimelineTypeEnum TimelineType { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public string CreatedByUsername { get; set; } = string.Empty;

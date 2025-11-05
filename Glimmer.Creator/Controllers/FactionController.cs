@@ -1,4 +1,5 @@
 using Glimmer.Core.Services;
+using Glimmer.Core.Models;
 using Glimmer.Creator.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -113,11 +114,23 @@ public class FactionController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.CreateFactionAsync(
-                model.UniverseId,
-                model.Name,
-                model.Description,
-                model.FactionType);
+            var faction = new Faction
+            {
+                Name = model.Name,
+                Description = model.Description,
+                FactionType = model.FactionType,
+                LeadershipStructure = model.LeadershipStructure,
+                MembershipCriteria = model.MembershipCriteria,
+                Hierarchy = model.Hierarchy,
+                PrimaryGoals = model.PrimaryGoals,
+                Motivations = model.Motivations,
+                KeyActivities = model.KeyActivities,
+                FoundingHistory = model.FoundingHistory,
+                EvolutionOverTime = model.EvolutionOverTime,
+                AdditionalNotes = model.AdditionalNotes
+            };
+
+            var entity = await _entityService.CreateFactionAsync(model.UniverseId, faction);
 
             if (entity == null)
             {
@@ -172,6 +185,15 @@ public class FactionController : BaseController
                 Name = entity.Name,
                 Description = entity.Description,
                 FactionType = entity.FactionType,
+                LeadershipStructure = entity.LeadershipStructure,
+                MembershipCriteria = entity.MembershipCriteria,
+                Hierarchy = entity.Hierarchy,
+                PrimaryGoals = entity.PrimaryGoals,
+                Motivations = entity.Motivations,
+                KeyActivities = entity.KeyActivities,
+                FoundingHistory = entity.FoundingHistory,
+                EvolutionOverTime = entity.EvolutionOverTime,
+                AdditionalNotes = entity.AdditionalNotes,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -219,6 +241,15 @@ public class FactionController : BaseController
                 Name = entity.Name,
                 Description = entity.Description,
                 FactionType = entity.FactionType,
+                LeadershipStructure = entity.LeadershipStructure,
+                MembershipCriteria = entity.MembershipCriteria,
+                Hierarchy = entity.Hierarchy,
+                PrimaryGoals = entity.PrimaryGoals,
+                Motivations = entity.Motivations,
+                KeyActivities = entity.KeyActivities,
+                FoundingHistory = entity.FoundingHistory,
+                EvolutionOverTime = entity.EvolutionOverTime,
+                AdditionalNotes = entity.AdditionalNotes,
                 CreatedAt = entity.CreatedAt,
                 UpdatedAt = entity.UpdatedAt
             };
@@ -271,6 +302,15 @@ public class FactionController : BaseController
             entity.Name = model.Name;
             entity.Description = model.Description;
             entity.FactionType = model.FactionType;
+            entity.LeadershipStructure = model.LeadershipStructure;
+            entity.MembershipCriteria = model.MembershipCriteria;
+            entity.Hierarchy = model.Hierarchy;
+            entity.PrimaryGoals = model.PrimaryGoals;
+            entity.Motivations = model.Motivations;
+            entity.KeyActivities = model.KeyActivities;
+            entity.FoundingHistory = model.FoundingHistory;
+            entity.EvolutionOverTime = model.EvolutionOverTime;
+            entity.AdditionalNotes = model.AdditionalNotes;
             entity.UpdatedAt = DateTime.UtcNow;
 
             var success = await _entityService.UpdateFactionAsync(universeId, entity);

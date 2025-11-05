@@ -9,7 +9,7 @@ namespace Glimmer.Core.Services;
 /// </summary>
 public partial class EntityService
 {
-public async Task<Fact?> CreateFactAsync(Guid universeId, string name, string description, string value, FactTypeEnum factType)
+public async Task<Fact?> CreateFactAsync(Guid universeId, string name, string description, string value, FactTypeEnum factType, string additionalNotes)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
@@ -22,6 +22,7 @@ public async Task<Fact?> CreateFactAsync(Guid universeId, string name, string de
             Description = description,
             Value = value,
             FactType = factType,
+            AdditionalNotes = additionalNotes,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -56,10 +57,15 @@ public async Task<Fact?> CreateFactAsync(Guid universeId, string name, string de
         existing.Description = fact.Description;
         existing.Value = fact.Value;
         existing.FactType = fact.FactType;
+        existing.AdditionalNotes = fact.AdditionalNotes;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }

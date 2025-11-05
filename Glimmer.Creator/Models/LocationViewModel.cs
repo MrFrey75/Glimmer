@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Glimmer.Core.Enums;
+using Glimmer.Core.Models;
 
 namespace Glimmer.Creator.Models;
 
@@ -37,6 +38,37 @@ public class CreateLocationViewModel
     
     public Guid? ParentLocationId { get; set; }
     public List<LocationSelectItem> AvailableParentLocations { get; set; } = new();
+    
+    // Geographical Information
+    [StringLength(100)]
+    public string Coordinates { get; set; } = string.Empty;
+    
+    public ClimateEnum Climate { get; set; } = ClimateEnum.Unknown;
+    public TerrainEnum Terrain { get; set; } = TerrainEnum.Unknown;
+    
+    [StringLength(1000)]
+    public string NaturalResources { get; set; } = string.Empty;
+    
+    // Address and Political Information
+    [StringLength(500)]
+    public string Address { get; set; } = string.Empty;
+    
+    [StringLength(500)]
+    public string PoliticalAffiliation { get; set; } = string.Empty;
+    
+    // Cultural and Societal Information
+    [StringLength(1000)]
+    public string Inhabitants { get; set; } = string.Empty;
+    
+    [StringLength(500)]
+    public string LanguagesSpoken { get; set; } = string.Empty;
+    
+    [StringLength(2000)]
+    public string HistoricalSignificance { get; set; } = string.Empty;
+    
+    // Additional Information
+    [StringLength(2000)]
+    public string AdditionalNotes { get; set; } = string.Empty;
 }
 
 public class EditLocationViewModel
@@ -58,6 +90,37 @@ public class EditLocationViewModel
     public Guid? ParentLocationId { get; set; }
     public List<LocationSelectItem> AvailableParentLocations { get; set; } = new();
     
+    // Geographical Information
+    [StringLength(100)]
+    public string Coordinates { get; set; } = string.Empty;
+    
+    public ClimateEnum Climate { get; set; } = ClimateEnum.Unknown;
+    public TerrainEnum Terrain { get; set; } = TerrainEnum.Unknown;
+    
+    [StringLength(1000)]
+    public string NaturalResources { get; set; } = string.Empty;
+    
+    // Address and Political Information
+    [StringLength(500)]
+    public string Address { get; set; } = string.Empty;
+    
+    [StringLength(500)]
+    public string PoliticalAffiliation { get; set; } = string.Empty;
+    
+    // Cultural and Societal Information
+    [StringLength(1000)]
+    public string Inhabitants { get; set; } = string.Empty;
+    
+    [StringLength(500)]
+    public string LanguagesSpoken { get; set; } = string.Empty;
+    
+    [StringLength(2000)]
+    public string HistoricalSignificance { get; set; } = string.Empty;
+    
+    // Additional Information
+    [StringLength(2000)]
+    public string AdditionalNotes { get; set; } = string.Empty;
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
@@ -73,6 +136,25 @@ public class LocationDetailsViewModel
     public string? ParentLocationName { get; set; }
     public Guid? ParentLocationId { get; set; }
     public List<LocationCardViewModel> ChildLocations { get; set; } = new();
+    
+    // Geographical Information
+    public string Coordinates { get; set; } = string.Empty;
+    public ClimateEnum Climate { get; set; }
+    public TerrainEnum Terrain { get; set; }
+    public string NaturalResources { get; set; } = string.Empty;
+    
+    // Address and Political Information
+    public string Address { get; set; } = string.Empty;
+    public string PoliticalAffiliation { get; set; } = string.Empty;
+    
+    // Cultural and Societal Information
+    public string Inhabitants { get; set; } = string.Empty;
+    public string LanguagesSpoken { get; set; } = string.Empty;
+    public string HistoricalSignificance { get; set; } = string.Empty;
+    
+    // Additional Information
+    public string AdditionalNotes { get; set; } = string.Empty;
+    
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

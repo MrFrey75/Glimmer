@@ -9,5 +9,5 @@ public class Fact : BaseEntity
     public FactTypeEnum FactType { get; set; } = FactTypeEnum.Unknown;
 
     // Additional Information
-    public string? AdditionalNotes { get; set; }
+    public string AdditionalNotes { get; set; } = string.Empty;
 }

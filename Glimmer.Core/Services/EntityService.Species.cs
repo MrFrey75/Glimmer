@@ -9,21 +9,15 @@ namespace Glimmer.Core.Services;
 /// </summary>
 public partial class EntityService
 {
-public async Task<Species?> CreateSpeciesAsync(Guid universeId, string name, string description, SpeciesTypeEnum speciesType)
+public async Task<Species?> CreateSpeciesAsync(Guid universeId, Species species)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        var species = new Species
-        {
-            Uuid = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            SpeciesType = speciesType,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        species.Uuid = Guid.NewGuid();
+        species.CreatedAt = DateTime.UtcNow;
+        species.UpdatedAt = DateTime.UtcNow;
 
         universe.Species.Add(species);
         universe.UpdatedAt = DateTime.UtcNow;
@@ -54,10 +48,37 @@ public async Task<Species?> CreateSpeciesAsync(Guid universeId, string name, str
         existing.Name = species.Name;
         existing.Description = species.Description;
         existing.SpeciesType = species.SpeciesType;
+        existing.AverageHeight = species.AverageHeight;
+        existing.AverageWeight = species.AverageWeight;
+        existing.HeightMeasure = species.HeightMeasure;
+        existing.WeightMeasure = species.WeightMeasure;
+        existing.SkinColor = species.SkinColor;
+        existing.EyeColor = species.EyeColor;
+        existing.HairColor = species.HairColor;
+        existing.DistinguishingFeatures = species.DistinguishingFeatures;
+        existing.NaturalHabitat = species.NaturalHabitat;
+        existing.GeographicDistribution = species.GeographicDistribution;
+        existing.SocialStructure = species.SocialStructure;
+        existing.BehavioralTraits = species.BehavioralTraits;
+        existing.Diet = species.Diet;
+        existing.AverageLifespan = species.AverageLifespan;
+        existing.ReproductiveMethods = species.ReproductiveMethods;
+        existing.GestationPeriod = species.GestationPeriod;
+        existing.OffspringPerBirth = species.OffspringPerBirth;
+        existing.CommunicationMethods = species.CommunicationMethods;
+        existing.PredatorsAndThreats = species.PredatorsAndThreats;
+        existing.ConservationStatus = species.ConservationStatus;
+        existing.HasMagicalAbilities = species.HasMagicalAbilities;
+        existing.MagicalAbilitiesDescription = species.MagicalAbilitiesDescription;
+        existing.AdditionalNotes = species.AdditionalNotes;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null)
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }

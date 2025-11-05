@@ -9,9 +9,9 @@ namespace Glimmer.Core.Services;
 /// </summary>
 public partial class EntityService
 {
-public async Task<Artifact?> CreateArtifactAsync(Guid universeId, string name, string description, ArtifactTypeEnum artifactType)
+public async Task<Artifact?> CreateArtifactAsync(Guid universeId, Artifact artifact)
     {
-        _logger.LogDebug("Creating artifact '{Name}' in universe {UniverseId}", name, universeId);
+        _logger.LogDebug("Creating artifact '{Name}' in universe {UniverseId}", artifact.Name, universeId);
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null)
@@ -20,22 +20,16 @@ public async Task<Artifact?> CreateArtifactAsync(Guid universeId, string name, s
             return null;
         }
 
-        var artifact = new Artifact
-        {
-            Uuid = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            ArtifactType = artifactType,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
+        artifact.Uuid = Guid.NewGuid();
+        artifact.CreatedAt = DateTime.UtcNow;
+        artifact.UpdatedAt = DateTime.UtcNow;
 
         universe.Artifacts.Add(artifact);
         universe.UpdatedAt = DateTime.UtcNow;
         await _universeRepository.UpdateAsync(universe);
         
         _logger.LogInformation("Artifact {ArtifactId} '{Name}' created in universe {UniverseId}", 
-            artifact.Uuid, name, universeId);
+            artifact.Uuid, artifact.Name, universeId);
         
         return artifact;
     }
@@ -63,10 +57,26 @@ public async Task<Artifact?> CreateArtifactAsync(Guid universeId, string name, s
         existing.Name = artifact.Name;
         existing.Description = artifact.Description;
         existing.ArtifactType = artifact.ArtifactType;
+        existing.MaterialComposition = artifact.MaterialComposition;
+        existing.Dimensions = artifact.Dimensions;
+        existing.Weight = artifact.Weight;
+        existing.Color = artifact.Color;
+        existing.Condition = artifact.Condition;
+        existing.Origin = artifact.Origin;
+        existing.HistoricalPeriod = artifact.HistoricalPeriod;
+        existing.CulturalSignificance = artifact.CulturalSignificance;
+        existing.NotableOwners = artifact.NotableOwners;
+        existing.HasMagicalProperties = artifact.HasMagicalProperties;
+        existing.MagicalPropertiesDescription = artifact.MagicalPropertiesDescription;
+        existing.AdditionalNotes = artifact.AdditionalNotes;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
-        if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
+        if (universe != null) 
+        {
+            universe.UpdatedAt = DateTime.UtcNow;
+            await _universeRepository.UpdateAsync(universe);
+        }
 
         return true;
     }

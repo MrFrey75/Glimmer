@@ -29,6 +29,22 @@
                 <div class="card-body">
                     <h5 class="card-title">Description</h5>
                     <p class="card-text">@Model.Description</p>
+                    <hr />
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">Timeline Type:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-primary">@Model.TimelineType</span>
+                            @switch (Model.TimelineType)
+                            {
+                                case Glimmer.Core.Models.TimelineTypeEnum.CalendarBased:
+                                    <small class="text-muted d-block mt-1">Events use specific calendar dates (Year/Month/Day with optional eras)</small>
+                                    break;
+                                case Glimmer.Core.Models.TimelineTypeEnum.RelativeDating:
+                                    <small class="text-muted d-block mt-1">Events are anchored relative to other events</small>
+                                    break;
+                            }
+                        </dd>
+                    </dl>
                 </div>
             </div>
         </div>

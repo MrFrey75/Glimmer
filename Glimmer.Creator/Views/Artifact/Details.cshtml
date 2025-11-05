@@ -19,6 +19,14 @@
             </h1>
             <p class="text-muted">
                 <span class="badge bg-warning">@Model.ArtifactType</span>
+                @if (Model.Condition != Glimmer.Core.Enums.ConditionEnum.Unknown)
+                {
+                    <span class="badge bg-info">@Model.Condition</span>
+                }
+                @if (Model.HasMagicalProperties)
+                {
+                    <span class="badge bg-purple">✨ Magical</span>
+                }
                 Created @Model.CreatedAt.ToString("MMMM dd, yyyy")
             </p>
         </div>
@@ -36,6 +44,7 @@
 
     <div class="row mb-4">
         <div class="col-lg-8">
+            <!-- Description -->
             <div class="card mb-4">
                 <div class="card-header">
                     <h5><i class="bi bi-file-text"></i> Description</h5>
@@ -45,6 +54,106 @@
                 </div>
             </div>
 
+            <!-- Physical Characteristics -->
+            @if (!string.IsNullOrEmpty(Model.Dimensions) || !string.IsNullOrEmpty(Model.Weight) || 
+                 !string.IsNullOrEmpty(Model.Color) || Model.MaterialComposition != Glimmer.Core.Enums.MaterialCompositionEnmum.Unknown)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-box"></i> Physical Characteristics</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row mb-0">
+                            @if (Model.MaterialComposition != Glimmer.Core.Enums.MaterialCompositionEnmum.Unknown)
+                            {
+                                <dt class="col-sm-3">Material:</dt>
+                                <dd class="col-sm-9">@Model.MaterialComposition</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Dimensions))
+                            {
+                                <dt class="col-sm-3">Dimensions:</dt>
+                                <dd class="col-sm-9">@Model.Dimensions</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Weight))
+                            {
+                                <dt class="col-sm-3">Weight:</dt>
+                                <dd class="col-sm-9">@Model.Weight</dd>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Color))
+                            {
+                                <dt class="col-sm-3">Color:</dt>
+                                <dd class="col-sm-9">@Model.Color</dd>
+                            }
+                            @if (Model.Condition != Glimmer.Core.Enums.ConditionEnum.Unknown)
+                            {
+                                <dt class="col-sm-3">Condition:</dt>
+                                <dd class="col-sm-9"><span class="badge bg-info">@Model.Condition</span></dd>
+                            }
+                        </dl>
+                    </div>
+                </div>
+            }
+
+            <!-- Historical & Cultural Significance -->
+            @if (!string.IsNullOrEmpty(Model.Origin) || !string.IsNullOrEmpty(Model.HistoricalPeriod) || 
+                 !string.IsNullOrEmpty(Model.CulturalSignificance) || !string.IsNullOrEmpty(Model.NotableOwners))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-book"></i> Historical & Cultural Significance</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.Origin))
+                        {
+                            <h6>Origin</h6>
+                            <p>@Model.Origin</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.HistoricalPeriod))
+                        {
+                            <h6>Historical Period</h6>
+                            <p>@Model.HistoricalPeriod</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.NotableOwners))
+                        {
+                            <h6>Notable Owners</h6>
+                            <p>@Model.NotableOwners</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.CulturalSignificance))
+                        {
+                            <h6>Cultural Significance</h6>
+                            <p class="mb-0">@Model.CulturalSignificance</p>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Magical Properties -->
+            @if (Model.HasMagicalProperties && !string.IsNullOrEmpty(Model.MagicalPropertiesDescription))
+            {
+                <div class="card mb-4 border-purple">
+                    <div class="card-header bg-purple text-white">
+                        <h5 class="mb-0"><i class="bi bi-stars"></i> Magical Properties</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.MagicalPropertiesDescription</p>
+                    </div>
+                </div>
+            }
+
+            <!-- Additional Notes -->
+            @if (!string.IsNullOrEmpty(Model.AdditionalNotes))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-pencil-square"></i> Additional Notes</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">@Model.AdditionalNotes</p>
+                    </div>
+                </div>
+            }
+
+            <!-- Relationships -->
             <div class="card">
                 <div class="card-header">
                     <h5><i class="bi bi-diagram-3"></i> Relationships</h5>
@@ -61,7 +170,7 @@
                     <h5><i class="bi bi-info-circle"></i> Information</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row">
+                    <dl class="row mb-0">
                         <dt class="col-sm-4">Type:</dt>
                         <dd class="col-sm-8"><span class="badge bg-warning">@Model.ArtifactType</span></dd>
                         
@@ -124,3 +233,12 @@
         </div>
     </div>
 </div>
+
+<style>
+    .bg-purple {
+        background-color: #9333ea !important;
+    }
+    .border-purple {
+        border-color: #9333ea !important;
+    }
+</style>

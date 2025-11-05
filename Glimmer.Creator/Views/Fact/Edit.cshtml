@@ -42,9 +42,21 @@
                         </div>
 
                         <div class="mb-3">
+                            <label asp-for="Value" class="form-label">Value</label>
+                            <input asp-for="Value" class="form-control" />
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="5"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AdditionalNotes" class="form-label">Additional Notes</label>
+                            <textarea asp-for="AdditionalNotes" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
                         </div>
 
                         <div class="alert alert-info">

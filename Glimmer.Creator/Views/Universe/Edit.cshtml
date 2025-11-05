@@ -1,4 +1,5 @@
 @model Glimmer.Creator.Models.EditUniverseViewModel
+@using Glimmer.Core.Models
 @{
     ViewData["Title"] = "Edit Universe";
 }
@@ -31,11 +32,28 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label">Timeline Type <span class="badge bg-secondary">Read-Only</span></label>
+                            <input type="text" class="form-control" value="@Model.TimelineType" readonly disabled />
+                            <input type="hidden" asp-for="TimelineType" />
+                            <div class="form-text">
+                                <i class="bi bi-lock-fill"></i> Timeline type is set once during universe creation and cannot be changed.
+                                @if (Model.TimelineType == TimelineTypeEnum.CalendarBased)
+                                {
+                                    <text><br/><strong>Calendar-Based:</strong> Events use specific dates (Year/Month/Day with optional eras).</text>
+                                }
+                                else
+                                {
+                                    <text><br/><strong>Relative Dating:</strong> Events are anchored relative to the primary anchor event.</text>
+                                }
+                            </div>
+                        </div>
+
                         <div class="alert alert-info">
                             <small>
                                 <i class="bi bi-info-circle"></i>
-                                Created: @Model.CreatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt") UTC<br />
-                                Last Updated: @Model.UpdatedAt.ToString("MMMM dd, yyyy 'at' h:mm tt") UTC
+                                Created: @Model.CreatedAt.ToString("MMMM dd, yyyy") at @Model.CreatedAt.ToString("h:mm tt") UTC<br />
+                                Last Updated: @Model.UpdatedAt.ToString("MMMM dd, yyyy") at @Model.UpdatedAt.ToString("h:mm tt") UTC
                             </small>
                         </div>
 
