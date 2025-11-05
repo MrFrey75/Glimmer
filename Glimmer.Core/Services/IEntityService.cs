@@ -28,7 +28,7 @@ public interface IEntityService
     Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, string name, string description, TimelineEventTypeEnum eventType);
     Task<TimelineEvent?> GetTimelineEventByIdAsync(Guid universeId, Guid eventId);
     Task<List<TimelineEvent>> GetTimelineEventsByUniverseAsync(Guid universeId);
-    Task<bool> UpdateTimelineEventAsync(Guid universeId, TimelineEvent cannonEvent);
+    Task<bool> UpdateTimelineEventAsync(Guid universeId, TimelineEvent timelineEvent);
     Task<bool> DeleteTimelineEventAsync(Guid universeId, Guid eventId);
 
     // Faction Operations

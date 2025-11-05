@@ -40,7 +40,7 @@ Glimmer follows a clean 2-tier architecture:
 
 ### Domain Modeling
 - **Universe Management**: Create and manage multiple universes with full CRUD operations
-- **7 Entity Types**: NotableFigures (19 types), Locations (hierarchy), Artifacts (19 types), TimelineEvents (20 types), Factions (13 types), Facts (11 types), Species (16 types)
+- **7 Entity Types**: NotableFigures (19 types), Locations (hierarchy), Artifacts (19 types), TimelineEvents (20 types with calendar/relative dating), Factions (13 types), Facts (11 types), Species (16 types)
 - **101 Type Variants**: Rich categorization across all entity types for detailed world-building
 - **Relationship System**: Rich semantic relationships between any entities (ParentOf, LocatedIn, AllyOf, etc.)
 - **Hierarchical Locations**: Parent-child relationships for regions, countries, cities, buildings
@@ -160,7 +160,7 @@ Glimmer/
 │   │   ├── NotableFigure.cs   # Characters/people (19 types)
 │   │   ├── Location.cs        # Places with hierarchy (11 types)
 │   │   ├── Artifact.cs        # Objects and items (19 types)
-│   │   ├── TimelineEvent.cs     # Historical events (20 types)
+│   │   ├── TimelineEvent.cs     # Historical events (20 types, calendar/relative)
 │   │   ├── Faction.cs         # Groups and organizations (13 types)
 │   │   ├── Fact.cs           # Lore and trivia (11 types)
 │   │   ├── Species.cs         # Lifeforms and creatures (16 types)

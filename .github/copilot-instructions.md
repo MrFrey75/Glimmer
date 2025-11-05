@@ -13,12 +13,15 @@ The domain centers around **Universe** as the root aggregate containing collecti
 - `Location` - Places with hierarchical parent-child relationships (11 types)
 - `Artifact` - Objects, items, and significant things (19 types: Weapon, Armor, Magic Item, etc.)
 - `TimelineEvent` - Historical events and occurrences (20 types: Battle, Birth, Death, etc.)
+  - **Calendar-based dating**: Year/Month/Day with Era support (e.g., "253 CE", "Year 4127 of the Third Age")
+  - **Relative dating**: Events anchored to other events (e.g., "10 years before the Great War")
+  - Flexible precision (year-only, year-month, or full date)
+  - Optional duration tracking
 - `Faction` - Groups, organizations, and political entities (13 types: Kingdom, Guild, etc.)
 - `Fact` - Miscellaneous facts, lore, and trivia (11 types: Historical, Scientific, etc.)
 - `Species` - Lifeforms and creatures (16 types: Mammal, Reptile, Humanoid, Dragon, etc.)
 
 **Total**: 101 type variants for rich categorization and detailed world-building.
-- `Species` - Lifeforms and creatures in the universe
 
 ### Entity Patterns
 
@@ -47,6 +50,26 @@ Entities are connected via `EntityRelation` which creates typed relationships be
 - Stored in separate MongoDB collection for efficient querying
 
 ## Development Workflow
+
+### Branch Strategy
+**CRITICAL**: All development work MUST be done on the `development` branch. **NEVER commit directly to `main`.**
+
+- `main` - Production-ready, stable code only
+- `development` - Active development branch (default for all work)
+- Feature branches - Create from `development` for isolated features, merge back to `development`
+
+```bash
+# Always work on development branch
+git checkout development
+
+# For new features
+git checkout -b feature/my-feature development
+# ... make changes ...
+git checkout development && git merge feature/my-feature
+
+# Merge to main only when stable
+git checkout main && git merge development && git push
+```
 
 ### Build & Run
 ```bash

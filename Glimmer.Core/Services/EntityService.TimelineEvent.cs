@@ -15,7 +15,7 @@ public async Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, stri
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        var cannonEvent = new TimelineEvent
+        var timelineEvent = new TimelineEvent
         {
             Uuid = Guid.NewGuid(),
             Name = name,
@@ -25,10 +25,10 @@ public async Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, stri
             UpdatedAt = DateTime.UtcNow
         };
 
-        universe.TimelineEvents.Add(cannonEvent);
+        universe.TimelineEvents.Add(timelineEvent);
         universe.UpdatedAt = DateTime.UtcNow;
         await _universeRepository.UpdateAsync(universe);
-        return cannonEvent;
+        return timelineEvent;
     }
 
     public async Task<TimelineEvent?> GetTimelineEventByIdAsync(Guid universeId, Guid eventId)
@@ -45,15 +45,24 @@ public async Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, stri
         return universe?.TimelineEvents.Where(e => !e.IsDeleted).ToList() ?? new List<TimelineEvent>();
     }
 
-    public async Task<bool> UpdateTimelineEventAsync(Guid universeId, TimelineEvent cannonEvent)
+    public async Task<bool> UpdateTimelineEventAsync(Guid universeId, TimelineEvent timelineEvent)
     {
 
-        var existing = await GetTimelineEventByIdAsync(universeId, cannonEvent.Uuid);
+        var existing = await GetTimelineEventByIdAsync(universeId, timelineEvent.Uuid);
         if (existing == null) return false;
 
-        existing.Name = cannonEvent.Name;
-        existing.Description = cannonEvent.Description;
-        existing.EventType = cannonEvent.EventType;
+        existing.Name = timelineEvent.Name;
+        existing.Description = timelineEvent.Description;
+        existing.EventType = timelineEvent.EventType;
+        existing.UseCalendarDate = timelineEvent.UseCalendarDate;
+        existing.Year = timelineEvent.Year;
+        existing.Month = timelineEvent.Month;
+        existing.Day = timelineEvent.Day;
+        existing.Era = timelineEvent.Era;
+        existing.AnchorEventId = timelineEvent.AnchorEventId;
+        existing.YearsFromAnchor = timelineEvent.YearsFromAnchor;
+        existing.RelativeDescription = timelineEvent.RelativeDescription;
+        existing.DurationInDays = timelineEvent.DurationInDays;
         existing.UpdatedAt = DateTime.UtcNow;
 
         var universe = await GetUniverseByIdAsync(universeId);
@@ -65,11 +74,11 @@ public async Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, stri
     public async Task<bool> DeleteTimelineEventAsync(Guid universeId, Guid eventId)
     {
 
-        var cannonEvent = await GetTimelineEventByIdAsync(universeId, eventId);
-        if (cannonEvent == null) return false;
+        var timelineEvent = await GetTimelineEventByIdAsync(universeId, eventId);
+        if (timelineEvent == null) return false;
 
-        cannonEvent.IsDeleted = true;
-        cannonEvent.UpdatedAt = DateTime.UtcNow;
+        timelineEvent.IsDeleted = true;
+        timelineEvent.UpdatedAt = DateTime.UtcNow;
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe != null) universe.UpdatedAt = DateTime.UtcNow;
         if (universe != null) await _universeRepository.UpdateAsync(universe);
