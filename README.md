@@ -40,8 +40,10 @@ Glimmer follows a clean 2-tier architecture:
 
 ### Domain Modeling
 - **Universe Management**: Create and manage multiple universes with full CRUD operations
-- **Entity Types**: NotableFigures, Locations, Artifacts, CannonEvents, Factions, Facts, Species
+- **7 Entity Types**: NotableFigures (19 types), Locations (hierarchy), Artifacts (19 types), CannonEvents (20 types), Factions (13 types), Facts (11 types), Species (16 types)
+- **101 Type Variants**: Rich categorization across all entity types for detailed world-building
 - **Relationship System**: Rich semantic relationships between any entities (ParentOf, LocatedIn, AllyOf, etc.)
+- **Hierarchical Locations**: Parent-child relationships for regions, countries, cities, buildings
 - **Soft Delete**: Safe entity removal with recovery options
 - **Embedded Collections**: Entities stored within universes for efficient queries
 
@@ -155,22 +157,31 @@ Glimmer/
 │   ├── Models/                # Domain entities with MongoDB attributes
 │   │   ├── BaseEntity.cs      # Common entity properties ([BsonId])
 │   │   ├── Universe.cs        # Root aggregate
-│   │   ├── NotableFigure.cs   # Characters/people
-│   │   ├── Location.cs        # Places and geography
-│   │   ├── Artifact.cs        # Objects and items
-│   │   ├── CannonEvent.cs     # Historical events
-│   │   ├── Faction.cs         # Groups and organizations
-│   │   ├── Fact.cs           # Lore and trivia
+│   │   ├── NotableFigure.cs   # Characters/people (19 types)
+│   │   ├── Location.cs        # Places with hierarchy (11 types)
+│   │   ├── Artifact.cs        # Objects and items (19 types)
+│   │   ├── CannonEvent.cs     # Historical events (20 types)
+│   │   ├── Faction.cs         # Groups and organizations (13 types)
+│   │   ├── Fact.cs           # Lore and trivia (11 types)
+│   │   ├── Species.cs         # Lifeforms and creatures (16 types)
 │   │   ├── EntityRelation.cs  # Relationship modeling
 │   │   ├── User.cs           # User accounts
 │   │   ├── RefreshToken.cs    # JWT refresh tokens
 │   │   └── PasswordResetToken.cs # Password reset tokens
-│   ├── Enums/                # Domain enumerations
+│   ├── Enums/                # Domain enumerations (101 type variants)
 │   │   ├── RelationTypeEnum.cs # Relationship types
-│   │   └── *TypeEnum.cs      # Entity type classifications
-│   ├── Services/             # Business services
-│   │   ├── AuthenticationService.cs # User auth & JWT (MongoDB)
-│   │   └── EntityService.cs  # Entity management (MongoDB)
+│   │   ├── FigureTypeEnum.cs  # 19 character types
+│   │   ├── LocationTypeEnum.cs # 11 location types
+│   │   ├── ArtifactTypeEnum.cs # 19 artifact types
+│   │   ├── CannonEventTypeEnum.cs # 20 event types
+│   │   ├── FactionTypeEnum.cs # 13 faction types
+│   │   ├── FactTypeEnum.cs    # 11 fact types
+│   │   └── SpeciesTypeEnum.cs # 16 species types
+│   ├── Services/             # Business services (Modular architecture)
+│   │   ├── IEntityService.cs  # Service interface
+│   │   ├── EntityService.cs   # Main DI class
+│   │   ├── EntityService.*.cs # 10 partial classes by entity type
+│   │   └── AuthenticationService.cs # User auth & JWT (MongoDB)
 │   ├── Repositories/         # MongoDB data access layer
 │   │   ├── UserRepository.cs # User CRUD with unique indexes
 │   │   ├── TokenRepository.cs # Token management
@@ -183,12 +194,29 @@ Glimmer/
 │       └── ServiceCollectionExtensions.cs # Service registration
 ├── Glimmer.Creator/          # Web application layer → [README](Glimmer.Creator/README.md)
 │   ├── Controllers/          # MVC controllers
-│   │   ├── HomeController.cs # Main application
-│   │   └── AccountController.cs # Authentication
-│   ├── Views/               # Razor views
-│   │   ├── Home/           # Application views
+│   │   ├── BaseController.cs  # Shared controller functionality
+│   │   ├── HomeController.cs  # Main application & dashboard
+│   │   ├── AccountController.cs # Authentication
+│   │   ├── UniverseController.cs # Universe CRUD
+│   │   ├── NotableFigureController.cs # Character CRUD
+│   │   ├── LocationController.cs # Location CRUD (hierarchy)
+│   │   ├── ArtifactController.cs # Artifact CRUD
+│   │   ├── CannonEventController.cs # Event CRUD
+│   │   ├── FactionController.cs # Faction CRUD
+│   │   ├── FactController.cs # Fact CRUD
+│   │   └── SpeciesController.cs # Species CRUD
+│   ├── Views/               # Razor views (Dark mode)
+│   │   ├── Home/           # Dashboard and main views
 │   │   ├── Account/        # Auth views (Login, Register)
-│   │   └── Shared/         # Layouts (_Layout.cshtml)
+│   │   ├── Universe/       # Universe management
+│   │   ├── NotableFigure/  # Character management
+│   │   ├── Location/       # Location management
+│   │   ├── Artifact/       # Artifact management
+│   │   ├── CannonEvent/    # Event management
+│   │   ├── Faction/        # Faction management
+│   │   ├── Fact/           # Fact management
+│   │   ├── Species/        # Species management
+│   │   └── Shared/         # Layouts (_Layout.cshtml, _FileRibbon.cshtml)
 │   ├── wwwroot/             # Static assets
 │   │   ├── css/            # Dark mode styles (site.css)
 │   │   ├── js/             # JavaScript (site.js)
@@ -318,12 +346,18 @@ dotnet build /p:TreatWarningsAsErrors=true
 
 ## 📖 Documentation
 
+### Main Documentation
+- **[README.md](README.md)** - Project overview and setup (this file)
+- **[TODO.md](TODO.md)** - Complete project roadmap and task list
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick start and common commands
+
+### Component Documentation
 - **[Glimmer.Core README](Glimmer.Core/README.md)** - Domain layer, services, and repositories
+- **[Glimmer.Core Services README](Glimmer.Core/Services/README.md)** - EntityService modular architecture
 - **[Glimmer.Creator README](Glimmer.Creator/README.md)** - Web application and UI
 
-- **[TODO List](TODO.md)** - Complete project roadmap and task list
-- **[Quick Reference](QUICK_REFERENCE.md)** - Quick start and common commands
-- **[Copilot Instructions](.github/copilot-instructions.md)** - AI coding guidelines
+### Development Guidelines
+- **[Copilot Instructions](.github/copilot-instructions.md)** - AI coding guidelines and patterns
 
 ## 🛡️ Security Considerations
 

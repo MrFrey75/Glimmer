@@ -8,13 +8,16 @@ Glimmer is a universe building tool for storytelling with a 2-tier architecture:
 
 ## Core Domain Model
 
-The domain centers around **Universe** as the root aggregate containing collections of:
-- `NotableFigure` - Characters/people in the universe
-- `Location` - Places and geographical entities
-- `Artifact` - Objects, items, and significant things
-- `CannonEvent` - Historical events and occurrences
-- `Faction` - Groups, organizations, and political entities
-- `Fact` - Miscellaneous facts, lore, and trivia
+The domain centers around **Universe** as the root aggregate containing collections of **7 entity types**:
+- `NotableFigure` - Characters/people (19 types: Protagonist, Antagonist, Hero, Villain, etc.)
+- `Location` - Places with hierarchical parent-child relationships (11 types)
+- `Artifact` - Objects, items, and significant things (19 types: Weapon, Armor, Magic Item, etc.)
+- `CannonEvent` - Historical events and occurrences (20 types: Battle, Birth, Death, etc.)
+- `Faction` - Groups, organizations, and political entities (13 types: Kingdom, Guild, etc.)
+- `Fact` - Miscellaneous facts, lore, and trivia (11 types: Historical, Scientific, etc.)
+- `Species` - Lifeforms and creatures (16 types: Mammal, Reptile, Humanoid, Dragon, etc.)
+
+**Total**: 101 type variants for rich categorization and detailed world-building.
 - `Species` - Lifeforms and creatures in the universe
 
 ### Entity Patterns
@@ -103,6 +106,23 @@ universe.UpdatedAt = DateTime.UtcNow;
 await _universeRepository.UpdateAsync(universe);
 ```
 
+### Modular Service Architecture
+EntityService uses **partial classes** split across 11 files for maintainability:
+- `EntityService.cs` - Main class with DI (40 lines)
+- `IEntityService.cs` - Interface definition (85 lines)
+- `EntityService.Universe.cs` - Universe operations (100 lines)
+- `EntityService.Artifact.cs` - Artifact CRUD (~85 lines)
+- `EntityService.CannonEvent.cs` - Event CRUD (~85 lines)
+- `EntityService.Faction.cs` - Faction CRUD (~85 lines)
+- `EntityService.Location.cs` - Location CRUD with hierarchy (~85 lines)
+- `EntityService.NotableFigure.cs` - Character CRUD (~85 lines)
+- `EntityService.Fact.cs` - Fact CRUD (~85 lines)
+- `EntityService.Species.cs` - Species CRUD (~85 lines)
+- `EntityService.Relations.cs` - Relationship operations (~85 lines)
+- `EntityService.Generic.cs` - Search and count operations (~120 lines)
+
+See `Glimmer.Core/Services/README.md` for details.
+
 ### MVC Web Application
 - ASP.NET Core MVC with Razor views
 - Dark mode always enabled (#1a1a1a background, #e0e0e0 text, #9333ea accents)
@@ -112,6 +132,24 @@ await _universeRepository.UpdateAsync(universe);
 - BaseController provides shared methods for authentication, validation, error handling
 - Serilog structured logging (Console, File, MongoDB sinks)
 - Global exception middleware with friendly error pages
+
+### Full CRUD Controllers (All Implemented) ✅
+- UniverseController - Universe management with dashboard
+- NotableFigureController - Character management (19 types)
+- LocationController - Location management with hierarchy (11 types)
+- ArtifactController - Artifact management (19 types)
+- CannonEventController - Event management (20 types)
+- FactionController - Faction management (13 types)
+- FactController - Fact/lore management (11 types)
+- SpeciesController - Species management (16 types)
+
+Each controller inherits from BaseController and includes:
+- Authorization checks
+- Full CRUD operations (List, Create, Edit, Delete, Details)
+- Type-specific badges with color coding
+- Breadcrumb navigation
+- Delete confirmation modals
+- Integration with Universe dashboard
 
 ## Current Implementation Status
 
@@ -123,7 +161,7 @@ await _universeRepository.UpdateAsync(universe);
   - BSON serialization with attributes
 - Services migrated to MongoDB
   - AuthenticationService (13 methods)
-  - EntityService (70+ methods)
+  - EntityService (70+ methods in 11 modular partial classes)
 - Authentication system
   - JWT access tokens (60 min)
   - Refresh tokens (7 days)
@@ -137,23 +175,24 @@ await _universeRepository.UpdateAsync(universe);
   - Global exception middleware
   - BaseController with HandleException helper
   - Friendly error pages
-- Basic MVC UI
-  - Dark mode layout
+- Full MVC UI
+  - Dark mode layout with file ribbon navigation
   - AccountController (Login, Register, Password Reset)
-  - HomeController (Index, Privacy, Error)
-  - File ribbon navigation
-  - BaseController with shared helpers
+  - HomeController (Dashboard with universe cards)
+  - Universe CRUD with dashboard
+  - All 7 entity types with full CRUD (101 type variants)
+  - Responsive design with Bootstrap 5.3
+  - Type-specific badges and color coding
 
-### 🚧 In Progress (25%)
-- Universe management UI
-- Entity CRUD UI
+### 🚧 In Progress (10%)
 - Relationship management UI
+- Unit testing framework (skeleton created)
 
 ### ⏳ Not Started
 - Search functionality
 - Visualization (graphs, timelines)
 - Export/import
-- Advanced features
+- Advanced filtering
 
 ## Key Files for Understanding
 - `Glimmer.Core/Models/BaseEntity.cs` - Common entity pattern with BSON attributes
@@ -161,13 +200,19 @@ await _universeRepository.UpdateAsync(universe);
 - `Glimmer.Core/Models/EntityRelation.cs` - Relationship modeling
 - `Glimmer.Core/Enums/RelationTypeEnum.cs` - Semantic relationship types
 - `Glimmer.Core/Repositories/*.cs` - MongoDB repository implementations
+- `Glimmer.Core/Services/IEntityService.cs` - Service interface (85 lines)
+- `Glimmer.Core/Services/EntityService.cs` - Main service class with DI (40 lines)
+- `Glimmer.Core/Services/EntityService.*.cs` - 10 partial classes by entity type (~85 lines each)
+- `Glimmer.Core/Services/README.md` - Modular EntityService architecture guide
 - `Glimmer.Core/Services/AuthenticationService.cs` - Authentication logic (MongoDB)
-- `Glimmer.Core/Services/EntityService.cs` - Entity management (MongoDB)
 - `Glimmer.Core/Extensions/ServiceCollectionExtensions.cs` - DI registration
 - `Glimmer.Creator/Program.cs` - MVC application startup & superuser seeding
 - `Glimmer.Creator/Controllers/BaseController.cs` - Shared controller functionality
 - `Glimmer.Creator/Controllers/AccountController.cs` - Authentication flows
+- `Glimmer.Creator/Controllers/UniverseController.cs` - Universe CRUD with dashboard
+- `Glimmer.Creator/Controllers/*Controller.cs` - Entity-specific CRUD controllers
 - `Glimmer.Creator/Views/Shared/_Layout.cshtml` - Dark mode layout with file ribbon
+- `Glimmer.Creator/Views/Shared/_FileRibbon.cshtml` - Navigation menu component
 - `Glimmer.Core/Services/EntityService.cs` - Entity management (MongoDB)
 - `Glimmer.Core/Extensions/ServiceCollectionExtensions.cs` - DI registration
 - `Glimmer.Creator/Program.cs` - MVC application startup
@@ -297,13 +342,15 @@ var universe = await collection.Find(u => u.Uuid == id).FirstOrDefaultAsync();
 4. ❌ Not handling null returns from repository queries
 5. ❌ Exposing repository interfaces outside of services
 6. ❌ Forgetting to update `Universe.UpdatedAt` when modifying entities
+7. ❌ Not inheriting controllers from `BaseController`
+8. ❌ Creating monolithic service files (use partial classes like EntityService)
 
 ## Next Steps (Priority Order)
-1. 🔴 Implement UniverseController with full CRUD UI
-2. 🔴 Implement NotableFigureController (characters)
-3. 🔴 Implement LocationController
-4. 🟡 Implement RelationController (relationships)
-5. 🟡 Add search functionality
-6. 🟡 Add relationship graph visualization
+1. 🔴 Implement RelationController for entity relationship management
+2. 🔴 Add unit tests for EntityService partial classes
+3. 🟡 Implement global search functionality
+4. 🟡 Add relationship graph visualization
+5. 🟡 Implement timeline view for CannonEvents
+6. 🟡 Add data export/import (JSON/YAML)
 
 See [TODO.md](TODO.md) for complete task list.
