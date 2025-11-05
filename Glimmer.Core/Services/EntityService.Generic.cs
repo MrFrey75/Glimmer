@@ -18,7 +18,7 @@ public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId
         BaseEntity? entity = universe.Artifacts.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
         if (entity != null) return entity;
 
-        entity = universe.CannonEvents.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
+        entity = universe.TimelineEvents.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
         if (entity != null) return entity;
 
         entity = universe.Factions.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
@@ -49,7 +49,7 @@ public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId
                        (e.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
                         e.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))));
 
-        results.AddRange(universe.CannonEvents
+        results.AddRange(universe.TimelineEvents
             .Where(e => !e.IsDeleted && 
                        (e.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
                         e.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))));
@@ -85,7 +85,7 @@ public async Task<BaseEntity?> GetEntityByIdAsync(Guid universeId, Guid entityId
         if (universe == null) return 0;
 
         return universe.Artifacts.Count(e => !e.IsDeleted) +
-               universe.CannonEvents.Count(e => !e.IsDeleted) +
+               universe.TimelineEvents.Count(e => !e.IsDeleted) +
                universe.Factions.Count(e => !e.IsDeleted) +
                universe.Figures.Count(e => !e.IsDeleted) +
                universe.Locations.Count(e => !e.IsDeleted) +

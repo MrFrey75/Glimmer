@@ -14,12 +14,23 @@ public class Universe
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+    public List<MetadataItem> Metadata { get; set; } = [];
+
+    // Collections of related entities
+
     public List<Artifact> Artifacts { get; set; } = [];
-    public List<CannonEvent> CannonEvents { get; set; } = [];
+    public List<TimelineEvent> TimelineEvents { get; set; } = [];
     public List<Faction> Factions { get; set; } = [];
     public List<NotableFigure> Figures { get; set; } = [];
     public List<Location> Locations { get; set; } = [];
     public List<Fact> Facts { get; set; } = [];
     public List<Species> Species { get; set; } = [];
 
+}
+
+public class MetadataItem
+{
+    public string Key { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
 }

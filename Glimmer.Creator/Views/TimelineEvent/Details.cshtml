@@ -1,4 +1,4 @@
-@model Glimmer.Creator.Models.CannonEventDetailsViewModel
+@model Glimmer.Creator.Models.TimelineEventDetailsViewModel
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -117,7 +117,7 @@
                 <form asp-action="Delete" asp-route-universeId="@Model.UniverseId" asp-route-id="@Model.Uuid" method="post" style="display: inline;">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash"></i> Delete CannonEvent
+                        <i class="bi bi-trash"></i> Delete TimelineEvent
                     </button>
                 </form>
             </div>

@@ -10,7 +10,7 @@ Glimmer.Core/Services/
 ├── EntityService.cs                # Main class with DI and fields
 ├── EntityService.Universe.cs       # Universe CRUD operations
 ├── EntityService.Artifact.cs       # Artifact entity operations  
-├── EntityService.CannonEvent.cs    # Event entity operations
+├── EntityService.TimelineEvent.cs    # Event entity operations
 ├── EntityService.Faction.cs        # Faction entity operations
 ├── EntityService.Location.cs       # Location operations (with hierarchy)
 ├── EntityService.NotableFigure.cs  # Character entity operations

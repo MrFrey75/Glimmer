@@ -41,7 +41,7 @@ public class BaseEntity
 - **NotableFigure**: Characters, people, and personalities
 - **Location**: Places, regions, and geographical entities
 - **Artifact**: Objects, items, tools, and significant things
-- **CannonEvent**: Historical events, battles, discoveries
+- **TimelineEvent**: Historical events, battles, discoveries
 - **Faction**: Groups, organizations, nations, and political entities
 - **Fact**: Miscellaneous lore, trivia, and universe facts
 
@@ -147,7 +147,7 @@ builder.Services.AddGlimmerCore();
 - `FigureTypeEnum` - Person, Deity, Creature, etc.
 - `LocationTypeEnum` - City, Region, Building, etc.
 - `ArtifactTypeEnum` - Weapon, Tool, Relic, etc.
-- `CannonEventTypeEnum` - Battle, Discovery, Birth, Death, etc.
+- `TimelineEventTypeEnum` - Battle, Discovery, Birth, Death, etc.
 - `FactionTypeEnum` - Nation, Guild, Family, etc.
 - `FactTypeEnum` - Lore, Rule, Custom, etc.
 

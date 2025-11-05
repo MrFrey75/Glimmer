@@ -330,13 +330,13 @@ public class RelationController : BaseController
             });
         }
 
-        foreach (var evt in universe.CannonEvents.Where(e => !e.IsDeleted))
+        foreach (var evt in universe.TimelineEvents.Where(e => !e.IsDeleted))
         {
             entities.Add(new EntityPickerItem
             {
                 EntityId = evt.Uuid,
                 EntityName = evt.Name,
-                EntityType = "CannonEvent"
+                EntityType = "TimelineEvent"
             });
         }
 
@@ -384,8 +384,8 @@ public class RelationController : BaseController
         var artifact = universe.Artifacts.FirstOrDefault(a => a.Uuid == entityId && !a.IsDeleted);
         if (artifact != null) return (artifact, "Artifact");
 
-        var evt = universe.CannonEvents.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
-        if (evt != null) return (evt, "CannonEvent");
+        var evt = universe.TimelineEvents.FirstOrDefault(e => e.Uuid == entityId && !e.IsDeleted);
+        if (evt != null) return (evt, "TimelineEvent");
 
         var faction = universe.Factions.FirstOrDefault(f => f.Uuid == entityId && !f.IsDeleted);
         if (faction != null) return (faction, "Faction");
@@ -408,7 +408,7 @@ public class RelationController : BaseController
             NotableFigure => "NotableFigure",
             Location => "Location",
             Artifact => "Artifact",
-            CannonEvent => "CannonEvent",
+            TimelineEvent => "TimelineEvent",
             Faction => "Faction",
             Fact => "Fact",
             Species => "Species",

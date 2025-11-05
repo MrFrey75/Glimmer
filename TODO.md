@@ -35,7 +35,7 @@
 
 ### Business Logic ✅
 - [x] EntityService with 70+ methods for CRUD operations
-- [x] Entity operations (Artifact, CannonEvent, Faction, Location, NotableFigure, Fact, Species)
+- [x] Entity operations (Artifact, TimelineEvent, Faction, Location, NotableFigure, Fact, Species)
 - [x] Relationship management system
 - [x] Universe management
 - [x] EntityService fully migrated to MongoDB
@@ -107,7 +107,7 @@
 - [x] **NotableFigure** (Characters) - 19 types ✅
 - [x] **Location** (with hierarchy) - 11 types ✅
 - [x] **Artifact** (Objects) - 19 types ✅
-- [x] **CannonEvent** (Events) - 20 types ✅
+- [x] **TimelineEvent** (Events) - 20 types ✅
 - [x] **Faction** (Organizations) - 13 types ✅
 - [x] **Fact** (Lore) - 11 types ✅
 - [x] **Species** (Lifeforms) - 16 types ✅
@@ -162,8 +162,8 @@ Each entity includes:
 - [ ] Views
 - [ ] View Models
 
-#### CannonEvent 🟡
-- [ ] CannonEventController
+#### TimelineEvent 🟡
+- [ ] TimelineEventController
 - [ ] Views
 - [ ] View Models
 - [ ] Timeline view
@@ -225,7 +225,7 @@ Each entity includes:
   - [ ] Zoom and pan
   - [ ] Filter by relationship type
   - [ ] Click to view entity details
-- [ ] Timeline view for CannonEvents
+- [ ] Timeline view for TimelineEvents
   - [ ] Chronological ordering
   - [ ] Filter by date range
   - [ ] Interactive timeline component

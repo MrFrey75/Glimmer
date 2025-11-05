@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Glimmer.Creator.Controllers;
 
-public class CannonEventController : BaseController
+public class TimelineEventController : BaseController
 {
     private readonly IEntityService _entityService;
 
-    public CannonEventController(
+    public TimelineEventController(
         IEntityService entityService,
-        ILogger<CannonEventController> logger) : base(logger)
+        ILogger<TimelineEventController> logger) : base(logger)
     {
         _entityService = entityService;
     }
@@ -36,13 +36,13 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var viewModel = new CannonEventListViewModel
+            var viewModel = new TimelineEventListViewModel
             {
                 UniverseId = universeId,
                 UniverseName = universe.Name,
-                Events = universe.CannonEvents
+                Events = universe.TimelineEvents
                     .Where(e => !e.IsDeleted)
-                    .Select(e => new CannonEventCardViewModel
+                    .Select(e => new TimelineEventCardViewModel
                     {
                         Uuid = e.Uuid,
                         Name = e.Name,
@@ -81,7 +81,7 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var viewModel = new CreateCannonEventViewModel { UniverseId = universeId };
+            var viewModel = new CreateTimelineEventViewModel { UniverseId = universeId };
             return View(viewModel);
         }
         catch (Exception ex)
@@ -92,7 +92,7 @@ public class CannonEventController : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateCannonEventViewModel model)
+    public async Task<IActionResult> Create(CreateTimelineEventViewModel model)
     {
         if (!IsAuthenticated()) return RedirectToLogin();
         if (!ModelState.IsValid) return View(model);
@@ -113,7 +113,7 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.CreateCannonEventAsync(
+            var entity = await _entityService.CreateTimelineEventAsync(
                 model.UniverseId,
                 model.Name,
                 model.Description,
@@ -125,9 +125,9 @@ public class CannonEventController : BaseController
                 return View(model);
             }
 
-            Logger.LogInformation("CannonEvent created: {Name} in universe {UniverseName}", 
+            Logger.LogInformation("TimelineEvent created: {Name} in universe {UniverseName}", 
                 entity.Name, universe.Name);
-            TempData["SuccessMessage"] = $"CannonEvent '{entity.Name}' created successfully!";
+            TempData["SuccessMessage"] = $"TimelineEvent '{entity.Name}' created successfully!";
             return RedirectToAction(nameof(Details), new { universeId = model.UniverseId, id = entity.Uuid });
         }
         catch (Exception ex)
@@ -157,14 +157,14 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.GetCannonEventByIdAsync(universeId, id);
+            var entity = await _entityService.GetTimelineEventByIdAsync(universeId, id);
             if (entity == null)
             {
-                TempData["ErrorMessage"] = "CannonEvent not found.";
+                TempData["ErrorMessage"] = "TimelineEvent not found.";
                 return RedirectToAction(nameof(Index), new { universeId });
             }
 
-            var viewModel = new CannonEventDetailsViewModel
+            var viewModel = new TimelineEventDetailsViewModel
             {
                 UniverseId = universeId,
                 UniverseName = universe.Name,
@@ -205,14 +205,14 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.GetCannonEventByIdAsync(universeId, id);
+            var entity = await _entityService.GetTimelineEventByIdAsync(universeId, id);
             if (entity == null)
             {
-                TempData["ErrorMessage"] = "CannonEvent not found.";
+                TempData["ErrorMessage"] = "TimelineEvent not found.";
                 return RedirectToAction(nameof(Index), new { universeId });
             }
 
-            var viewModel = new EditCannonEventViewModel
+            var viewModel = new EditTimelineEventViewModel
             {
                 UniverseId = universeId,
                 Uuid = entity.Uuid,
@@ -233,7 +233,7 @@ public class CannonEventController : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid universeId, Guid id, EditCannonEventViewModel model)
+    public async Task<IActionResult> Edit(Guid universeId, Guid id, EditTimelineEventViewModel model)
     {
         if (!IsAuthenticated()) return RedirectToLogin();
 
@@ -261,10 +261,10 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.GetCannonEventByIdAsync(universeId, id);
+            var entity = await _entityService.GetTimelineEventByIdAsync(universeId, id);
             if (entity == null)
             {
-                TempData["ErrorMessage"] = "CannonEvent not found.";
+                TempData["ErrorMessage"] = "TimelineEvent not found.";
                 return RedirectToAction(nameof(Index), new { universeId });
             }
 
@@ -273,16 +273,16 @@ public class CannonEventController : BaseController
             entity.EventType = model.EventType;
             entity.UpdatedAt = DateTime.UtcNow;
 
-            var success = await _entityService.UpdateCannonEventAsync(universeId, entity);
+            var success = await _entityService.UpdateTimelineEventAsync(universeId, entity);
             if (!success)
             {
                 TempData["ErrorMessage"] = "Failed to update event. Please try again.";
                 return View(model);
             }
 
-            Logger.LogInformation("CannonEvent updated: {Name} in universe {UniverseName}", 
+            Logger.LogInformation("TimelineEvent updated: {Name} in universe {UniverseName}", 
                 entity.Name, universe.Name);
-            TempData["SuccessMessage"] = $"CannonEvent '{entity.Name}' updated successfully!";
+            TempData["SuccessMessage"] = $"TimelineEvent '{entity.Name}' updated successfully!";
             return RedirectToAction(nameof(Details), new { universeId, id });
         }
         catch (Exception ex)
@@ -313,23 +313,23 @@ public class CannonEventController : BaseController
                 return RedirectToAction("Index", "Universe");
             }
 
-            var entity = await _entityService.GetCannonEventByIdAsync(universeId, id);
+            var entity = await _entityService.GetTimelineEventByIdAsync(universeId, id);
             if (entity == null)
             {
-                TempData["ErrorMessage"] = "CannonEvent not found.";
+                TempData["ErrorMessage"] = "TimelineEvent not found.";
                 return RedirectToAction(nameof(Index), new { universeId });
             }
 
-            var success = await _entityService.DeleteCannonEventAsync(universeId, id);
+            var success = await _entityService.DeleteTimelineEventAsync(universeId, id);
             if (!success)
             {
                 TempData["ErrorMessage"] = "Failed to delete event. Please try again.";
                 return RedirectToAction(nameof(Details), new { universeId, id });
             }
 
-            Logger.LogInformation("CannonEvent deleted: {Name} in universe {UniverseName}", 
+            Logger.LogInformation("TimelineEvent deleted: {Name} in universe {UniverseName}", 
                 entity.Name, universe.Name);
-            TempData["SuccessMessage"] = $"CannonEvent '{entity.Name}' deleted successfully.";
+            TempData["SuccessMessage"] = $"TimelineEvent '{entity.Name}' deleted successfully.";
             return RedirectToAction(nameof(Index), new { universeId });
         }
         catch (Exception ex)

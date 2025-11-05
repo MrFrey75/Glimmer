@@ -40,7 +40,7 @@ Glimmer follows a clean 2-tier architecture:
 
 ### Domain Modeling
 - **Universe Management**: Create and manage multiple universes with full CRUD operations
-- **7 Entity Types**: NotableFigures (19 types), Locations (hierarchy), Artifacts (19 types), CannonEvents (20 types), Factions (13 types), Facts (11 types), Species (16 types)
+- **7 Entity Types**: NotableFigures (19 types), Locations (hierarchy), Artifacts (19 types), TimelineEvents (20 types), Factions (13 types), Facts (11 types), Species (16 types)
 - **101 Type Variants**: Rich categorization across all entity types for detailed world-building
 - **Relationship System**: Rich semantic relationships between any entities (ParentOf, LocatedIn, AllyOf, etc.)
 - **Hierarchical Locations**: Parent-child relationships for regions, countries, cities, buildings
@@ -160,7 +160,7 @@ Glimmer/
 │   │   ├── NotableFigure.cs   # Characters/people (19 types)
 │   │   ├── Location.cs        # Places with hierarchy (11 types)
 │   │   ├── Artifact.cs        # Objects and items (19 types)
-│   │   ├── CannonEvent.cs     # Historical events (20 types)
+│   │   ├── TimelineEvent.cs     # Historical events (20 types)
 │   │   ├── Faction.cs         # Groups and organizations (13 types)
 │   │   ├── Fact.cs           # Lore and trivia (11 types)
 │   │   ├── Species.cs         # Lifeforms and creatures (16 types)
@@ -173,7 +173,7 @@ Glimmer/
 │   │   ├── FigureTypeEnum.cs  # 19 character types
 │   │   ├── LocationTypeEnum.cs # 11 location types
 │   │   ├── ArtifactTypeEnum.cs # 19 artifact types
-│   │   ├── CannonEventTypeEnum.cs # 20 event types
+│   │   ├── TimelineEventTypeEnum.cs # 20 event types
 │   │   ├── FactionTypeEnum.cs # 13 faction types
 │   │   ├── FactTypeEnum.cs    # 11 fact types
 │   │   └── SpeciesTypeEnum.cs # 16 species types
@@ -201,7 +201,7 @@ Glimmer/
 │   │   ├── NotableFigureController.cs # Character CRUD
 │   │   ├── LocationController.cs # Location CRUD (hierarchy)
 │   │   ├── ArtifactController.cs # Artifact CRUD
-│   │   ├── CannonEventController.cs # Event CRUD
+│   │   ├── TimelineEventController.cs # Event CRUD
 │   │   ├── FactionController.cs # Faction CRUD
 │   │   ├── FactController.cs # Fact CRUD
 │   │   └── SpeciesController.cs # Species CRUD
@@ -212,7 +212,7 @@ Glimmer/
 │   │   ├── NotableFigure/  # Character management
 │   │   ├── Location/       # Location management
 │   │   ├── Artifact/       # Artifact management
-│   │   ├── CannonEvent/    # Event management
+│   │   ├── TimelineEvent/    # Event management
 │   │   ├── Faction/        # Faction management
 │   │   ├── Fact/           # Fact management
 │   │   ├── Species/        # Species management

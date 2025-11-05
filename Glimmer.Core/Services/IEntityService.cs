@@ -24,12 +24,12 @@ public interface IEntityService
     Task<bool> UpdateArtifactAsync(Guid universeId, Artifact artifact);
     Task<bool> DeleteArtifactAsync(Guid universeId, Guid artifactId);
 
-    // CannonEvent Operations
-    Task<CannonEvent?> CreateCannonEventAsync(Guid universeId, string name, string description, CannonEventTypeEnum eventType);
-    Task<CannonEvent?> GetCannonEventByIdAsync(Guid universeId, Guid eventId);
-    Task<List<CannonEvent>> GetCannonEventsByUniverseAsync(Guid universeId);
-    Task<bool> UpdateCannonEventAsync(Guid universeId, CannonEvent cannonEvent);
-    Task<bool> DeleteCannonEventAsync(Guid universeId, Guid eventId);
+    // TimelineEvent Operations
+    Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, string name, string description, TimelineEventTypeEnum eventType);
+    Task<TimelineEvent?> GetTimelineEventByIdAsync(Guid universeId, Guid eventId);
+    Task<List<TimelineEvent>> GetTimelineEventsByUniverseAsync(Guid universeId);
+    Task<bool> UpdateTimelineEventAsync(Guid universeId, TimelineEvent cannonEvent);
+    Task<bool> DeleteTimelineEventAsync(Guid universeId, Guid eventId);
 
     // Faction Operations
     Task<Faction?> CreateFactionAsync(Guid universeId, string name, string description, FactionTypeEnum factionType);

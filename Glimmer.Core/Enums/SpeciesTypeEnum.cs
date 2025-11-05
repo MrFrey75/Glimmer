@@ -20,5 +20,13 @@ public enum SpeciesTypeEnum
     Poriferan = 15,
     Artificial = 16,
     Cybernetic = 17,
-    Other = 18
+
+    // magical or mythical species
+    Sprite = 18,
+    Dragon = 19,
+    Elemental = 20,
+    Undead = 21,
+    Phantom = 22,
+
+    Other = 23
 }

@@ -1,6 +1,6 @@
 namespace Glimmer.Core.Enums;
 
-public enum CannonEventTypeEnum
+public enum TimelineEventTypeEnum
 {
     Unknown = 0,
 

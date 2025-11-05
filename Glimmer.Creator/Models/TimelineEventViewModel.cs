@@ -3,23 +3,23 @@ using Glimmer.Core.Enums;
 
 namespace Glimmer.Creator.Models;
 
-public class CannonEventListViewModel
+public class TimelineEventListViewModel
 {
     public Guid UniverseId { get; set; }
     public string UniverseName { get; set; } = string.Empty;
-    public List<CannonEventCardViewModel> Events { get; set; } = new();
+    public List<TimelineEventCardViewModel> Events { get; set; } = new();
 }
 
-public class CannonEventCardViewModel
+public class TimelineEventCardViewModel
 {
     public Guid Uuid { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public CannonEventTypeEnum EventType { get; set; }
+    public TimelineEventTypeEnum EventType { get; set; }
     public DateTime CreatedAt { get; set; }
 }
 
-public class CreateCannonEventViewModel
+public class CreateTimelineEventViewModel
 {
     public Guid UniverseId { get; set; }
     
@@ -32,10 +32,10 @@ public class CreateCannonEventViewModel
     public string Description { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Event type is required")]
-    public CannonEventTypeEnum EventType { get; set; } = CannonEventTypeEnum.Discovery;
+    public TimelineEventTypeEnum EventType { get; set; } = TimelineEventTypeEnum.Discovery;
 }
 
-public class EditCannonEventViewModel
+public class EditTimelineEventViewModel
 {
     public Guid UniverseId { get; set; }
     public Guid Uuid { get; set; }
@@ -49,20 +49,20 @@ public class EditCannonEventViewModel
     public string Description { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Event type is required")]
-    public CannonEventTypeEnum EventType { get; set; }
+    public TimelineEventTypeEnum EventType { get; set; }
     
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }
 
-public class CannonEventDetailsViewModel
+public class TimelineEventDetailsViewModel
 {
     public Guid UniverseId { get; set; }
     public string UniverseName { get; set; } = string.Empty;
     public Guid Uuid { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public CannonEventTypeEnum EventType { get; set; }
+    public TimelineEventTypeEnum EventType { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

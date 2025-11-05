@@ -32,7 +32,7 @@ public class CreateNotableFigureViewModel
     public string Description { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Figure type is required")]
-    public FigureTypeEnum FigureType { get; set; } = FigureTypeEnum.Person;
+    public FigureTypeEnum FigureType { get; set; } = FigureTypeEnum.Unknown;
 }
 
 public class EditNotableFigureViewModel

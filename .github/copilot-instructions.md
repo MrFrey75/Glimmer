@@ -12,7 +12,7 @@ The domain centers around **Universe** as the root aggregate containing collecti
 - `NotableFigure` - Characters/people (19 types: Protagonist, Antagonist, Hero, Villain, etc.)
 - `Location` - Places with hierarchical parent-child relationships (11 types)
 - `Artifact` - Objects, items, and significant things (19 types: Weapon, Armor, Magic Item, etc.)
-- `CannonEvent` - Historical events and occurrences (20 types: Battle, Birth, Death, etc.)
+- `TimelineEvent` - Historical events and occurrences (20 types: Battle, Birth, Death, etc.)
 - `Faction` - Groups, organizations, and political entities (13 types: Kingdom, Guild, etc.)
 - `Fact` - Miscellaneous facts, lore, and trivia (11 types: Historical, Scientific, etc.)
 - `Species` - Lifeforms and creatures (16 types: Mammal, Reptile, Humanoid, Dragon, etc.)
@@ -112,7 +112,7 @@ EntityService uses **partial classes** split across 11 files for maintainability
 - `IEntityService.cs` - Interface definition (85 lines)
 - `EntityService.Universe.cs` - Universe operations (100 lines)
 - `EntityService.Artifact.cs` - Artifact CRUD (~85 lines)
-- `EntityService.CannonEvent.cs` - Event CRUD (~85 lines)
+- `EntityService.TimelineEvent.cs` - Event CRUD (~85 lines)
 - `EntityService.Faction.cs` - Faction CRUD (~85 lines)
 - `EntityService.Location.cs` - Location CRUD with hierarchy (~85 lines)
 - `EntityService.NotableFigure.cs` - Character CRUD (~85 lines)
@@ -138,7 +138,7 @@ See `Glimmer.Core/Services/README.md` for details.
 - NotableFigureController - Character management (19 types)
 - LocationController - Location management with hierarchy (11 types)
 - ArtifactController - Artifact management (19 types)
-- CannonEventController - Event management (20 types)
+- TimelineEventController - Event management (20 types)
 - FactionController - Faction management (13 types)
 - FactController - Fact/lore management (11 types)
 - SpeciesController - Species management (16 types)
@@ -350,7 +350,7 @@ var universe = await collection.Find(u => u.Uuid == id).FirstOrDefaultAsync();
 2. 🔴 Add unit tests for EntityService partial classes
 3. 🟡 Implement global search functionality
 4. 🟡 Add relationship graph visualization
-5. 🟡 Implement timeline view for CannonEvents
+5. 🟡 Implement timeline view for TimelineEvents
 6. 🟡 Add data export/import (JSON/YAML)
 
 See [TODO.md](TODO.md) for complete task list.

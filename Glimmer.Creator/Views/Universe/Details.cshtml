@@ -85,7 +85,7 @@
                 <div class="card-body">
                     <i class="bi bi-calendar-event stat-icon text-danger"></i>
                     <h4 class="mb-0">
-                        <a asp-controller="CannonEvent" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
+                        <a asp-controller="TimelineEvent" asp-action="Index" asp-route-universeId="@Model.Uuid" class="text-decoration-none">
                             @Model.EventCount
                         </a>
                     </h4>
@@ -183,7 +183,7 @@
                     <i class="bi bi-calendar-event action-icon text-danger"></i>
                     <h5 class="card-title">Create Event</h5>
                     <p class="card-text">Add a new cannon event to your universe</p>
-                    <a asp-controller="CannonEvent" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-danger">
+                    <a asp-controller="TimelineEvent" asp-action="Create" asp-route-universeId="@Model.Uuid" class="btn btn-danger">
                         <i class="bi bi-plus-circle"></i> Create
                     </a>
                 </div>

@@ -42,7 +42,7 @@ public class UniverseController : BaseController
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt,
                     EntityCount = u.Figures.Count + u.Locations.Count + u.Artifacts.Count + 
-                                 u.CannonEvents.Count + u.Factions.Count + u.Facts.Count
+                                 u.TimelineEvents.Count + u.Factions.Count + u.Facts.Count
                 }).ToList()
             };
 
@@ -144,12 +144,12 @@ public class UniverseController : BaseController
                 FigureCount = universe.Figures.Count,
                 LocationCount = universe.Locations.Count,
                 ArtifactCount = universe.Artifacts.Count,
-                EventCount = universe.CannonEvents.Count,
+                EventCount = universe.TimelineEvents.Count,
                 FactionCount = universe.Factions.Count,
                 FactCount = universe.Facts.Count,
                 SpeciesCount = universe.Species.Count,
                 TotalEntityCount = universe.Figures.Count + universe.Locations.Count + 
-                                  universe.Artifacts.Count + universe.CannonEvents.Count + 
+                                  universe.Artifacts.Count + universe.TimelineEvents.Count + 
                                   universe.Factions.Count + universe.Facts.Count + universe.Species.Count
             };
 

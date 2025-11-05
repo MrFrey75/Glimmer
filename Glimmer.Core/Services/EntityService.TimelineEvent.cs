@@ -5,17 +5,17 @@ using Glimmer.Core.Enums;
 namespace Glimmer.Core.Services;
 
 /// <summary>
-/// EntityService partial class - CannonEvent Operations
+/// EntityService partial class - TimelineEvent Operations
 /// </summary>
 public partial class EntityService
 {
-public async Task<CannonEvent?> CreateCannonEventAsync(Guid universeId, string name, string description, CannonEventTypeEnum eventType)
+public async Task<TimelineEvent?> CreateTimelineEventAsync(Guid universeId, string name, string description, TimelineEventTypeEnum eventType)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
         if (universe == null) return null;
 
-        var cannonEvent = new CannonEvent
+        var cannonEvent = new TimelineEvent
         {
             Uuid = Guid.NewGuid(),
             Name = name,
@@ -25,30 +25,30 @@ public async Task<CannonEvent?> CreateCannonEventAsync(Guid universeId, string n
             UpdatedAt = DateTime.UtcNow
         };
 
-        universe.CannonEvents.Add(cannonEvent);
+        universe.TimelineEvents.Add(cannonEvent);
         universe.UpdatedAt = DateTime.UtcNow;
         await _universeRepository.UpdateAsync(universe);
         return cannonEvent;
     }
 
-    public async Task<CannonEvent?> GetCannonEventByIdAsync(Guid universeId, Guid eventId)
+    public async Task<TimelineEvent?> GetTimelineEventByIdAsync(Guid universeId, Guid eventId)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
-        return universe?.CannonEvents.FirstOrDefault(e => e.Uuid == eventId && !e.IsDeleted);
+        return universe?.TimelineEvents.FirstOrDefault(e => e.Uuid == eventId && !e.IsDeleted);
     }
 
-    public async Task<List<CannonEvent>> GetCannonEventsByUniverseAsync(Guid universeId)
+    public async Task<List<TimelineEvent>> GetTimelineEventsByUniverseAsync(Guid universeId)
     {
 
         var universe = await GetUniverseByIdAsync(universeId);
-        return universe?.CannonEvents.Where(e => !e.IsDeleted).ToList() ?? new List<CannonEvent>();
+        return universe?.TimelineEvents.Where(e => !e.IsDeleted).ToList() ?? new List<TimelineEvent>();
     }
 
-    public async Task<bool> UpdateCannonEventAsync(Guid universeId, CannonEvent cannonEvent)
+    public async Task<bool> UpdateTimelineEventAsync(Guid universeId, TimelineEvent cannonEvent)
     {
 
-        var existing = await GetCannonEventByIdAsync(universeId, cannonEvent.Uuid);
+        var existing = await GetTimelineEventByIdAsync(universeId, cannonEvent.Uuid);
         if (existing == null) return false;
 
         existing.Name = cannonEvent.Name;
@@ -62,10 +62,10 @@ public async Task<CannonEvent?> CreateCannonEventAsync(Guid universeId, string n
         return true;
     }
 
-    public async Task<bool> DeleteCannonEventAsync(Guid universeId, Guid eventId)
+    public async Task<bool> DeleteTimelineEventAsync(Guid universeId, Guid eventId)
     {
 
-        var cannonEvent = await GetCannonEventByIdAsync(universeId, eventId);
+        var cannonEvent = await GetTimelineEventByIdAsync(universeId, eventId);
         if (cannonEvent == null) return false;
 
         cannonEvent.IsDeleted = true;
