@@ -36,6 +36,7 @@ public class NotableFigure : BaseEntity
     {
         Height = string.Empty;
         Weight = string.Empty;
+        Length = string.Empty;
         EyeColor = string.Empty;
         HairColor = string.Empty;
         SkinColor = string.Empty;
@@ -64,11 +65,13 @@ public class NotableFigure : BaseEntity
     }
 
     //physical characteristics
-    public string Height { get; set; } = string.Empty;
-    public string Weight { get; set; } = string.Empty;
+    public string Height { get; set; } = "N/A";
+    public string Weight { get; set; } = "N/A";
+    public string Length { get; set; } = "N/A";
 
     public HeightMeasureEnum HeightMeasure { get; set; } = HeightMeasureEnum.Unknown;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
 
     public string EyeColor { get; set; } = string.Empty;
     public string HairColor { get; set; } = string.Empty;

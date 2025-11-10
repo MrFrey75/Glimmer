@@ -18,5 +18,6 @@ public enum NaturalHabitatEnum
     Terrestrial = 13,
     Cave = 14,
     Domestic = 15,
-    SaltwaterAquatic = 16
+    SaltwaterAquatic = 16,
+    Underground = 17
 }

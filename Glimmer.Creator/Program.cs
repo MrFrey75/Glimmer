@@ -64,13 +64,13 @@ try
         };
     });
 
-    // Ensure superuser exists in database
+    // Ensure database is seeded
     using (var scope = app.Services.CreateScope())
     {
-        var authService = scope.ServiceProvider.GetRequiredService<IAuthenticationService>();
-        Log.Information("Ensuring superuser exists in database");
-        await authService.EnsureSuperUserExistsAsync();
-        Log.Information("Superuser check completed");
+        var seedService = scope.ServiceProvider.GetRequiredService<IDbSeedService>();
+        Log.Information("Seeding database...");
+        await seedService.SeedDatabaseAsync();
+        Log.Information("Database seeding completed");
     }
 
     // Configure the HTTP request pipeline.

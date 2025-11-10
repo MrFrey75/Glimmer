@@ -52,6 +52,8 @@ public async Task<Species?> CreateSpeciesAsync(Guid universeId, Species species)
         existing.AverageWeight = species.AverageWeight;
         existing.HeightMeasure = species.HeightMeasure;
         existing.WeightMeasure = species.WeightMeasure;
+        existing.AverageLength = species.AverageLength;
+        existing.LengthMeasure = species.LengthMeasure;
         existing.SkinColor = species.SkinColor;
         existing.EyeColor = species.EyeColor;
         existing.HairColor = species.HairColor;

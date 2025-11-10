@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Glimmer.Core.Models;
 using Glimmer.Core.Repositories;
+using Glimmer.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -25,9 +26,6 @@ public interface IAuthenticationService
     Task<User?> GetUserByEmailAsync(string email);
     Task<bool> DeleteUserAsync(Guid userId);
     Task<bool> DeactivateUserAsync(Guid userId);
-    Task EnsureSuperUserExistsAsync();
-    string HashPassword(string password, out string salt);
-    bool VerifyPassword(string password, string hash, string salt);
 }
 
 public class AuthenticationService : IAuthenticationService
@@ -57,41 +55,6 @@ public class AuthenticationService : IAuthenticationService
         _jwtAudience = configuration["Jwt:Audience"] ?? "Glimmer.Users";
         _accessTokenExpirationMinutes = int.Parse(configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
         _refreshTokenExpirationDays = int.Parse(configuration["Jwt:RefreshTokenExpirationDays"] ?? "7");
-    }
-
-    public async Task EnsureSuperUserExistsAsync()
-    {
-        _logger.LogDebug("Checking if superuser exists");
-        
-        // Check if superuser already exists
-        var existingSuperUser = await _userRepository.GetByUsernameAsync("Admin");
-        if (existingSuperUser != null && existingSuperUser.IsSuperUser)
-        {
-            _logger.LogDebug("Superuser already exists");
-            return;
-        }
-
-        _logger.LogInformation("Creating superuser");
-        var passwordHash = HashPassword("Password1234", out string salt);
-
-        var superUser = new User
-        {
-            Uuid = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-            Name = "Administrator",
-            Description = "System Administrator - Cannot be deleted",
-            Username = "Admin",
-            Email = "admin@glimmer.local",
-            PasswordHash = passwordHash,
-            PasswordSalt = salt,
-            IsActive = true,
-            EmailVerified = true,
-            IsSuperUser = true,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        };
-
-        await _userRepository.CreateAsync(superUser);
-        _logger.LogInformation("Superuser created successfully");
     }
 
     public async Task<AuthenticationResult> RegisterAsync(string username, string email, string password)
@@ -452,19 +415,14 @@ public class AuthenticationService : IAuthenticationService
 
     public string HashPassword(string password, out string salt)
     {
-        using var hmac = new HMACSHA512();
-        salt = Convert.ToBase64String(hmac.Key);
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(hash);
+        var (hash, generatedSalt) = SecurityUtils.HashPassword(password);
+        salt = generatedSalt;
+        return hash;
     }
 
     public bool VerifyPassword(string password, string hash, string salt)
     {
-        var saltBytes = Convert.FromBase64String(salt);
-        using var hmac = new HMACSHA512(saltBytes);
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        var computedHashString = Convert.ToBase64String(computedHash);
-        return computedHashString == hash;
+        return SecurityUtils.VerifyPassword(password, hash, salt);
     }
 
     private string GenerateAccessToken(User user)

@@ -55,6 +55,7 @@ public static class ServiceCollectionExtensions
         // Register services
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IEntityService, EntityService>();
+        services.AddScoped<IDbSeedService, DbSeedService>();
         
         return services;
     }

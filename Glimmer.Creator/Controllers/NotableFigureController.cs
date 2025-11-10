@@ -156,6 +156,8 @@ public class NotableFigureController : BaseController
                 HeightMeasure = model.HeightMeasure,
                 Weight = model.Weight ?? string.Empty,
                 WeightMeasure = model.WeightMeasure,
+                Length = model.Length ?? string.Empty,
+                LengthMeasure = model.LengthMeasure,
                 EyeColor = model.EyeColor ?? string.Empty,
                 HairColor = model.HairColor ?? string.Empty,
                 SkinColor = model.SkinColor ?? string.Empty,
@@ -238,6 +240,8 @@ public class NotableFigureController : BaseController
                 HeightMeasure = figure.HeightMeasure,
                 Weight = figure.Weight,
                 WeightMeasure = figure.WeightMeasure,
+                Length = figure.Length,
+                LengthMeasure = figure.LengthMeasure,
                 EyeColor = figure.EyeColor,
                 HairColor = figure.HairColor,
                 SkinColor = figure.SkinColor,
@@ -307,6 +311,8 @@ public class NotableFigureController : BaseController
                 HeightMeasure = figure.HeightMeasure,
                 Weight = figure.Weight,
                 WeightMeasure = figure.WeightMeasure,
+                Length = figure.Length,
+                LengthMeasure = figure.LengthMeasure,
                 EyeColor = figure.EyeColor,
                 HairColor = figure.HairColor,
                 SkinColor = figure.SkinColor,
@@ -395,6 +401,8 @@ public class NotableFigureController : BaseController
             figure.HeightMeasure = model.HeightMeasure;
             figure.Weight = model.Weight ?? string.Empty;
             figure.WeightMeasure = model.WeightMeasure;
+            figure.Length = model.Length ?? string.Empty;
+            figure.LengthMeasure = model.LengthMeasure;
             figure.EyeColor = model.EyeColor ?? string.Empty;
             figure.HairColor = model.HairColor ?? string.Empty;
             figure.SkinColor = model.SkinColor ?? string.Empty;

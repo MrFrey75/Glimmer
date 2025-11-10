@@ -21,15 +21,18 @@ public partial class EntityService : IEntityService
 {
     private readonly IUniverseRepository _universeRepository;
     private readonly IRelationRepository _relationRepository;
+    private readonly IDbSeedService _dbSeedService;
     private readonly ILogger<EntityService> _logger;
 
     public EntityService(
-        IUniverseRepository universeRepository, 
+        IUniverseRepository universeRepository,
         IRelationRepository relationRepository,
+        IDbSeedService dbSeedService,
         ILogger<EntityService> logger)
     {
         _universeRepository = universeRepository;
         _relationRepository = relationRepository;
+        _dbSeedService = dbSeedService;
         _logger = logger;
     }
 }

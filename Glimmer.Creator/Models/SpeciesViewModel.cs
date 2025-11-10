@@ -43,6 +43,9 @@ public class CreateSpeciesViewModel
     public string AverageWeight { get; set; } = string.Empty;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
     [StringLength(100)]
+    public string AverageLength { get; set; } = string.Empty;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
+    [StringLength(100)]
     public string SkinColor { get; set; } = string.Empty;
     [StringLength(100)]
     public string EyeColor { get; set; } = string.Empty;
@@ -113,6 +116,13 @@ public class EditSpeciesViewModel
     [StringLength(100)]
     public string AverageWeight { get; set; } = string.Empty;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
+
+
+    [StringLength(100)]
+    public string AverageLength { get; set; } = string.Empty;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
+
+
     [StringLength(100)]
     public string SkinColor { get; set; } = string.Empty;
     [StringLength(100)]
@@ -177,6 +187,8 @@ public class SpeciesDetailsViewModel
     public HeightMeasureEnum HeightMeasure { get; set; }
     public string AverageWeight { get; set; } = string.Empty;
     public WeightMeasureEnum WeightMeasure { get; set; }
+    public string AverageLength { get; set; } = string.Empty;
+    public LengthMeasureEnum LengthMeasure { get; set; }
     public string SkinColor { get; set; } = string.Empty;
     public string EyeColor { get; set; } = string.Empty;
     public string HairColor { get; set; } = string.Empty;

@@ -15,5 +15,6 @@ public enum SocialStructureEnum
     Varied = 10,
     Pair = 11,
     Flock = 12,
-    SmallCommunity = 13
+    SmallCommunity = 13,
+    Clan = 14
 }

@@ -9,9 +9,11 @@ public class Species : BaseEntity
     // Physical Characteristics
     public string AverageHeight { get; set; } = string.Empty;
     public string AverageWeight { get; set; } = string.Empty;
+    public string AverageLength { get; set; } = string.Empty;
 
     public HeightMeasureEnum HeightMeasure { get; set; } = HeightMeasureEnum.Unknown;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
     
     public string SkinColor { get; set; } = string.Empty;
     public string EyeColor { get; set; } = string.Empty;

@@ -53,6 +53,8 @@ public async Task<NotableFigure?> CreateNotableFigureAsync(Guid universeId, Nota
         existing.Weight = figure.Weight;
         existing.HeightMeasure = figure.HeightMeasure;
         existing.WeightMeasure = figure.WeightMeasure;
+        existing.LengthMeasure = figure.LengthMeasure;
+        existing.Length = figure.Length;
         existing.EyeColor = figure.EyeColor;
         existing.HairColor = figure.HairColor;
         existing.SkinColor = figure.SkinColor;

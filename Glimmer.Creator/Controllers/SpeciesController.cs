@@ -140,6 +140,8 @@ public class SpeciesController : BaseController
                 HeightMeasure = model.HeightMeasure,
                 AverageWeight = model.AverageWeight,
                 WeightMeasure = model.WeightMeasure,
+                LengthMeasure = model.LengthMeasure,
+                AverageLength = model.AverageLength,
                 SkinColor = model.SkinColor,
                 EyeColor = model.EyeColor,
                 HairColor = model.HairColor,
@@ -223,6 +225,8 @@ public class SpeciesController : BaseController
                 HeightMeasure = species.HeightMeasure,
                 AverageWeight = species.AverageWeight,
                 WeightMeasure = species.WeightMeasure,
+                AverageLength = species.AverageLength,
+                LengthMeasure = species.LengthMeasure,
                 SkinColor = species.SkinColor,
                 EyeColor = species.EyeColor,
                 HairColor = species.HairColor,
@@ -296,6 +300,8 @@ public class SpeciesController : BaseController
                 HeightMeasure = species.HeightMeasure,
                 AverageWeight = species.AverageWeight,
                 WeightMeasure = species.WeightMeasure,
+                LengthMeasure = species.LengthMeasure,
+                AverageLength = species.AverageLength,
                 SkinColor = species.SkinColor,
                 EyeColor = species.EyeColor,
                 HairColor = species.HairColor,
@@ -377,6 +383,8 @@ public class SpeciesController : BaseController
             species.HeightMeasure = model.HeightMeasure;
             species.AverageWeight = model.AverageWeight;
             species.WeightMeasure = model.WeightMeasure;
+            species.AverageLength = model.AverageLength;
+            species.LengthMeasure = model.LengthMeasure;
             species.SkinColor = model.SkinColor;
             species.EyeColor = model.EyeColor;
             species.HairColor = model.HairColor;

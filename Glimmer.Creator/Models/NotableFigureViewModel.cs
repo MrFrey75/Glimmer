@@ -41,8 +41,10 @@ public class CreateNotableFigureViewModel
     // Physical characteristics
     public string? Height { get; set; }
     public string? Weight { get; set; }
+    public string? Length { get; set; }
     public HeightMeasureEnum HeightMeasure { get; set; } = HeightMeasureEnum.Unknown;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
     public string? EyeColor { get; set; }
     public string? HairColor { get; set; }
     public string? SkinColor { get; set; }
@@ -87,8 +89,10 @@ public class EditNotableFigureViewModel
     // Physical characteristics
     public string? Height { get; set; }
     public string? Weight { get; set; }
+    public string? Length { get; set; }
     public HeightMeasureEnum HeightMeasure { get; set; } = HeightMeasureEnum.Unknown;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
     public string? EyeColor { get; set; }
     public string? HairColor { get; set; }
     public string? SkinColor { get; set; }
@@ -129,8 +133,10 @@ public class NotableFigureDetailsViewModel
     // Physical characteristics
     public string? Height { get; set; }
     public string? Weight { get; set; }
+    public string? Length { get; set; }
     public HeightMeasureEnum HeightMeasure { get; set; } = HeightMeasureEnum.Unknown;
     public WeightMeasureEnum WeightMeasure { get; set; } = WeightMeasureEnum.Unknown;
+    public LengthMeasureEnum LengthMeasure { get; set; } = LengthMeasureEnum.Unknown;
     public string? EyeColor { get; set; }
     public string? HairColor { get; set; }
     public string? SkinColor { get; set; }
